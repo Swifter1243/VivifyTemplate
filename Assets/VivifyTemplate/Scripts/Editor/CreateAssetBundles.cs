@@ -60,6 +60,9 @@ public class CreateAssetBundles
 		BuildVersion version
 	)
 	{
+		// Ensure rebuild
+		buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
+
 		// Set Single Pass Mode
 		switch (version)
 		{
@@ -72,11 +75,7 @@ public class CreateAssetBundles
 		}
 
 		// Build
-		var temp = Application.temporaryCachePath + "/" + version.ToString();
-
-		if (!Directory.Exists(temp))
-			Directory.CreateDirectory(temp);
-
+		var temp = Application.temporaryCachePath;
 		var manifest = BuildPipeline.BuildAssetBundles(temp,
 		buildOptions, EditorUserBuildSettings.activeBuildTarget);
 
@@ -118,8 +117,8 @@ public class CreateAssetBundles
 		//GenerateAssetJson.Run(assetBundleDirectory);
 
 		// Build Asset Bundle
-		Build(outputDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildVersion._2021);
-		Build(outputDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildVersion._2019);
+		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion._2021);
+		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion._2019);
 	}
 
 	static string GetOutputDirectory()
