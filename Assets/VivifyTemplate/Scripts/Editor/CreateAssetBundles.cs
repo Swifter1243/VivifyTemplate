@@ -3,6 +3,8 @@ using UnityEngine;
 using System.IO;
 using System;
 using UnityEngine.XR;
+using System.Collections.Generic;
+using System.Linq;
 
 public class CreateAssetBundles
 {
@@ -53,7 +55,7 @@ public class CreateAssetBundles
 	}
 
 	static bool Build(
-		string directory,
+		string outputDirectory,
 		BuildAssetBundleOptions buildOptions,
 		BuildVersion version
 	)
@@ -70,26 +72,23 @@ public class CreateAssetBundles
 		}
 
 		// Build
-		var temp = Application.temporaryCachePath;
+		var temp = Application.temporaryCachePath + "/" + version.ToString();
+
+		if (!Directory.Exists(temp))
+			Directory.CreateDirectory(temp);
+
 		var manifest = BuildPipeline.BuildAssetBundles(temp,
 		buildOptions, EditorUserBuildSettings.activeBuildTarget);
 
 		if (!manifest) return false;
 
-		// Rename 2021 bundle
-		if (version == BuildVersion._2021)
-		{
-			string source = temp + "/bundle";
-			string destination = temp + "/bundle_2021";
-			File.Copy(source, destination, true);
-		}
-
 		// Move into project
-		foreach (string file in Directory.GetFiles(temp, "*."))
-		{
-			var fileDestination = directory + "/" + Path.GetFileName(file);
-			File.Copy(file, fileDestination, true);
-		}
+		var fileName = version == BuildVersion._2019 ? "bundle_2019" : "bundle_2021";
+		var bundleOutput = outputDirectory + "/" + fileName;
+		var manifestOutput = outputDirectory + "/" + fileName + ".manifest";
+
+		File.Copy(temp + "/bundle", bundleOutput, true);
+		File.Copy(temp + "/bundle.manifest", manifestOutput, true);
 
 		return true;
 	}
@@ -98,7 +97,7 @@ public class CreateAssetBundles
 	static void QuickBuild()
 	{
 		// Get Directory
-		string assetBundleDirectory = GetDirectory();
+		string assetBundleDirectory = GetOutputDirectory();
 		if (assetBundleDirectory == "") return;
 
 		// Build Asset JSON For Scripting
@@ -112,18 +111,18 @@ public class CreateAssetBundles
 	static void FinalBuild()
 	{
 		// Get Directory
-		string assetBundleDirectory = GetDirectory();
-		if (assetBundleDirectory == "") return;
+		string outputDirectory = GetOutputDirectory();
+		if (outputDirectory == "") return;
 
 		// Build Asset JSON For Scripting
 		//GenerateAssetJson.Run(assetBundleDirectory);
 
 		// Build Asset Bundle
-		Build(assetBundleDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildVersion._2021);
-		Build(assetBundleDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildVersion._2019);
+		Build(outputDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildVersion._2021);
+		Build(outputDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, BuildVersion._2019);
 	}
 
-	static string GetDirectory()
+	static string GetOutputDirectory()
 	{
 		if (
 			!EditorPrefs.HasKey("bundleDir") ||
