@@ -5,6 +5,8 @@ using System;
 using UnityEngine.XR;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public class CreateAssetBundles
 {
@@ -80,6 +82,19 @@ public class CreateAssetBundles
 		buildOptions, EditorUserBuildSettings.activeBuildTarget);
 
 		if (!manifest) return false;
+
+		// Fix new shader keywords
+		if (version == BuildVersion._2021)
+		{
+			var bundlePath = temp + "/bundle";
+			var processPath = Path.Combine(
+				Application.dataPath, 
+				"VivifyTemplate/Scripts/net6.0/ShaderKeywordRewriter.exe"
+			);
+			var processInfo = new ProcessStartInfo(processPath, bundlePath);
+			Process.Start(processInfo).WaitForExit();
+			File.Copy(bundlePath + "_fixed", bundlePath, true);
+		}
 
 		// Move into project
 		var fileName = version == BuildVersion._2019 ? "bundle_2019" : "bundle_2021";
