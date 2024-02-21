@@ -56,6 +56,8 @@ public class CreateAssetBundles
 		return workingVersion != BuildVersion._2021;
 	}
 
+	static string GetCachePath() => Application.temporaryCachePath;
+
 	static bool Build(
 		string outputDirectory,
 		BuildAssetBundleOptions buildOptions,
@@ -77,7 +79,7 @@ public class CreateAssetBundles
 		}
 
 		// Build
-		var temp = Application.temporaryCachePath;
+		var temp = GetCachePath();
 		var manifest = BuildPipeline.BuildAssetBundles(temp,
 		buildOptions, EditorUserBuildSettings.activeBuildTarget);
 
@@ -93,7 +95,9 @@ public class CreateAssetBundles
 			);
 			var processInfo = new ProcessStartInfo(processPath, bundlePath);
 			Process.Start(processInfo).WaitForExit();
-			File.Copy(bundlePath + "_fixed", bundlePath, true);
+			var fixedBundle = bundlePath + "_fixed";
+			if (File.Exists(fixedBundle))
+				File.Copy(bundlePath + "_fixed", bundlePath, true);
 		}
 
 		// Move into project
@@ -111,14 +115,14 @@ public class CreateAssetBundles
 	static void QuickBuild()
 	{
 		// Get Directory
-		string assetBundleDirectory = GetOutputDirectory();
-		if (assetBundleDirectory == "") return;
-
-		// Build Asset JSON For Scripting
-		//GenerateAssetJson.Run(assetBundleDirectory);
+		string outputDirectory = GetOutputDirectory();
+		if (outputDirectory == "") return;
 
 		// Build Asset Bundle
-		Build(assetBundleDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
+		Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
+
+		// Build Asset JSON For Scripting
+		GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
 	}
 
 	[MenuItem("Assets/Vivify/Build Asset Bundles")]
@@ -128,12 +132,12 @@ public class CreateAssetBundles
 		string outputDirectory = GetOutputDirectory();
 		if (outputDirectory == "") return;
 
-		// Build Asset JSON For Scripting
-		//GenerateAssetJson.Run(assetBundleDirectory);
-
 		// Build Asset Bundle
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion._2021);
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion._2019);
+
+		// Build Asset JSON For Scripting
+		GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
 	}
 
 	static string GetOutputDirectory()
