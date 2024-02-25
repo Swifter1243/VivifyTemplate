@@ -1,9 +1,8 @@
-﻿Shader "VivifyTemplate/ExampleSkybox"
+﻿Shader "VivifyTemplate/ViewVector"
 {
     Properties
     {
-        _BaseColor ("Base Color", Color) = (1, 1, 1)
-        _HorizonColor ("Horizon Color", Color) = (1, 1, 1)
+
     }
     SubShader
     {
@@ -27,7 +26,7 @@
             struct v2f
             {
                 float4 vertex : SV_POSITION;
-                float3 localPosition : TEXCOORD0;
+                float3 viewVector : TEXCOORD0;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -41,18 +40,15 @@
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.localPosition = v.vertex;
+                float3 worldPosition = mul(unity_ObjectToWorld, v.vertex);
+                o.viewVector = worldPosition - _WorldSpaceCameraPos;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float3 up = float3(0, 1, 0);
-                float3 forward = normalize(i.localPosition);
-
-                float3 skyColor = _BaseColor;
-                skyColor += saturate(pow(1 - (dot(forward, up)), 4)) * _HorizonColor;
-                return float4(skyColor, Luminance(skyColor));
+                float3 normalizedView = normalize(i.viewVector);
+                return float4(normalizedView, 0);
             }
             ENDCG
         }
