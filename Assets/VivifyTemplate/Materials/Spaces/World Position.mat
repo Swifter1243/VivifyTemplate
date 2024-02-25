@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Worldspace Normals
-  m_Shader: {fileID: 4800000, guid: 3b908de9ee2fc64429cc8aa33faf1f6b, type: 3}
+  m_Name: World Position
+  m_Shader: {fileID: 4800000, guid: 5ff2370baab793848a0bb7322f1da779, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
