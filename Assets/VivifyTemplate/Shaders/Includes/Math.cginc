@@ -29,7 +29,7 @@ float3 rotateX(float a, float3 p)
 {
     return float3(
         p.x,
-        rotate2D(a, p.xz)
+        rotate2D(a, p.yz)
     );
 }
 
@@ -62,9 +62,9 @@ float3 rotatePoint(float3 a, float3 p)
     float sz = sin(a.z);
     
     return float3(
-        p.x * (cy*cx) + p.x * (sz*sy*cx) + p.x * (cz*sy*cx),
-        p.y * (cy*sx) + p.y * (sz*sy*sx + cz*cx) + p.y * (cz*sy*sx - sz*cx),
-        p.z * (-sy) + p.z * (sz*cy) + p.z * (cz*cy)
+        p.x * (cy*cx) + p.y * (sz*sy*cx - cz*sx) + p.z * (cz*sy*cx + sz*sx),
+        p.x * (cy*sx) + p.y * (sz*sy*sx + cz*cx) + p.z * (cz*sy*sx - sz*cx),
+        p.x * (-sy) + p.y * (sz*cy) + p.z * (cz*cy)
     );
 }
 
@@ -75,12 +75,12 @@ float3 lineXZPlaneIntersect(float3 linePoint, float3 lineDir, float planeY)
     return linePoint + t * lineDir;
 }
 
-float3 closestPointOnLine(float3 linePoint1, float3 linePoint2, float3 targetPoint)
+float3 closestPointOnLine(float3 linePoint1, float3 linePoint2, float3 p)
 {
     float3 lineDirection = normalize(linePoint2 - linePoint1);
-    float3 toTarget = targetPoint - linePoint1;
+    float3 toPoint = p - linePoint1;
 
-    float projection = dot(toTarget, lineDirection);
+    float projection = dot(toPoint, lineDirection);
     return linePoint1 + projection * lineDirection;
 }
 
@@ -93,14 +93,34 @@ float3x3 matrixFromBasis(float3 x, float3 y, float3 z)
     );
 }
 
-float3 rotatePointLookat(float3 forward, float3 up, float3 p)
+float3 directionToCamera()
 {
-    // Compute the right vector as the cross product of forward and up
-    float3 right = cross(forward, up);
-    forward = cross(up, right);
+    return _WorldSpaceCameraPos - localToWorld(0);
+}
 
-    // Create the transformation matrix
+float3 rotateLook(float3 forward, float3 p)
+{
+    forward = normalize(forward);
+
+    float3 up = float3(0,1,0);
+
+    float3 right = normalize(cross(forward, up));
+    up = cross(right, forward);
+
     float3x3 m = matrixFromBasis(right, up, forward);
 
-    return mul(m, p);
+    return -mul(m, p);
+}
+
+float3 rotateLookOnAxis(float3 forward, float3 up, float3 p)
+{
+    forward = normalize(forward);
+    up = normalize(up);
+
+    float3 right = normalize(cross(forward, up));
+    forward = cross(up, right);
+
+    float3x3 m = matrixFromBasis(right, up, forward);
+
+    return -mul(m, p);
 }
