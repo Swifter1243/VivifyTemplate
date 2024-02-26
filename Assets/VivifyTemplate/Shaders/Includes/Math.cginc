@@ -75,6 +75,16 @@ float3 lineXZPlaneIntersect(float3 linePoint, float3 lineDir, float planeY)
     return linePoint + t * lineDir;
 }
 
+float angleBetweenVectors(float2 a, float2 b)
+{
+    return dot(a, b) / (length(a) * length(b));
+}
+
+float angleBetweenVectors(float3 a, float3 b)
+{
+    return dot(a, b) / (length(a) * length(b));
+}
+
 float3 closestPointOnLine(float3 linePoint1, float3 linePoint2, float3 p)
 {
     float3 lineDirection = normalize(linePoint2 - linePoint1);
