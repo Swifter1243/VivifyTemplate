@@ -1,23 +1,13 @@
-Shader "VivifyTemplate/DepthBlending"
+Shader "VivifyTemplate/DepthPosition"
 {
     Properties
     {
-        _DepthFade ("Depth Fade", Float) = 2
+
     }
     SubShader
     {
         // Render this material after opaque geometry
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
-
-        Blend One OneMinusSrcColor
-        // You could read this as:
-        /*
-        float3 existingPixel = <the existing pixel>
-        float3 sourcePixel = <output of our fragment shader>
-
-        >>            (One)               (OneMinusSrcColor)
-        float3 output = 1 * sourcePixel + (1 - sourcePixel) * existingPixel;
-        */
 
         // Doesn't write to the depth texture
         ZWrite Off
@@ -31,6 +21,7 @@ Shader "VivifyTemplate/DepthBlending"
 
             #include "UnityCG.cginc"
             #include "../Includes/Math.cginc" // If you move this shader, update this
+            #include "../Includes/Noise.cginc"
 
             struct appdata
             {
@@ -42,12 +33,10 @@ Shader "VivifyTemplate/DepthBlending"
             struct v2f
             {
                 float4 vertex : SV_POSITION;
-                float3 worldPos : TEXCOORD1;
+                float3 viewVector : TEXCOORD1;
                 float4 screenUV : TEXCOORD3;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
-
-            float _DepthFade;
 
             v2f vert (appdata v)
             {
@@ -61,7 +50,7 @@ Shader "VivifyTemplate/DepthBlending"
                 o.screenUV = ComputeGrabScreenPos(o.vertex);
 
                 // World Position
-                o.worldPos = localToWorld(v.vertex); // from Math.cginc
+                o.viewVector = viewVectorFromLocal(v.vertex); // from Math.cginc
                 
                 return o;
             }
@@ -71,9 +60,13 @@ Shader "VivifyTemplate/DepthBlending"
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 screenUV = (i.screenUV) / i.screenUV.w;
-                float depth = LinearEyeDepth(UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV));
-                float viewLength = -UnityWorldToViewPos(i.worldPos).z;
-                return saturate((depth - viewLength) / _DepthFade);
+                float rawDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenUV);
+                float depth = LinearEyeDepth(rawDepth);
+
+                float3 viewPlane = unwarpViewVector(i.viewVector);
+                float3 worldPos = viewPlane * depth + _WorldSpaceCameraPos;
+
+                return worldPos.xyzz * (1 != Linear01Depth(rawDepth));
             }
             ENDCG
         }

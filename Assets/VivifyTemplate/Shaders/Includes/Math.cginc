@@ -18,6 +18,11 @@ float3 viewVectorFromLocal(float3 localPos)
     return viewVectorFromWorld(localToWorld(localPos));
 }
 
+float3 unwarpViewVector(float3 viewVector)
+{
+    return viewVector / dot(viewVector, unity_WorldToCamera._m20_m21_m22);
+}
+
 float2 rotate2D(float a, float2 p)
 {
     float c = cos(a);
