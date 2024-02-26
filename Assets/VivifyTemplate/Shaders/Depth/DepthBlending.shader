@@ -30,6 +30,7 @@ Shader "VivifyTemplate/DepthBlending"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
+            #include "../Includes/Math.cginc" // If you move this shader, update this
 
             struct appdata
             {
@@ -60,7 +61,7 @@ Shader "VivifyTemplate/DepthBlending"
                 o.screenUV = ComputeGrabScreenPos(o.vertex);
 
                 // World Position
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                o.worldPos = localToWorld(v.vertex); // from Math.cginc
                 
                 return o;
             }

@@ -40,7 +40,7 @@
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.cameraForward = -UNITY_MATRIX_IT_MV[2].xyz;;
+                o.cameraForward = -UNITY_MATRIX_IT_MV[2].xyz;
                 return o;
             }
 

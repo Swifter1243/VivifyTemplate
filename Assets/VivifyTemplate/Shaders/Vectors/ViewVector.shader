@@ -15,6 +15,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #include "../Includes/Math.cginc" // If you move this shader, update this
 
             struct appdata
             {
@@ -40,8 +41,7 @@
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                float3 worldPosition = mul(unity_ObjectToWorld, v.vertex);
-                o.viewVector = worldPosition - _WorldSpaceCameraPos;
+                o.viewVector = viewVectorFromLocal(v.vertex); // from Math.cginc
                 return o;
             }
 
