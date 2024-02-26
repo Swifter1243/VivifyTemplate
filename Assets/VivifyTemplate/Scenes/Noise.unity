@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 1493556007}
   - component: {fileID: 1493556006}
   m_Layer: 0
-  m_Name: Gradient 3D
+  m_Name: Simplex 3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

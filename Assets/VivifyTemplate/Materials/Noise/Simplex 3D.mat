@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Gradient 3D
+  m_Name: Simplex 3D
   m_Shader: {fileID: 4800000, guid: 1cc50a5e484281540b35cf4c2f59547e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Gradient3D"
+Shader "VivifyTemplate/Simplex3D"
 {
     Properties
     {
