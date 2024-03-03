@@ -59,14 +59,24 @@ Shader "VivifyTemplate/DepthPosition"
 
             fixed4 frag (v2f i) : SV_Target
             {
+                // Get the position of this fragment on the screen
                 float2 screenUV = (i.screenUV) / i.screenUV.w;
-                float rawDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenUV);
-                float depth = LinearEyeDepth(rawDepth);
 
+                // Gets the value of the depth texture at this fragment
+                float depth = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV);
+
+                // Convert the depth into a range between 0 to the clipping plane distance
+                float eyeDepth = LinearEyeDepth(depth);
+
+                // I'm not too sure on how this works still
+                // But I know it fixes descrepancies between the view vector and the projection plane
                 float3 viewPlane = unwarpViewVector(i.viewVector);
-                float3 worldPos = viewPlane * depth + _WorldSpaceCameraPos;
 
-                return worldPos.xyzz * (1 != Linear01Depth(rawDepth));
+                // Multiply the forward direction by the depth and add the camera position to get world space
+                float3 worldPos = viewPlane * eyeDepth + _WorldSpaceCameraPos;
+
+                // Return the world position if the depth isn't at the far clipping planes
+                return worldPos.xyzz * (1 != Linear01Depth(depth));
             }
             ENDCG
         }

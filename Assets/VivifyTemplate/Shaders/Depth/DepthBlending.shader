@@ -70,10 +70,21 @@ Shader "VivifyTemplate/DepthBlending"
 
             fixed4 frag (v2f i) : SV_Target
             {
+                // Gets position of this fragment on the screen
                 float2 screenUV = (i.screenUV) / i.screenUV.w;
-                float depth = LinearEyeDepth(UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV));
+
+                // Gets the value of the depth texture at this fragment
+                float depth = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV);
+
+                // Convert the depth into a range between 0 to the clipping plane distance
+                float eyeDepth = LinearEyeDepth(depth);
+
+                // Converts the world position into view space, and takes the negative Z component
+                // Essentially giving us the distance of the fragment to the projection plane of the camera
                 float viewLength = -UnityWorldToViewPos(i.worldPos).z;
-                return saturate((depth - viewLength) / _DepthFade);
+
+                // Return the distance between the fragment's world position and the distance from the depth texture
+                return saturate((eyeDepth - viewLength) / _DepthFade);
             }
             ENDCG
         }

@@ -20,7 +20,6 @@ Shader "VivifyTemplate/DepthTexture"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-            #include "../Includes/Math.cginc" // If you move this shader, update this
 
             struct appdata
             {
@@ -32,8 +31,7 @@ Shader "VivifyTemplate/DepthTexture"
             struct v2f
             {
                 float4 vertex : SV_POSITION;
-                float3 worldPos : TEXCOORD1;
-                float4 screenUV : TEXCOORD3;
+                float4 screenUV : TEXCOORD0;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -47,9 +45,6 @@ Shader "VivifyTemplate/DepthTexture"
 
                 // Screen UV
                 o.screenUV = ComputeGrabScreenPos(o.vertex);
-
-                // World Position
-                o.worldPos = localToWorld(v.vertex); // from Math.cginc
                 
                 return o;
             }
@@ -58,9 +53,16 @@ Shader "VivifyTemplate/DepthTexture"
 
             fixed4 frag (v2f i) : SV_Target
             {
+                // Get the position of this fragment on the screen
                 float2 screenUV = (i.screenUV) / i.screenUV.w;
-                float depth = Linear01Depth(UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV));
-                return depth;
+
+                // Gets the value of the depth texture at this fragment
+                float depth = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_CameraDepthTexture, screenUV);
+
+                // Convert the depth into a range between 0 and 1
+                float depth01 = Linear01Depth(depth);
+
+                return depth01;
             }
             ENDCG
         }
