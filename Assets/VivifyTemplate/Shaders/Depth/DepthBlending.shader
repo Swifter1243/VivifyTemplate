@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/DepthBlending"
+Shader "Vivify/Depth/DepthBlending"
 {
     Properties
     {
@@ -30,7 +30,7 @@ Shader "VivifyTemplate/DepthBlending"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-            #include "../Includes/Math.cginc" // If you move this shader, update this
+            #include "Assets/VivifyTemplate/Shaders/Includes/Math.cginc"
 
             struct appdata
             {

@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Translation"
+Shader "Vivify/Vertex/Translation"
 {
     Properties
     {

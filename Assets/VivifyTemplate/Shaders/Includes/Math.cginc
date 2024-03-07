@@ -23,6 +23,18 @@ float3 unwarpViewVector(float3 viewVector)
     return viewVector / dot(viewVector, unity_WorldToCamera._m20_m21_m22);
 }
 
+float3 viewVectorFromUV(float2 uv)
+{
+    float3 viewDir = mul(unity_CameraInvProjection, float4(uv * 2.0 - 1.0, 0, 1)).xyz;
+    viewDir.z = -viewDir.z;
+    return mul(unity_CameraToWorld, float4(viewDir, 0)).xyz;
+}
+
+float3 getCameraForward()
+{
+    return mul((float3x3)unity_CameraToWorld, float3(0,0,1));
+}
+
 float2 rotate2D(float a, float2 p)
 {
     float c = cos(a);

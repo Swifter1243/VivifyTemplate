@@ -1,12 +1,13 @@
-﻿Shader "Vivify/Vector/CameraForward"
+Shader "Vivify/Post Processing/CameraForward"
 {
     Properties
     {
-
+        _MainTex ("Texture", 2D) = "white" {}
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
+        LOD 100
 
         Pass
         {
@@ -31,23 +32,24 @@
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            float3 _BaseColor;
-            float3 _HorizonColor;
-
             v2f vert (appdata v)
             {
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
-                o.vertex = UnityObjectToClipPos(v.vertex);
+
                 o.cameraForward = getCameraForward(); // from Math.cginc
+                o.vertex = UnityObjectToClipPos(v.vertex);
 
                 return o;
             }
 
+            UNITY_DECLARE_SCREENSPACE_TEXTURE(_MainTex);
+
             fixed4 frag (v2f i) : SV_Target
             {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+
                 return float4(i.cameraForward, 0);
             }
             ENDCG

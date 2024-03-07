@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/LookAtOnAxis"
+Shader "Vivify/Vertex/LookAtOnAxis"
 {
     Properties
     {

@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Scaling"
+Shader "Vivify/Vertex/Scaling"
 {
     Properties
     {

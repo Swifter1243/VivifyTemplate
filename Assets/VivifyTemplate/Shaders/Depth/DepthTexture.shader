@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/DepthTexture"
+Shader "Vivify/Depth/DepthTexture"
 {
     Properties
     {

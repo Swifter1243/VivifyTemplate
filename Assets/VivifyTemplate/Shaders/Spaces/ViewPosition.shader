@@ -1,4 +1,4 @@
-﻿Shader "VivifyTemplate/ViewPosition"
+﻿Shader "Vivify/Spaces/ViewPosition"
 {
     Properties
     {

@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Twist"
+Shader "Vivify/Vertex/Twist"
 {
     Properties
     {

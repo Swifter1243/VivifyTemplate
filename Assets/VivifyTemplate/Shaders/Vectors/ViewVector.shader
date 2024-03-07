@@ -1,4 +1,4 @@
-﻿Shader "VivifyTemplate/ViewVector"
+﻿Shader "Vivify/Vector/ViewVector"
 {
     Properties
     {
@@ -15,7 +15,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "../Includes/Math.cginc" // If you move this shader, update this
+            #include "Assets/VivifyTemplate/Shaders/Includes/Math.cginc"
 
             struct appdata
             {

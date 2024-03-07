@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Solid"
+Shader "Vivify/Opacity/Solid"
 {
     Properties
     {

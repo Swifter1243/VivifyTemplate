@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/DepthPosition"
+Shader "Vivify/Depth/DepthPosition"
 {
     Properties
     {
@@ -20,8 +20,8 @@ Shader "VivifyTemplate/DepthPosition"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-            #include "../Includes/Math.cginc" // If you move this shader, update this
-            #include "../Includes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Shaders/Includes/Math.cginc"
+            #include "Assets/VivifyTemplate/Shaders/Includes/Noise.cginc"
 
             struct appdata
             {

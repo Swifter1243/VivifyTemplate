@@ -1,4 +1,4 @@
-﻿Shader "VivifyTemplate/Normals"
+﻿Shader "Vivify/Vector/Normals"
 {
     Properties
     {

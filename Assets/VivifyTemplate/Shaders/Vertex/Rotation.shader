@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Rotation"
+Shader "Vivify/Vertex/Rotation"
 {
     Properties
     {

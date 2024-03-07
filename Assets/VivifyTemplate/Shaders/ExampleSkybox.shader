@@ -1,4 +1,4 @@
-﻿Shader "VivifyTemplate/ExampleSkybox"
+﻿Shader "Vivify/ExampleSkybox"
 {
     Properties
     {

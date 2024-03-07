@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/Voronoi3D"
+Shader "Vivify/Noise/Voronoi3D"
 {
     Properties
     {
@@ -15,8 +15,8 @@ Shader "VivifyTemplate/Voronoi3D"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "../Includes/Noise.cginc" // If you move this shader, update this
-            #include "../Includes/Math.cginc" // This too
+            #include "Assets/VivifyTemplate/Shaders/Includes/Math.cginc"
+            #include "Assets/VivifyTemplate/Shaders/Includes/Noise.cginc"
 
             struct appdata
             {

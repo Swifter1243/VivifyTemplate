@@ -1,4 +1,4 @@
-Shader "VivifyTemplate/BrightnessTransparency"
+Shader "Vivify/Opacity/BrightnessTransparency"
 {
     Properties
     {
