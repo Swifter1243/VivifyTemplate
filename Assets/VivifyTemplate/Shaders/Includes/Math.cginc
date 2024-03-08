@@ -35,6 +35,16 @@ float3 getCameraForward()
     return mul((float3x3)unity_CameraToWorld, float3(0,0,1));
 }
 
+float3 getLightDirection()
+{
+    return normalize(_WorldSpaceLightPos0.xyz);
+}
+
+float4 sampleReflectionProbe(float3 viewVector) 
+{
+    return float4(DecodeHDR(UNITY_SAMPLE_TEXCUBE_LOD(unity_SpecCube0, viewVector, 0), unity_SpecCube0_HDR), 0);
+}
+
 float2 rotate2D(float a, float2 p)
 {
     float c = cos(a);
