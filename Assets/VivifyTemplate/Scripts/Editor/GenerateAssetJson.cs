@@ -22,10 +22,12 @@ public class GenerateAssetJson
 		{
 			var material = bundle.LoadAsset<Material>(name);
 
-			var materialInfo = new MaterialInfo();
-			materialInfo.path = name;
+            var materialInfo = new MaterialInfo
+            {
+                path = name
+            };
 
-			int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
+            int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
 			for (int i = 0; i < propertyCount; i++)
 			{
 				string propertyName = ShaderUtil.GetPropertyName(material.shader, i);

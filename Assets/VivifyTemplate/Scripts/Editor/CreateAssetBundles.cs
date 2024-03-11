@@ -103,7 +103,7 @@ public class CreateAssetBundles
 		var isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
 		var buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
 		AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(temp, buildOptions, buildTarget);
-	
+
 		if (!manifest) return false;
 
 		// Fix new shader keywords
@@ -111,7 +111,7 @@ public class CreateAssetBundles
 		{
 			var bundlePath = temp + "/bundle";
 			var processPath = Path.Combine(
-				Application.dataPath, 
+				Application.dataPath,
 				"VivifyTemplate/Scripts/net6.0/ShaderKeywordRewriter.exe"
 			);
 			var processInfo = new ProcessStartInfo(processPath, bundlePath);
@@ -160,10 +160,13 @@ public class CreateAssetBundles
 		foreach (var value in Enum.GetValues(typeof(BuildVersion)).Cast<BuildVersion>())
 		{
 			Build(outputDirectory, BuildAssetBundleOptions.None, value);
-		}
 
-		// Build Asset JSON For Scripting
-		GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
+			if (value == BuildVersion.Windows2019)
+			{
+				// Build Asset JSON For Scripting
+				GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
+			}
+		}
 	}
 
 	static string GetOutputDirectory()
