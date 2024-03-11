@@ -23,10 +23,10 @@ public class CreateAssetBundles
 	{
 		switch (version)
 		{
-			case BuildVersion.Windows2019: return "_windows2019";
-			case BuildVersion.Windows2021: return "_windows2021";
-			case BuildVersion.Android2019: return "_android2019";
-			case BuildVersion.Android2021: return "_android2021";
+			case BuildVersion.Windows2019: return "bundle_windows2019";
+			case BuildVersion.Windows2021: return "bundle_windows2021";
+			case BuildVersion.Android2019: return "bundle_android2019";
+			case BuildVersion.Android2021: return "bundle_android2021";
 		}
 
 		return "";
