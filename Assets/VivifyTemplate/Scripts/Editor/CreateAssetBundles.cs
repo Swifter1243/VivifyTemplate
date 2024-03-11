@@ -101,7 +101,10 @@ public class CreateAssetBundles
 		}
 
 		// Move into project
-		var fileName = version == BuildVersion._2019 ? "bundle_2019" : "bundle_2021";
+		var fileName = version == BuildVersion._2019 
+			? "bundle_windows2019" 
+			: "bundle_windows2021";
+
 		var bundleOutput = outputDirectory + "/" + fileName;
 		var manifestOutput = outputDirectory + "/" + fileName + ".manifest";
 
