@@ -7,53 +7,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
+using UnityEditor.Build.Content;
 
 public class CreateAssetBundles
 {
 	enum BuildVersion
 	{
-		_2019,
-		_2021
+		Windows2019,
+		Windows2021,
+		Android2019,
+		Android2021
+	}
+
+	private static string GetBundleFileName(BuildVersion version)
+	{
+		switch (version)
+		{
+			case BuildVersion.Windows2019: return "_windows2019";
+			case BuildVersion.Windows2021: return "_windows2021";
+			case BuildVersion.Android2019: return "_android2019";
+			case BuildVersion.Android2021: return "_android2021";
+		}
+
+		return "";
 	}
 
 	static BuildVersion workingVersion
 	{
 		get
 		{
-			string pref = EditorPrefs.GetString("workingVer", null);
+			string pref = PlayerPrefs.GetString("workingVer", null);
 
 			if (!Enum.TryParse(pref, out BuildVersion ver))
 			{
-				var defaultVersion = BuildVersion._2019;
-				EditorPrefs.SetString("workingVer", defaultVersion.ToString());
+				var defaultVersion = BuildVersion.Windows2019;
+				PlayerPrefs.SetString("workingVer", defaultVersion.ToString());
 				return defaultVersion;
 			}
 
 			return ver;
 		}
-		set => EditorPrefs.SetString("workingVer", value.ToString());
+		set => PlayerPrefs.SetString("workingVer", value.ToString());
 	}
 
 	[MenuItem("Assets/Vivify/Set Working Version/2019")]
 	static void SetWorkingVersion_2019()
 	{
-		workingVersion = BuildVersion._2019;
+		workingVersion = BuildVersion.Windows2019;
 	}
 	[MenuItem("Assets/Vivify/Set Working Version/2019", true)]
-	static bool ValidateWorkingVersion_209()
+	static bool ValidateWorkingVersion_2019()
 	{
-		return workingVersion != BuildVersion._2019;
+		return workingVersion != BuildVersion.Windows2019;
 	}
 
 	[MenuItem("Assets/Vivify/Set Working Version/2021")]
 	static void SetWorkingVersion_2021()
 	{
-		workingVersion = BuildVersion._2021;
+		workingVersion = BuildVersion.Windows2021;
 	}
 	[MenuItem("Assets/Vivify/Set Working Version/2021", true)]
 	static bool ValidateWorkingVersion_2021()
 	{
-		return workingVersion != BuildVersion._2021;
+		return workingVersion != BuildVersion.Windows2021;
 	}
 
 	static string GetCachePath() => Application.temporaryCachePath;
@@ -64,29 +80,34 @@ public class CreateAssetBundles
 		BuildVersion version
 	)
 	{
+
 		// Ensure rebuild
 		buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
 
 		// Set Single Pass Mode
 		switch (version)
 		{
-			case BuildVersion._2019:
+			case BuildVersion.Windows2019:
+			case BuildVersion.Android2019:
 				PlayerSettings.stereoRenderingPath = StereoRenderingPath.SinglePass;
 				break;
-			case BuildVersion._2021:
+			case BuildVersion.Windows2021:
+			case BuildVersion.Android2021:
 				PlayerSettings.stereoRenderingPath = StereoRenderingPath.Instancing;
 				break;
 		}
 
 		// Build
 		var temp = GetCachePath();
-		var manifest = BuildPipeline.BuildAssetBundles(temp,
-		buildOptions, EditorUserBuildSettings.activeBuildTarget);
 
+		var isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
+		var buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
+		AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(temp, buildOptions, buildTarget);
+	
 		if (!manifest) return false;
 
 		// Fix new shader keywords
-		if (version == BuildVersion._2021)
+		if (PlayerSettings.stereoRenderingPath == StereoRenderingPath.Instancing)
 		{
 			var bundlePath = temp + "/bundle";
 			var processPath = Path.Combine(
@@ -97,14 +118,14 @@ public class CreateAssetBundles
 			Process.Start(processInfo).WaitForExit();
 			var fixedBundle = bundlePath + "_fixed";
 			if (File.Exists(fixedBundle))
-				File.Copy(bundlePath + "_fixed", bundlePath, true);
+			{
+				File.Copy(fixedBundle, bundlePath, true);
+				File.Delete(fixedBundle);
+			}
 		}
 
 		// Move into project
-		var fileName = version == BuildVersion._2019 
-			? "bundle_windows2019" 
-			: "bundle_windows2021";
-
+		var fileName = GetBundleFileName(version);
 		var bundleOutput = outputDirectory + "/" + fileName;
 		var manifestOutput = outputDirectory + "/" + fileName + ".manifest";
 
@@ -136,8 +157,10 @@ public class CreateAssetBundles
 		if (outputDirectory == "") return;
 
 		// Build Asset Bundle
-		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion._2021);
-		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion._2019);
+		foreach (var value in Enum.GetValues(typeof(BuildVersion)).Cast<BuildVersion>())
+		{
+			Build(outputDirectory, BuildAssetBundleOptions.None, value);
+		}
 
 		// Build Asset JSON For Scripting
 		GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
@@ -146,21 +169,21 @@ public class CreateAssetBundles
 	static string GetOutputDirectory()
 	{
 		if (
-			!EditorPrefs.HasKey("bundleDir") ||
-			EditorPrefs.GetString("bundleDir") == ""
+			!PlayerPrefs.HasKey("bundleDir") ||
+			PlayerPrefs.GetString("bundleDir") == ""
 		)
 		{
 			var assetBundleDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
-			EditorPrefs.SetString("bundleDir", assetBundleDirectory);
+			PlayerPrefs.SetString("bundleDir", assetBundleDirectory);
 			return assetBundleDirectory;
 		}
 
-		return EditorPrefs.GetString("bundleDir");
+		return PlayerPrefs.GetString("bundleDir");
 	}
 
 	[MenuItem("Assets/Vivify/Clear Asset Bundle Location")]
 	static void ClearAssetBundleLocation()
 	{
-		EditorPrefs.DeleteKey("bundleDir");
+		PlayerPrefs.DeleteKey("bundleDir");
 	}
 }
