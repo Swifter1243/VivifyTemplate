@@ -50,23 +50,23 @@ public class CreateAssetBundles
 		set => PlayerPrefs.SetString("workingVer", value.ToString());
 	}
 
-	[MenuItem("Assets/Vivify/Set Working Version/2019")]
+	[MenuItem("Vivify/Set Working Version/2019")]
 	static void SetWorkingVersion_2019()
 	{
 		workingVersion = BuildVersion.Windows2019;
 	}
-	[MenuItem("Assets/Vivify/Set Working Version/2019", true)]
+	[MenuItem("Vivify/Set Working Version/2019", true)]
 	static bool ValidateWorkingVersion_2019()
 	{
 		return workingVersion != BuildVersion.Windows2019;
 	}
 
-	[MenuItem("Assets/Vivify/Set Working Version/2021")]
+	[MenuItem("Vivify/Set Working Version/2021")]
 	static void SetWorkingVersion_2021()
 	{
 		workingVersion = BuildVersion.Windows2021;
 	}
-	[MenuItem("Assets/Vivify/Set Working Version/2021", true)]
+	[MenuItem("Vivify/Set Working Version/2021", true)]
 	static bool ValidateWorkingVersion_2021()
 	{
 		return workingVersion != BuildVersion.Windows2021;
@@ -80,6 +80,14 @@ public class CreateAssetBundles
 		BuildVersion version
 	)
 	{
+		var projectBundle = BundleName.projectBundle;
+
+		// Check bundle exists
+		var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundle);
+		if (assetPaths.Length == 0)
+		{
+			throw new Exception($"The bundle '{projectBundle}' is empty.");
+		}
 
 		// Ensure rebuild
 		buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
@@ -98,18 +106,30 @@ public class CreateAssetBundles
 		}
 
 		// Build
-		var temp = GetCachePath();
+		var tempDir = GetCachePath();
 
 		var isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
 		var buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
-		AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(temp, buildOptions, buildTarget);
 
-		if (!manifest) return false;
+		AssetBundleBuild[] builds = {
+			new AssetBundleBuild
+			{
+				assetBundleName = projectBundle,
+				assetNames = assetPaths
+			}
+		};
+
+		AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(tempDir, builds, buildOptions, buildTarget);
+
+		if (!manifest)
+		{
+			throw new Exception("The build was unsuccessful for some stupid fucking reason.");
+		}
 
 		// Fix new shader keywords
 		if (PlayerSettings.stereoRenderingPath == StereoRenderingPath.Instancing)
 		{
-			var bundlePath = temp + "/bundle";
+			var bundlePath = tempDir + "/" + projectBundle;
 			var processPath = Path.Combine(
 				Application.dataPath,
 				"VivifyTemplate/Scripts/net6.0/ShaderKeywordRewriter.exe"
@@ -129,13 +149,14 @@ public class CreateAssetBundles
 		var bundleOutput = outputDirectory + "/" + fileName;
 		var manifestOutput = outputDirectory + "/" + fileName + ".manifest";
 
-		File.Copy(temp + "/bundle", bundleOutput, true);
-		File.Copy(temp + "/bundle.manifest", manifestOutput, true);
+		File.Copy(tempDir + "/" + projectBundle, bundleOutput, true);
+		File.Copy(tempDir + $"/{projectBundle}.manifest", manifestOutput, true);
+		Debug.Log($"Successfully built bundle '{projectBundle}' to {bundleOutput}.");
 
 		return true;
 	}
 
-	[MenuItem("Assets/Vivify/Quick Build Asset Bundles _F5")]
+	[MenuItem("Vivify/Quick Build Asset Bundles _F5")]
 	static void QuickBuild()
 	{
 		// Get Directory
@@ -146,10 +167,10 @@ public class CreateAssetBundles
 		Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
 
 		// Build Asset JSON For Scripting
-		GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
+		GenerateAssetJson.Run(Path.Combine(GetCachePath(), BundleName.projectBundle), outputDirectory);
 	}
 
-	[MenuItem("Assets/Vivify/Build Asset Bundles")]
+	[MenuItem("Vivify/Build Asset Bundles")]
 	static void FinalBuild()
 	{
 		// Get Directory
@@ -164,9 +185,11 @@ public class CreateAssetBundles
 			if (value == BuildVersion.Windows2019)
 			{
 				// Build Asset JSON For Scripting
-				GenerateAssetJson.Run(Path.Combine(GetCachePath(), "bundle"), outputDirectory);
+				GenerateAssetJson.Run(Path.Combine(GetCachePath(), BundleName.projectBundle), outputDirectory);
 			}
 		}
+
+		Debug.Log("All builds done!");
 	}
 
 	static string GetOutputDirectory()
@@ -184,7 +207,7 @@ public class CreateAssetBundles
 		return PlayerPrefs.GetString("bundleDir");
 	}
 
-	[MenuItem("Assets/Vivify/Clear Asset Bundle Location")]
+	[MenuItem("Vivify/Clear Asset Bundle Location")]
 	static void ClearAssetBundleLocation()
 	{
 		PlayerPrefs.DeleteKey("bundleDir");

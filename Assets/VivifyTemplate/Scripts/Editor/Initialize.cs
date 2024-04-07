@@ -6,7 +6,7 @@ using UnityEngine.XR;
 
 public class Initialize
 {
-	[MenuItem("Assets/Vivify/Setup Project")]
+	[MenuItem("Vivify/Setup Project")]
     [Obsolete]
     static void SetupProject()
 	{
