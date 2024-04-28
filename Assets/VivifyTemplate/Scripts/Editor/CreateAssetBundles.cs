@@ -72,7 +72,12 @@ public class CreateAssetBundles
 		return workingVersion != BuildVersion.Windows2021;
 	}
 
-	static string GetCachePath() => Application.temporaryCachePath;
+	static string GetCachePath()
+	{
+		string path = Path.Combine(Application.temporaryCachePath, "bundleBuilds");
+		if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+		return path;
+	}
 
 	static bool Build(
 		string outputDirectory,
