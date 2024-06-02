@@ -36,24 +36,30 @@ public class CreateAssetBundles
 	{
 		get
 		{
-			string pref = PlayerPrefs.GetString("workingVer", null);
+			string pref = PlayerPrefs.GetString("workingVersion", null);
 
 			if (!Enum.TryParse(pref, out BuildVersion ver))
 			{
 				var defaultVersion = BuildVersion.Windows2019;
-				PlayerPrefs.SetString("workingVer", defaultVersion.ToString());
+				PlayerPrefs.SetString("workingVersion", defaultVersion.ToString());
 				return defaultVersion;
 			}
 
 			return ver;
 		}
-		set => PlayerPrefs.SetString("workingVer", value.ToString());
+		set => PlayerPrefs.SetString("workingVersion", value.ToString());
 	}
 
 	static bool exportAssetInfo
 	{
 		get => PlayerPrefs.GetInt("exportAssetInfo", 1) == 1;
 		set => PlayerPrefs.SetInt("exportAssetInfo", value ? 1 : 0);
+	}
+
+	static bool buildAndroidVersions
+	{
+		get => PlayerPrefs.GetInt("buildAndroidVersions", 1) == 1;
+		set => PlayerPrefs.SetInt("buildAndroidVersions", value ? 1 : 0);
 	}
 
 	// Set Working Version
@@ -89,6 +95,23 @@ public class CreateAssetBundles
 	}
 	[MenuItem("Vivify/Export Asset Info/False", true)]
 	static bool ValidateExportAssetInfo_False() { return exportAssetInfo; }
+
+	// Build Android Versions
+	[MenuItem("Vivify/Build Android Versions/True")]
+	static void BuildAndroidVersions_True()
+	{
+		buildAndroidVersions = true;
+	}
+	[MenuItem("Vivify/Build Android Versions/True", true)]
+	static bool ValidateBuildAndroidVersions_True() { return !buildAndroidVersions; }
+
+	[MenuItem("Vivify/Build Android Versions/False")]
+	static void BuildAndroidVersions_False()
+	{
+		buildAndroidVersions = false;
+	}
+	[MenuItem("Vivify/Build Android Versions/False", true)]
+	static bool ValidateBuildAndroidVersions_False() { return buildAndroidVersions; }
 
 	static string GetCachePath()
 	{
@@ -203,7 +226,7 @@ public class CreateAssetBundles
 		Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
 
 		// Build Asset JSON For Scripting
-		if (exportAssetInfo) 
+		if (exportAssetInfo)
 		{
 			GenerateAssetJson.Run(GetBuiltBundlePath(), outputDirectory);
 		}
@@ -224,8 +247,11 @@ public class CreateAssetBundles
 		}
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021);
 
-		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019);
-		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021);
+		if (buildAndroidVersions)
+		{
+			Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019);
+			Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021);
+		}
 
 		Debug.Log("All builds done!");
 	}
