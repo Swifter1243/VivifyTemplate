@@ -97,6 +97,11 @@ public class CreateAssetBundles
 		return path;
 	}
 
+	static string GetBuiltBundlePath()
+	{
+		return Path.Combine(GetCachePath(), BundleName.projectBundle);
+	}
+
 	static bool Build(
 		string outputDirectory,
 		BuildAssetBundleOptions buildOptions,
@@ -190,13 +195,16 @@ public class CreateAssetBundles
 	{
 		// Get Directory
 		string outputDirectory = GetOutputDirectory();
-		if (outputDirectory == "") return;
+		if (outputDirectory == "") return; // windows was exited
 
 		// Build Asset Bundle
 		Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
 
 		// Build Asset JSON For Scripting
-		GenerateAssetJson.Run(Path.Combine(GetCachePath(), BundleName.projectBundle), outputDirectory);
+		if (exportAssetInfo) 
+		{
+			GenerateAssetJson.Run(GetBuiltBundlePath(), outputDirectory);
+		}
 	}
 
 	[MenuItem("Vivify/Build/Build All Versions Compressed")]
@@ -204,11 +212,14 @@ public class CreateAssetBundles
 	{
 		// Get Directory
 		string outputDirectory = GetOutputDirectory();
-		if (outputDirectory == "") return;
+		if (outputDirectory == "") return; // windows was exited
 
 		// Build Asset Bundle
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019);
-		if (exportAssetInfo) GenerateAssetJson.Run(Path.Combine(GetCachePath(), BundleName.projectBundle), outputDirectory);
+		if (exportAssetInfo)
+		{
+			GenerateAssetJson.Run(GetBuiltBundlePath(), outputDirectory);
+		}
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021);
 
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019);
