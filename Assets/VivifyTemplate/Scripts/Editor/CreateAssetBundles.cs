@@ -103,6 +103,12 @@ public class CreateAssetBundles
 		BuildVersion version
 	)
 	{
+		// Check output directory exists
+		if (!Directory.Exists(outputDirectory))
+		{
+			throw new DirectoryNotFoundException($"The directory \"{outputDirectory}\" doesn't exist.");
+		}
+
 		var projectBundle = BundleName.projectBundle;
 
 		// Check bundle exists
