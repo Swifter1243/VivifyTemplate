@@ -26,6 +26,7 @@ public class PackageExport
         ExportAll();
         ExportExporter();
         ExportExamples();
+        ExportCGIncludes();
     }
 
     static void ExportAll()
@@ -41,8 +42,7 @@ public class PackageExport
     {
         string[] assetPaths = new string[]
         {
-            "Assets/VivifyTemplate/Dependencies",
-            "Assets/VivifyTemplate/Scripts"
+            "Assets/VivifyTemplate/Exporter",
         };
         ExportPackage(assetPaths, "VivifyTemplate-Exporter");
     }
@@ -51,12 +51,18 @@ public class PackageExport
     {
         string[] assetPaths = new string[]
         {
-            "Assets/VivifyTemplate/Materials",
-            "Assets/VivifyTemplate/Models",
-            "Assets/VivifyTemplate/Scenes",
-            "Assets/VivifyTemplate/Shaders",
-            "Assets/VivifyTemplate/Textures",
+            "Assets/VivifyTemplate/Examples",
+            "Assets/VivifyTemplate/CGIncludes",
         };
         ExportPackage(assetPaths, "VivifyTemplate-Examples");
+    }
+
+    static void ExportCGIncludes()
+    {
+        string[] assetPaths = new string[]
+        {
+            "Assets/VivifyTemplate/CGIncludes",
+        };
+        ExportPackage(assetPaths, "VivifyTemplate-CGIncludes");
     }
 }
