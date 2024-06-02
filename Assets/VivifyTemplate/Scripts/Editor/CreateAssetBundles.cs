@@ -97,20 +97,20 @@ public class CreateAssetBundles
 	static bool ValidateExportAssetInfo_False() { return exportAssetInfo; }
 
 	// Build Android Versions
-	[MenuItem("Vivify/Build Android Versions/True")]
+	[MenuItem("Vivify/Build/Build Android Versions/True")]
 	static void BuildAndroidVersions_True()
 	{
 		buildAndroidVersions = true;
 	}
-	[MenuItem("Vivify/Build Android Versions/True", true)]
+	[MenuItem("Vivify/Build/Build Android Versions/True", true)]
 	static bool ValidateBuildAndroidVersions_True() { return !buildAndroidVersions; }
 
-	[MenuItem("Vivify/Build Android Versions/False")]
+	[MenuItem("Vivify/Build/Build Android Versions/False")]
 	static void BuildAndroidVersions_False()
 	{
 		buildAndroidVersions = false;
 	}
-	[MenuItem("Vivify/Build Android Versions/False", true)]
+	[MenuItem("Vivify/Build/Build Android Versions/False", true)]
 	static bool ValidateBuildAndroidVersions_False() { return buildAndroidVersions; }
 
 	static string GetCachePath()
