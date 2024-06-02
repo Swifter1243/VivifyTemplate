@@ -111,7 +111,7 @@ public class CreateAssetBundles
 		// Check output directory exists
 		if (!Directory.Exists(outputDirectory))
 		{
-			throw new DirectoryNotFoundException($"The directory \"{outputDirectory}\" doesn't exist.");
+			throw new DirectoryNotFoundException($"The directory '{outputDirectory}' doesn't exist.");
 		}
 
 		var projectBundle = BundleName.projectBundle;
@@ -154,14 +154,16 @@ public class CreateAssetBundles
 		};
 
 		AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(tempDir, builds, buildOptions, buildTarget);
-
 		if (!manifest)
 		{
 			throw new Exception("The build was unsuccessful for some stupid fucking reason.");
 		}
 
 		// Fix new shader keywords
-		if (PlayerSettings.stereoRenderingPath == StereoRenderingPath.Instancing)
+		if (
+			workingVersion == BuildVersion.Windows2021 ||
+			workingVersion == BuildVersion.Android2021
+		)
 		{
 			var bundlePath = tempDir + "/" + projectBundle;
 			var processPath = Path.Combine(
@@ -185,7 +187,7 @@ public class CreateAssetBundles
 
 		File.Copy(tempDir + "/" + projectBundle, bundleOutput, true);
 		File.Copy(tempDir + $"/{projectBundle}.manifest", manifestOutput, true);
-		Debug.Log($"Successfully built bundle '{projectBundle}' to {bundleOutput}.");
+		Debug.Log($"Successfully built bundle '{projectBundle}' to '{bundleOutput}'.");
 
 		return true;
 	}
@@ -195,7 +197,7 @@ public class CreateAssetBundles
 	{
 		// Get Directory
 		string outputDirectory = GetOutputDirectory();
-		if (outputDirectory == "") return; // windows was exited
+		if (outputDirectory == "") return; // window was exited
 
 		// Build Asset Bundle
 		Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
@@ -212,7 +214,7 @@ public class CreateAssetBundles
 	{
 		// Get Directory
 		string outputDirectory = GetOutputDirectory();
-		if (outputDirectory == "") return; // windows was exited
+		if (outputDirectory == "") return; // window was exited
 
 		// Build Asset Bundle
 		Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019);
