@@ -168,9 +168,14 @@ public class CreateAssetBundles
 				break;
 		}
 
-		// Build
+		// Empty build location directory
 		var tempDir = GetCachePath();
+		Directory.Delete(tempDir, true);
+		Directory.CreateDirectory(tempDir);
+
+		// Build
 		var tempBundlePath = tempDir + "/" + projectBundle;
+		var manifestPath = tempBundlePath + ".manifest"; // new .manifest isn't built from ShaderKeywordRewriter
 		var builtBundlePath = tempBundlePath;
 		var fixedBundlePath = "";
 
@@ -195,13 +200,6 @@ public class CreateAssetBundles
 		var shaderKeywordsFixed = workingVersion == BuildVersion.Windows2021 || workingVersion == BuildVersion.Android2021;
 		if (shaderKeywordsFixed)
 		{
-			// Delete file if already exists
-			fixedBundlePath = tempBundlePath + "_fixed";
-			if (File.Exists(fixedBundlePath))
-			{
-				File.Delete(fixedBundlePath);
-			}
-
 			// Run Process
 			var processPath = Path.Combine(
 				Application.dataPath,
@@ -227,7 +225,7 @@ public class CreateAssetBundles
 		var manifestOutput = outputDirectory + "/" + fileName + ".manifest";
 
 		File.Copy(builtBundlePath, bundleOutput, true);
-		File.Copy(builtBundlePath + ".manifest", manifestOutput, true);
+		File.Copy(manifestPath, manifestOutput, true);
 		Debug.Log($"Successfully built bundle '{projectBundle}' to '{bundleOutput}'.");
 
 		return new BuildReport
