@@ -120,6 +120,25 @@ public class CreateAssetBundles
 		return path;
 	}
 
+	static bool IsNewXRPluginInstalled()
+	{
+		// Check if the XR Management namespace exists
+        Type xrManagementType = Type.GetType("UnityEngine.XR.Management.XRGeneralSettings, Unity.XR.Management");
+        if (xrManagementType != null)
+        {
+            return true;
+        }
+
+        // Alternatively, check for another specific class from the new XR plugins
+        Type xrManagerSettingsType = Type.GetType("UnityEngine.XR.Management.XRManagerSettings, Unity.XR.Management");
+        if (xrManagerSettingsType != null)
+        {
+            return true;
+        }
+
+        return false;
+	}
+
 	struct BuildReport
 	{
 		public string tempBundlePath;
@@ -145,12 +164,23 @@ public class CreateAssetBundles
 
 		var projectBundle = BundleName.projectBundle;
 
-		// Check bundle exists
+		// Check bundle isn't empty
 		var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundle);
 		if (assetPaths.Length == 0)
 		{
 			throw new Exception($"The bundle '{projectBundle}' is empty.");
 		}
+
+		// Check correct packages are being used for XR
+		var isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
+		var is2019 = version == BuildVersion.Windows2019 || version == BuildVersion.Android2019;
+
+		if (is2019 && IsNewXRPluginInstalled()) {
+			var name = Enum.GetName(typeof(BuildVersion), version);
+			throw new Exception($"Version '{name}' requires Single Pass which doesn't exist on the new XR packages. Please go to Window > Package Manager and remove them.");
+		}
+
+		// TODO: Report no android SDK?
 
 		// Ensure rebuild
 		buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
@@ -178,8 +208,6 @@ public class CreateAssetBundles
 		var manifestPath = tempBundlePath + ".manifest"; // new .manifest isn't built from ShaderKeywordRewriter
 		var builtBundlePath = tempBundlePath;
 		var fixedBundlePath = "";
-
-		var isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
 		var buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
 
 		AssetBundleBuild[] builds = {
@@ -193,11 +221,11 @@ public class CreateAssetBundles
 		AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(tempDir, builds, buildOptions, buildTarget);
 		if (!manifest)
 		{
-			throw new Exception("The build was unsuccessful for some stupid fucking reason.");
+			throw new Exception("The build was unsuccessful. Check above for possible errors reported by the build pipeline.");
 		}
 
 		// Fix new shader keywords
-		var shaderKeywordsFixed = workingVersion == BuildVersion.Windows2021 || workingVersion == BuildVersion.Android2021;
+		var shaderKeywordsFixed = !is2019;
 		if (shaderKeywordsFixed)
 		{
 			// Run Process
