@@ -83,9 +83,8 @@ Shader "Vivify/CustomObjects/CustomNoteArrow"
                     return 1;
                 }
 
-                // Return some basic shading
-                float lighting = pow(i.localPos.y + 0.8, 4);
-                return float4(lighting, lighting, lighting, 0);
+                // Return a solid color
+                return float4(0.4, 0.4, 0.4, 0);
             }
             ENDCG
         }
