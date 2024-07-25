@@ -49,6 +49,11 @@ Shader "Vivify/Post Processing/ScreenUV"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
+                // Screenspace textures are setup differently in Single Pass (2019) vs Single Pass Instanced (2021).
+                // Single Pass works such that the texture for each eye is one big texture stretching across both of them
+                // Single Pass Instanced works such that the texture for each eye is individual
+                // "i.uv" in a post processing shader will always be 0-1 for each eye.
+                // so this transformation is done so that when sampling textures in Single Pass, the UV is continuous across both eyes
                 float2 uv = UnityStereoTransformScreenSpaceTex(i.uv);
 
                 return float4(uv, 0, 0);
