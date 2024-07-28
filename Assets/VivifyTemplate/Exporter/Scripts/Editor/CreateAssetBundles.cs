@@ -133,12 +133,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			// Alternatively, check for another specific class from the new XR plugins
 			Type xrManagerSettingsType = Type.GetType("UnityEngine.XR.Management.XRManagerSettings, Unity.XR.Management");
-			if (xrManagerSettingsType != null)
-			{
-				return true;
-			}
-
-			return false;
+			return xrManagerSettingsType != null;
 		}
 
 		private struct BuildReport
