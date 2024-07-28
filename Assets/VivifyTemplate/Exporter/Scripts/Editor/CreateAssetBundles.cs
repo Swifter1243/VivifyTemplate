@@ -42,7 +42,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				if (!Enum.TryParse(pref, out BuildVersion ver))
 				{
-					var defaultVersion = BuildVersion.Windows2019;
+					BuildVersion defaultVersion = BuildVersion.Windows2019;
 					PlayerPrefs.SetString("workingVersion", defaultVersion.ToString());
 					return defaultVersion;
 				}
@@ -147,6 +147,42 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			public BuildTarget buildTarget;
 		}
 
+		private static bool FixShaderKeywords(string bundlePath, string expectedOutput)
+		{
+			// Run Process
+			string processPath = Path.Combine(
+				Application.dataPath,
+				@"VivifyTemplate\Exporter\Dependencies\ShaderKeywordRewriter\ShaderKeywordRewriter.exe"
+			);
+			ProcessStartInfo processInfo = new ProcessStartInfo(processPath,  $"\"{bundlePath}\"")
+			{
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				UseShellExecute = false, // Required for redirection
+				CreateNoWindow = true
+			};
+
+			Process process = Process.Start(processInfo);
+			if (process == null)
+			{
+				throw new InvalidOperationException("Shader Keyword Rewriter program was null.");
+			}
+			
+			string output = process.StandardOutput.ReadToEnd();
+			string error = process.StandardError.ReadToEnd();
+					
+			process.WaitForExit();
+				
+			Debug.Log($"ShaderKeywordRewriter: {output}");
+			if (!string.IsNullOrEmpty(error))
+			{
+				Debug.Log($"Error: {error}");
+			}
+			
+			// Check if fixed bundle generated
+			return File.Exists(expectedOutput);
+		}
+
 		private static BuildReport Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
@@ -159,21 +195,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				throw new DirectoryNotFoundException($"The directory '{outputDirectory}' doesn't exist.");
 			}
 
-			var projectBundle = BundleName.ProjectBundle;
+			string projectBundle = BundleName.ProjectBundle;
 
 			// Check bundle isn't empty
-			var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundle);
+			string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundle);
 			if (assetPaths.Length == 0)
 			{
 				throw new Exception($"The bundle '{projectBundle}' is empty.");
 			}
 
 			// Check correct packages are being used for XR
-			var isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
-			var is2019 = version == BuildVersion.Windows2019 || version == BuildVersion.Android2019;
+			bool isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
+			bool is2019 = version == BuildVersion.Windows2019 || version == BuildVersion.Android2019;
 
 			if (is2019 && IsNewXRPluginInstalled()) {
-				var name = Enum.GetName(typeof(BuildVersion), version);
+				string name = Enum.GetName(typeof(BuildVersion), version);
 				throw new Exception($"Version '{name}' requires Single Pass which doesn't exist on the new XR packages. Please go to Window > Package Manager and remove them.");
 			}
 
@@ -196,16 +232,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			// Empty build location directory
-			var tempDir = GetCachePath();
+			string tempDir = GetCachePath();
 			Directory.Delete(tempDir, true);
 			Directory.CreateDirectory(tempDir);
 
 			// Build
-			var tempBundlePath = tempDir + "/" + projectBundle;
-			var manifestPath = tempBundlePath + ".manifest"; // new .manifest isn't built from ShaderKeywordRewriter
-			var builtBundlePath = tempBundlePath;
-			var fixedBundlePath = "";
-			var buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
+			string tempBundlePath = Path.Combine(tempDir, projectBundle);
+			string manifestPath = tempBundlePath + ".manifest"; // new .manifest isn't built from ShaderKeywordRewriter
+			string builtBundlePath = tempBundlePath;
+			string fixedBundlePath = "";
+			BuildTarget buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
 
 			AssetBundleBuild[] builds = {
 				new AssetBundleBuild
@@ -222,21 +258,15 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			// Fix new shader keywords
-			var shaderKeywordsFixed = !is2019;
+			bool shaderKeywordsFixed = !is2019;
 			if (shaderKeywordsFixed)
 			{
-				// Run Process
-				var processPath = Path.Combine(
-					Application.dataPath,
-					"VivifyTemplate/Exporter/Scripts/ShaderKeywordRewriter/ShaderKeywordRewriter.exe"
-				);
-				var processInfo = new ProcessStartInfo(processPath, tempBundlePath);
-				Process.Start(processInfo).WaitForExit();
-
-				// Check if fixed bundle generated
-				if (File.Exists(fixedBundlePath))
+				string expectedOutput = tempBundlePath + "_fixed";
+				bool success = FixShaderKeywords(tempBundlePath, expectedOutput);
+				if (success)
 				{
-					builtBundlePath = fixedBundlePath;
+					fixedBundlePath = expectedOutput;
+					builtBundlePath = expectedOutput;
 				}
 				else
 				{
@@ -245,9 +275,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			// Move into project
-			var fileName = GetBundleFileName(version);
-			var bundleOutput = outputDirectory + "/" + fileName;
-			var manifestOutput = outputDirectory + "/" + fileName + ".manifest";
+			string fileName = GetBundleFileName(version);
+			string bundleOutput = outputDirectory + "/" + fileName;
+			string manifestOutput = outputDirectory + "/" + fileName + ".manifest";
 
 			File.Copy(builtBundlePath, bundleOutput, true);
 			File.Copy(manifestPath, manifestOutput, true);
@@ -273,7 +303,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (outputDirectory == "") return; // window was exited
 
 			// Build Asset Bundle
-			var build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
+			BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
 
 			// Build Asset JSON For Scripting
 			if (ExportAssetInfo)
@@ -290,7 +320,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (outputDirectory == "") return; // window was exited
 
 			// Build Asset Bundle
-			var build = Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019);
+			BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019);
 			Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021);
 
 			if (ExportAssetInfo)
@@ -314,7 +344,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				PlayerPrefs.GetString("bundleDir") == ""
 			)
 			{
-				var assetBundleDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
+				string assetBundleDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
 				PlayerPrefs.SetString("bundleDir", assetBundleDirectory);
 				return assetBundleDirectory;
 			}
