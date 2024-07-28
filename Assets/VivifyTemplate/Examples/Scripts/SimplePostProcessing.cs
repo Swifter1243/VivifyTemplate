@@ -1,29 +1,31 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
-using UnityEngine.Rendering;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 
-[ExecuteInEditMode]
-[RequireComponent(typeof(Camera))]
-public class SimplePostProcessing : MonoBehaviour
+namespace VivifyTemplate.Examples.Scripts
 {
-    [SerializeField]
-    public Material _postProcessingMaterial;
+    [ExecuteInEditMode]
+    [RequireComponent(typeof(Camera))]
+    public class SimplePostProcessing : MonoBehaviour
+    {
+        [FormerlySerializedAs("_postProcessingMaterial")] [SerializeField]
+        public Material postProcessingMaterial;
 
-    [SerializeField]
-    public int _pass;
-    private void OnRenderImage(RenderTexture src, RenderTexture dst) {
-        if(_postProcessingMaterial != null) {
-            Graphics.Blit(src, dst, _postProcessingMaterial,
-                                    (_pass >= 0) ? _pass : -1);
-        } else {
-            Graphics.Blit(src, dst);
+        [FormerlySerializedAs("_pass")] [SerializeField]
+        public int pass;
+        private void OnRenderImage(RenderTexture src, RenderTexture dst) {
+            if(postProcessingMaterial != null) {
+                Graphics.Blit(src, dst, postProcessingMaterial,
+                    (pass >= 0) ? pass : -1);
+            } else {
+                Graphics.Blit(src, dst);
+            }
         }
-    }
 
-    private void OnEnable() {
-        Camera camera = GetComponent<Camera>();
-        if (camera != null) {
-            camera.depthTextureMode |= DepthTextureMode.Depth | DepthTextureMode.MotionVectors | DepthTextureMode.DepthNormals;
+        private void OnEnable() {
+            var thisCamera = GetComponent<Camera>();
+            if (thisCamera != null) {
+                thisCamera.depthTextureMode |= DepthTextureMode.Depth | DepthTextureMode.MotionVectors | DepthTextureMode.DepthNormals;
+            }
         }
     }
 }

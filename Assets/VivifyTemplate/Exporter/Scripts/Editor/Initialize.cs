@@ -1,19 +1,20 @@
+using System;
 using UnityEditor;
 using UnityEngine;
-using System.IO;
-using System;
-using UnityEngine.XR;
 
-public class Initialize
+namespace VivifyTemplate.Exporter.Scripts.Editor
 {
-	[MenuItem("Vivify/Setup Project")]
-    [Obsolete]
-    static void SetupProject()
+	public static class Initialize
 	{
-        PlayerSettings.colorSpace = ColorSpace.Linear;
-        PlayerSettings.virtualRealitySupported = true;
-        Debug.Log("Project set up!");
-        Debug.Log("If you plan to build for android, install the android module in build settings.");
-        Debug.Log("Also you can only install it if you have a unity version installed through the hub for some reason");
+		[MenuItem("Vivify/Setup Project")]
+		[Obsolete]
+		private static void SetupProject()
+		{
+			PlayerSettings.colorSpace = ColorSpace.Linear;
+			PlayerSettings.virtualRealitySupported = true;
+			Debug.Log("Project set up!");
+			Debug.Log("If you plan to build for android, install the android module in build settings.");
+			Debug.Log("Also you can only install it if you have a unity version installed through the hub for some reason");
+		}
 	}
 }
