@@ -1,13 +1,6 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
-using System.IO;
-using System;
-using UnityEngine.XR;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-using UnityEditor.Build.Content;
 
 public class PackageExport
 {
@@ -31,8 +24,7 @@ public class PackageExport
 
     static void ExportAll()
     {
-        string[] assetPaths = new string[]
-        {
+        string[] assetPaths = {
             "Assets/VivifyTemplate"
         };
         ExportPackage(assetPaths, "VivifyTemplate-All");
@@ -40,8 +32,7 @@ public class PackageExport
 
     static void ExportExporter()
     {
-        string[] assetPaths = new string[]
-        {
+        string[] assetPaths = {
             "Assets/VivifyTemplate/Exporter",
         };
         ExportPackage(assetPaths, "VivifyTemplate-Exporter");
@@ -49,8 +40,7 @@ public class PackageExport
 
     static void ExportExamples()
     {
-        string[] assetPaths = new string[]
-        {
+        string[] assetPaths = {
             "Assets/VivifyTemplate/Examples",
             "Assets/VivifyTemplate/CGIncludes",
         };
@@ -59,8 +49,7 @@ public class PackageExport
 
     static void ExportCgIncludes()
     {
-        string[] assetPaths = new string[]
-        {
+        string[] assetPaths = {
             "Assets/VivifyTemplate/CGIncludes",
         };
         ExportPackage(assetPaths, "VivifyTemplate-CGIncludes");

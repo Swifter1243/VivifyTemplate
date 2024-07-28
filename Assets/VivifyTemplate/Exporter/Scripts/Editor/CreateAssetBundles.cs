@@ -1,39 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using System.IO;
-using System;
-using UnityEngine.XR;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-using UnityEditor.Build.Content;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class CreateAssetBundles
 	{
-		private enum BuildVersion
-		{
-			Windows2019,
-			Windows2021,
-			Android2019,
-			Android2021
-		}
-
-		private static string GetBundleFileName(BuildVersion version)
-		{
-			switch (version)
-			{
-				case BuildVersion.Windows2019: return "bundle_windows2019";
-				case BuildVersion.Windows2021: return "bundle_windows2021";
-				case BuildVersion.Android2019: return "bundle_android2019";
-				case BuildVersion.Android2021: return "bundle_android2021";
-			}
-
-			return "";
-		}
-
 		private static BuildVersion WorkingVersion
 		{
 			get
@@ -140,11 +118,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			public string tempBundlePath;
 			public string fixedBundlePath;
-			public string bundleOutput;
-			public string manifestOutput;
+			public string outputBundlePath;
 			public bool shaderKeywordsFixed;
 			public bool isAndroid;
 			public BuildTarget buildTarget;
+			public BuildVersion buildVersion;
 		}
 
 		private static bool FixShaderKeywords(string bundlePath, string expectedOutput)
@@ -186,7 +164,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static BuildReport Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
-			BuildVersion version
+			BuildVersion buildVersion
 		)
 		{
 			// Check output directory exists
@@ -195,21 +173,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				throw new DirectoryNotFoundException($"The directory '{outputDirectory}' doesn't exist.");
 			}
 
-			string projectBundle = BundleName.ProjectBundle;
+			string projectBundleName = BundleName.ProjectBundle;
 
 			// Check bundle isn't empty
-			string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundle);
+			string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundleName);
 			if (assetPaths.Length == 0)
 			{
-				throw new Exception($"The bundle '{projectBundle}' is empty.");
+				throw new Exception($"The bundle '{projectBundleName}' is empty.");
 			}
 
 			// Check correct packages are being used for XR
-			bool isAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021;
-			bool is2019 = version == BuildVersion.Windows2019 || version == BuildVersion.Android2019;
+			bool isAndroid = buildVersion == BuildVersion.Android2019 || buildVersion == BuildVersion.Android2021;
+			bool is2019 = buildVersion == BuildVersion.Windows2019 || buildVersion == BuildVersion.Android2019;
 
 			if (is2019 && IsNewXRPluginInstalled()) {
-				string name = Enum.GetName(typeof(BuildVersion), version);
+				string name = Enum.GetName(typeof(BuildVersion), buildVersion);
 				throw new Exception($"Version '{name}' requires Single Pass which doesn't exist on the new XR packages. Please go to Window > Package Manager and remove them.");
 			}
 
@@ -219,7 +197,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
 
 			// Set Single Pass Mode
-			switch (version)
+			switch (buildVersion)
 			{
 				case BuildVersion.Windows2019:
 				case BuildVersion.Android2019:
@@ -229,6 +207,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				case BuildVersion.Android2021:
 					PlayerSettings.stereoRenderingPath = StereoRenderingPath.Instancing;
 					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(buildVersion), buildVersion, null);
 			}
 
 			// Empty build location directory
@@ -237,8 +217,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Directory.CreateDirectory(tempDir);
 
 			// Build
-			string tempBundlePath = Path.Combine(tempDir, projectBundle);
-			string manifestPath = tempBundlePath + ".manifest"; // new .manifest isn't built from ShaderKeywordRewriter
+			string tempBundlePath = Path.Combine(tempDir, projectBundleName);
 			string builtBundlePath = tempBundlePath;
 			string fixedBundlePath = "";
 			BuildTarget buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
@@ -246,7 +225,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			AssetBundleBuild[] builds = {
 				new AssetBundleBuild
 				{
-					assetBundleName = projectBundle,
+					assetBundleName = projectBundleName,
 					assetNames = assetPaths
 				}
 			};
@@ -275,63 +254,79 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			// Move into project
-			string fileName = GetBundleFileName(version);
-			string bundleOutput = outputDirectory + "/" + fileName;
-			string manifestOutput = outputDirectory + "/" + fileName + ".manifest";
+			string fileName = VersionTools.GetBundleFileName(buildVersion);
+			string outputBundlePath = outputDirectory + "/" + fileName;
 
-			File.Copy(builtBundlePath, bundleOutput, true);
-			File.Copy(manifestPath, manifestOutput, true);
-			Debug.Log($"Successfully built bundle '{projectBundle}' to '{bundleOutput}'.");
+			File.Copy(builtBundlePath, outputBundlePath, true);
+			Debug.Log($"Successfully built bundle '{projectBundleName}' to '{outputBundlePath}'.");
 
 			return new BuildReport
 			{
 				tempBundlePath = tempBundlePath,
 				fixedBundlePath = fixedBundlePath,
-				bundleOutput = bundleOutput,
-				manifestOutput = manifestOutput,
+				outputBundlePath = outputBundlePath,
 				shaderKeywordsFixed = shaderKeywordsFixed,
 				isAndroid = isAndroid,
-				buildTarget = buildTarget
+				buildTarget = buildTarget,
+				buildVersion = buildVersion
 			};
 		}
 
 		[MenuItem("Vivify/Build/Build Working Version Quick _F5")]
-		private static void QuickBuild()
+		private static async void QuickBuild()
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
 			if (outputDirectory == "") return; // window was exited
 
-			// Build Asset Bundle
-			BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
-
-			// Build Asset JSON For Scripting
 			if (ExportAssetInfo)
 			{
-				GenerateAssetJson.Run(build.tempBundlePath, outputDirectory);
+				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
+				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
+				string versionPrefix = VersionTools.GetVersionPrefix(WorkingVersion);
+				uint crc = await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
+				assetInfo.bundleCRCs[versionPrefix] = crc;
+				GenerateAssetJson.Run(build.outputBundlePath, outputDirectory, assetInfo);
+			}
+			else
+			{
+				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
 			}
 		}
 
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
-		private static void FinalBuild()
+		private static async void FinalBuild()
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
 			if (outputDirectory == "") return; // window was exited
 
-			// Build Asset Bundle
-			BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019);
-			Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021);
-
-			if (ExportAssetInfo)
+			List<BuildReport> builds = new List<BuildReport>
 			{
-				GenerateAssetJson.Run(build.tempBundlePath, outputDirectory);
-			}
+				// Build Asset Bundle
+				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019),
+				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021)
+			};
 
 			if (BuildAndroidVersions)
 			{
-				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019);
-				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021);
+				builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019));
+				builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021));
+			}
+
+			if (ExportAssetInfo)
+			{
+				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
+				
+				IEnumerable<Task> tasks = builds.Select(async build =>
+				{
+					uint crc = await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
+					string versionPrefix = VersionTools.GetVersionPrefix(build.buildVersion);
+					assetInfo.bundleCRCs[versionPrefix] = crc;
+				});
+				await Task.WhenAll(tasks);
+				
+				GenerateAssetJson.Run(builds[0].outputBundlePath, outputDirectory, assetInfo);
 			}
 
 			Debug.Log("All builds done!");

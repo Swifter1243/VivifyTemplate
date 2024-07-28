@@ -1,24 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.Playables;
-using Newtonsoft.Json;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class GenerateAssetJson
 	{
-		public static void Run(string bundlePath, string outputPath)
+		public static void Run(string bundlePath, string outputPath, AssetInfo assetInfo)
 		{
 			var bundle = AssetBundle.LoadFromFile(bundlePath);
 			var names = bundle.GetAllAssetNames();
 
 			var materialNames = names.Where(x => x.Contains(".mat"));
 			var prefabNames = names.Where(x => x.Contains(".prefab"));
-
-			var assetInfo = new AssetInfo();
 
 			foreach (var name in materialNames)
 			{
@@ -92,18 +90,19 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			File.WriteAllText(outputPath + "/assetinfo.json", json);
 		}
 
-		[System.Serializable]
+		[Serializable]
 		public class AssetInfo
 		{
 			public Dictionary<string, MaterialInfo> materials = new Dictionary<string, MaterialInfo>();
 			public Dictionary<string, string> prefabs = new Dictionary<string, string>();
+			public Dictionary<string, uint> bundleCRCs = new Dictionary<string, uint>();
 		}
 
-		[System.Serializable]
+		[Serializable]
 		public class MaterialInfo
 		{
 			public string path;
-			public Dictionary<string, Dictionary<string, string>> properties = new Dictionary<string, Dictionary<string, string>> { };
+			public Dictionary<string, Dictionary<string, string>> properties = new Dictionary<string, Dictionary<string, string>>();
 		}
 	}
 }
