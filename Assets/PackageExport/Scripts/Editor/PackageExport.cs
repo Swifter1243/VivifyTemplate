@@ -26,7 +26,7 @@ public class PackageExport
         ExportAll();
         ExportExporter();
         ExportExamples();
-        ExportCGIncludes();
+        ExportCgIncludes();
     }
 
     static void ExportAll()
@@ -57,7 +57,7 @@ public class PackageExport
         ExportPackage(assetPaths, "VivifyTemplate-Examples");
     }
 
-    static void ExportCGIncludes()
+    static void ExportCgIncludes()
     {
         string[] assetPaths = new string[]
         {

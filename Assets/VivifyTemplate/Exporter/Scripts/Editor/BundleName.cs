@@ -5,9 +5,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
     public class BundleName : EditorWindow
     {
-        private string inputText;
+        private string _inputText;
 
-        public static string projectBundle
+        public static string ProjectBundle
         {
             get => PlayerPrefs.GetString("projectBundle", "bundle");
             set => PlayerPrefs.SetString("projectBundle", value);
@@ -15,21 +15,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
         private void OnEnable()
         {
-            inputText = projectBundle;
+            _inputText = ProjectBundle;
         }
 
         private void OnGUI()
         {
             EditorGUILayout.Space(20);
 
-            inputText = EditorGUILayout.TextField("Bundle name:", inputText).Trim();
+            _inputText = EditorGUILayout.TextField("Bundle name:", _inputText).Trim();
 
             EditorGUILayout.Space(10);
 
             if (GUILayout.Button("Apply"))
             {
                 Close();
-                projectBundle = inputText;
+                ProjectBundle = _inputText;
             }
         }
 

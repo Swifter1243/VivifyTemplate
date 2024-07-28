@@ -34,7 +34,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return "";
 		}
 
-		private static BuildVersion workingVersion
+		private static BuildVersion WorkingVersion
 		{
 			get
 			{
@@ -52,13 +52,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			set => PlayerPrefs.SetString("workingVersion", value.ToString());
 		}
 
-		private static bool exportAssetInfo
+		private static bool ExportAssetInfo
 		{
 			get => PlayerPrefs.GetInt("exportAssetInfo", 1) == 1;
 			set => PlayerPrefs.SetInt("exportAssetInfo", value ? 1 : 0);
 		}
 
-		private static bool buildAndroidVersions
+		private static bool BuildAndroidVersions
 		{
 			get => PlayerPrefs.GetInt("buildAndroidVersions", 1) == 1;
 			set => PlayerPrefs.SetInt("buildAndroidVersions", value ? 1 : 0);
@@ -68,52 +68,52 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		[MenuItem("Vivify/Set Working Version/2019")]
 		private static void SetWorkingVersion_2019()
 		{
-			workingVersion = BuildVersion.Windows2019;
+			WorkingVersion = BuildVersion.Windows2019;
 		}
 		[MenuItem("Vivify/Set Working Version/2019", true)]
-		private static bool ValidateWorkingVersion_2019() { return workingVersion != BuildVersion.Windows2019; }
+		private static bool ValidateWorkingVersion_2019() { return WorkingVersion != BuildVersion.Windows2019; }
 
 		[MenuItem("Vivify/Set Working Version/2021")]
 		private static void SetWorkingVersion_2021()
 		{
-			workingVersion = BuildVersion.Windows2021;
+			WorkingVersion = BuildVersion.Windows2021;
 		}
 		[MenuItem("Vivify/Set Working Version/2021", true)]
-		private static bool ValidateWorkingVersion_2021() { return workingVersion != BuildVersion.Windows2021; }
+		private static bool ValidateWorkingVersion_2021() { return WorkingVersion != BuildVersion.Windows2021; }
 
 		// Export Asset Info
 		[MenuItem("Vivify/Export Asset Info/True")]
 		private static void ExportAssetInfo_True()
 		{
-			exportAssetInfo = true;
+			ExportAssetInfo = true;
 		}
 		[MenuItem("Vivify/Export Asset Info/True", true)]
-		private static bool ValidateExportAssetInfo_True() { return !exportAssetInfo; }
+		private static bool ValidateExportAssetInfo_True() { return !ExportAssetInfo; }
 
 		[MenuItem("Vivify/Export Asset Info/False")]
 		private static void ExportAssetInfo_False()
 		{
-			exportAssetInfo = false;
+			ExportAssetInfo = false;
 		}
 		[MenuItem("Vivify/Export Asset Info/False", true)]
-		private static bool ValidateExportAssetInfo_False() { return exportAssetInfo; }
+		private static bool ValidateExportAssetInfo_False() { return ExportAssetInfo; }
 
 		// Build Android Versions
 		[MenuItem("Vivify/Build/Build Android Versions/True")]
 		private static void BuildAndroidVersions_True()
 		{
-			buildAndroidVersions = true;
+			BuildAndroidVersions = true;
 		}
 		[MenuItem("Vivify/Build/Build Android Versions/True", true)]
-		private static bool ValidateBuildAndroidVersions_True() { return !buildAndroidVersions; }
+		private static bool ValidateBuildAndroidVersions_True() { return !BuildAndroidVersions; }
 
 		[MenuItem("Vivify/Build/Build Android Versions/False")]
 		private static void BuildAndroidVersions_False()
 		{
-			buildAndroidVersions = false;
+			BuildAndroidVersions = false;
 		}
 		[MenuItem("Vivify/Build/Build Android Versions/False", true)]
-		private static bool ValidateBuildAndroidVersions_False() { return buildAndroidVersions; }
+		private static bool ValidateBuildAndroidVersions_False() { return BuildAndroidVersions; }
 
 		private static string GetCachePath()
 		{
@@ -164,7 +164,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				throw new DirectoryNotFoundException($"The directory '{outputDirectory}' doesn't exist.");
 			}
 
-			var projectBundle = BundleName.projectBundle;
+			var projectBundle = BundleName.ProjectBundle;
 
 			// Check bundle isn't empty
 			var assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundle);
@@ -278,10 +278,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (outputDirectory == "") return; // window was exited
 
 			// Build Asset Bundle
-			var build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, workingVersion);
+			var build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
 
 			// Build Asset JSON For Scripting
-			if (exportAssetInfo)
+			if (ExportAssetInfo)
 			{
 				GenerateAssetJson.Run(build.tempBundlePath, outputDirectory);
 			}
@@ -298,12 +298,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			var build = Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019);
 			Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021);
 
-			if (exportAssetInfo)
+			if (ExportAssetInfo)
 			{
 				GenerateAssetJson.Run(build.tempBundlePath, outputDirectory);
 			}
 
-			if (buildAndroidVersions)
+			if (BuildAndroidVersions)
 			{
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019);
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021);
