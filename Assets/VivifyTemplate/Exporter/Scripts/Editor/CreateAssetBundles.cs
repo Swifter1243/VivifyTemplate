@@ -240,7 +240,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			bool shaderKeywordsFixed = !is2019;
 			if (shaderKeywordsFixed)
 			{
-				string expectedOutput = Path.ChangeExtension( tempBundlePath, ".mod.avatar");
+				string expectedOutput = Path.ChangeExtension(tempBundlePath, ".mod.avatar");
 				bool success = FixShaderKeywords(tempBundlePath, expectedOutput);
 				if (success)
 				{
