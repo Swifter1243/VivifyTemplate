@@ -154,7 +154,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Debug.Log($"ShaderKeywordRewriter: {output}");
 			if (!string.IsNullOrEmpty(error))
 			{
-				Debug.Log($"Error: {error}");
+				throw new Exception($"Error from ShaderKeywordsRewriter: {error}");
 			}
 			
 			// Check if fixed bundle generated
@@ -240,7 +240,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			bool shaderKeywordsFixed = !is2019;
 			if (shaderKeywordsFixed)
 			{
-				string expectedOutput = tempBundlePath + "_fixed";
+				string expectedOutput = Path.ChangeExtension( tempBundlePath, ".mod.avatar");
 				bool success = FixShaderKeywords(tempBundlePath, expectedOutput);
 				if (success)
 				{
