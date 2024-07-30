@@ -104,7 +104,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return File.Exists(expectedOutput);
 		}
 
-		private static CreateAssetBundles.BuildReport Build(
+		private static BuildReport Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion
@@ -229,7 +229,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static async void BuildSingleUncompressed(BuildVersion version)
 		{
 			// Get Directory
-			string outputDirectory = GetOutputDirectory();
+			string outputDirectory = OutputDirectory.Get();
 			
 			Debug.Log($"Building bundle '{BundleName.ProjectBundle}' for version '{version.ToString()}'");
 			await AsyncTools.AwaitNextFrame();
@@ -289,7 +289,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static async void BuildAllCompressed()
 		{
 			// Get Directory
-			string outputDirectory = GetOutputDirectory();
+			string outputDirectory = OutputDirectory.Get();
 			
 			Debug.Log($"Building Windows versions for bundle '{BundleName.ProjectBundle}' compressed.");
 			await AsyncTools.AwaitNextFrame();
@@ -336,28 +336,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			Debug.Log("All builds done!");
-		}
-
-		private static string GetOutputDirectory()
-		{
-			if (PlayerPrefs.HasKey("bundleDir"))
-			{
-				return PlayerPrefs.GetString("bundleDir");
-			}
-			
-			string outputDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
-			if (outputDirectory == "")
-			{
-				throw new Exception("User closed the directory window.");
-			}
-			PlayerPrefs.SetString("bundleDir", outputDirectory);
-			return outputDirectory;
-		}
-
-		[MenuItem("Vivify/Clear Asset Bundle Location")]
-		private static void ClearAssetBundleLocation()
-		{
-			PlayerPrefs.DeleteKey("bundleDir");
 		}
 	}
 }
