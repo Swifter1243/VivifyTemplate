@@ -12,6 +12,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class CreateAssetBundles
 	{
+		private static SimpleTimer timer = new SimpleTimer();
+		
 		private static string GetCachePath()
 		{
 			string path = Path.Combine(Application.temporaryCachePath, "bundleBuilds");
@@ -191,35 +193,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			};
 		}
 
-		private static async void BuildSingleUncompressed(BuildVersion version)
-		{
-			// Get Directory
-			string outputDirectory = OutputDirectory.Get();
-			
-			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{version.ToString()}'");
-			await AsyncTools.AwaitNextFrame();
-
-			if (ExportAssetInfo.Value)
-			{
-				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
-				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
-				
-				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' at '{outputDirectory}'");
-				await AsyncTools.AwaitNextFrame();
-				
-				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
-				bundleInfo.bundleCRCs[versionPrefix] = crc;
-				GenerateBundleInfo.Run(build.outputBundlePath, outputDirectory, bundleInfo);
-			}
-			else
-			{
-				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
-			}
-			
-			Debug.Log("Build done!");
-		}
-
 		[MenuItem("Vivify/Build/Build Windows 2019 Uncompressed")]
 		private static void BuildWindows2019Uncompressed()
 		{
@@ -249,6 +222,36 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			BuildSingleUncompressed(WorkingVersion.Value);
 		}
+		
+		private static async void BuildSingleUncompressed(BuildVersion version)
+		{
+			// Get Directory
+			string outputDirectory = OutputDirectory.Get();
+			
+			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{version.ToString()}'");
+			timer.Mark();
+			await AsyncTools.AwaitNextFrame();
+
+			if (ExportAssetInfo.Value)
+			{
+				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
+				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				
+				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' at '{outputDirectory}'");
+				await AsyncTools.AwaitNextFrame();
+				
+				string versionPrefix = VersionTools.GetVersionPrefix(version);
+				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
+				bundleInfo.bundleCRCs[versionPrefix] = crc;
+				GenerateBundleInfo.Run(build.outputBundlePath, outputDirectory, bundleInfo);
+			}
+			else
+			{
+				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+			}
+			
+			Debug.Log($"Build done in {timer.Mark()}s!");
+		}
 
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
 		private static async void BuildAllCompressed()
@@ -257,6 +260,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string outputDirectory = OutputDirectory.Get();
 			
 			Debug.Log($"Building Windows versions for bundle '{ProjectBundle.Value}' compressed.");
+			timer.Mark();
 			await AsyncTools.AwaitNextFrame();
 
 			List<BuildReport> builds = new List<BuildReport>
@@ -300,7 +304,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				GenerateBundleInfo.Run(builds[0].outputBundlePath, outputDirectory, bundleInfo);
 			}
 
-			Debug.Log("All builds done!");
+			Debug.Log($"All builds done in {timer.Mark()}s!");
 		}
 	}
 }
