@@ -13,13 +13,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 	public static class CreateAssetBundles
 	{
 		private static readonly SimpleTimer Timer = new SimpleTimer();
-		
-		private static string GetCachePath()
-		{
-			string path = Path.Combine(Application.temporaryCachePath, "bundleBuilds");
-			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-			return path;
-		}
 
 		private static bool IsNewXRPluginInstalled()
 		{
@@ -35,7 +28,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return xrManagerSettingsType != null;
 		}
 
-		private static bool FixShaderKeywords(string bundlePath, string expectedOutput)
+		private static async Task<bool> FixShaderKeywords(string bundlePath, string expectedOutput)
 		{
 			// Run Process
 			string processPath = Path.Combine(
@@ -50,16 +43,22 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				CreateNoWindow = true
 			};
 
-			Process process = Process.Start(processInfo);
-			if (process == null)
+			string output = null;
+			string error = null;
+
+			await Task.Run(() =>
 			{
-				throw new InvalidOperationException("Shader Keyword Rewriter program was null.");
-			}
+				Process process = Process.Start(processInfo);
+				if (process == null)
+				{
+					throw new InvalidOperationException("Shader Keyword Rewriter program was null.");
+				}
 			
-			string output = process.StandardOutput.ReadToEnd();
-			string error = process.StandardError.ReadToEnd();
+				output = process.StandardOutput.ReadToEnd();
+				error = process.StandardError.ReadToEnd();
 					
-			process.WaitForExit();
+				process.WaitForExit();
+			});
 				
 			Debug.Log($"ShaderKeywordRewriter: {output}");
 			if (!string.IsNullOrEmpty(error))
@@ -71,12 +70,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return File.Exists(expectedOutput);
 		}
 
-		private static BuildReport Build(
+		private static async Task<BuildReport> Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion
 		)
 		{
+			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{buildVersion.ToString()}'");
+			
 			// Check output directory exists
 			if (!Directory.Exists(outputDirectory))
 			{
@@ -122,7 +123,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			// Empty build location directory
-			string tempDir = GetCachePath();
+			string tempDir = VersionTools.GetTempDirectory(buildVersion);
 			Directory.Delete(tempDir, true);
 			Directory.CreateDirectory(tempDir);
 
@@ -153,7 +154,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				Debug.Log("2021 version detected, attempting to rebuild shader keywords...");
 				
 				string expectedOutput = Path.ChangeExtension(tempBundlePath, ".mod.avatar");
-				bool success = FixShaderKeywords(tempBundlePath, expectedOutput);
+				bool success = await FixShaderKeywords(tempBundlePath, expectedOutput);
 				if (success)
 				{
 					fixedBundlePath = expectedOutput;
@@ -225,21 +226,15 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		
 		private static async void BuildSingleUncompressed(BuildVersion version)
 		{
+			Timer.Mark();
+			
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
-			
-			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{version.ToString()}'");
-			Timer.Mark();
-			await AsyncTools.AwaitNextFrame();
 
 			if (ExportAssetInfo.Value)
 			{
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
-				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
-				
-				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' at '{outputDirectory}'");
-				await AsyncTools.AwaitNextFrame();
-				
+				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 				bundleInfo.bundleCRCs[versionPrefix] = crc;
@@ -247,7 +242,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 			else
 			{
-				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 			}
 			
 			Debug.Log($"Build done in {Timer.Mark()}s!");
@@ -256,41 +251,36 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
 		private static async void BuildAllCompressed()
 		{
+			Timer.Mark();
+			
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
-			
-			Debug.Log($"Building Windows versions for bundle '{ProjectBundle.Value}' compressed.");
-			Timer.Mark();
-			await AsyncTools.AwaitNextFrame();
 
-			List<BuildReport> builds = new List<BuildReport>
+			List<Task<BuildReport>> windowsBuilds = new List<Task<BuildReport>>()
 			{
-				// Build Asset Bundle
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019),
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021)
 			};
-
-			if (BuildAndroidVersion.Value)
+			List<Task<BuildReport>> androidBuilds = new List<Task<BuildReport>>()
 			{
-				Debug.Log($"Building Android versions for bundle '{ProjectBundle.Value}' compressed.");
-				await AsyncTools.AwaitNextFrame();
-				
-				try
-				{
-					builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019));
-					builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021));
-				}
-				catch (Exception e)
-				{
-					Debug.LogError($"Error trying to build for Android: {e}");
-				}
+				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019),
+				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021)
+			};
+			
+			List<BuildReport> builds = new List<BuildReport>();
+			builds.AddRange(await Task.WhenAll(windowsBuilds));
+
+			try
+			{
+				builds.AddRange(await Task.WhenAll(androidBuilds));
+			}
+			catch (Exception e)
+			{
+				Debug.LogError($"Error trying to build for Android: {e}");
 			}
 
 			if (ExportAssetInfo.Value)
 			{
-				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' at '{outputDirectory}'");
-				await AsyncTools.AwaitNextFrame();
-				
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				
 				IEnumerable<Task> tasks = builds.Select(async build =>
