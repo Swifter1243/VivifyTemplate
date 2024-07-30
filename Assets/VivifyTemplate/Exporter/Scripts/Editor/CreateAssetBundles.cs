@@ -81,7 +81,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				throw new DirectoryNotFoundException($"The directory '{outputDirectory}' doesn't exist.");
 			}
 
-			string projectBundleName = BundleName.ProjectBundle;
+			string projectBundleName = ProjectBundle.Value;
 
 			// Check bundle isn't empty
 			string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(projectBundleName);
@@ -196,7 +196,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
 			
-			Debug.Log($"Building bundle '{BundleName.ProjectBundle}' for version '{version.ToString()}'");
+			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{version.ToString()}'");
 			await AsyncTools.AwaitNextFrame();
 
 			if (ExportAssetInfo.Value)
@@ -204,7 +204,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				
-				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
+				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
 				
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
@@ -256,7 +256,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
 			
-			Debug.Log($"Building Windows versions for bundle '{BundleName.ProjectBundle}' compressed.");
+			Debug.Log($"Building Windows versions for bundle '{ProjectBundle.Value}' compressed.");
 			await AsyncTools.AwaitNextFrame();
 
 			List<BuildReport> builds = new List<BuildReport>
@@ -268,7 +268,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (BuildAndroidVersion.Value)
 			{
-				Debug.Log($"Building Android versions for bundle '{BundleName.ProjectBundle}' compressed.");
+				Debug.Log($"Building Android versions for bundle '{ProjectBundle.Value}' compressed.");
 				await AsyncTools.AwaitNextFrame();
 				
 				try
@@ -284,7 +284,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ExportAssetInfo.Value)
 			{
-				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
+				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
 				
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();

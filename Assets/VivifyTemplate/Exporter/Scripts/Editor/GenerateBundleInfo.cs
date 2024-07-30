@@ -103,7 +103,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string json = JsonConvert.SerializeObject(bundleInfo);
 			string assetInfoPath = Path.Combine(outputPath, BUNDLE_INFO_FILENAME);
 			File.WriteAllText(assetInfoPath, json);
-			Debug.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' to '{assetInfoPath}'");
+			Debug.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' to '{assetInfoPath}'");
 		}
 
 		[Serializable]

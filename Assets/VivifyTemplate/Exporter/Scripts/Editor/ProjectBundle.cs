@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
-    public class BundleName : EditorWindow
+    public class ProjectBundle : EditorWindow
     {
         private string _inputText;
 
-        public static string ProjectBundle
+        public static string Value
         {
             get => PlayerPrefs.GetString("projectBundle", "bundle");
             set => PlayerPrefs.SetString("projectBundle", value);
@@ -15,7 +15,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
         private void OnEnable()
         {
-            _inputText = ProjectBundle;
+            _inputText = Value;
         }
 
         private void OnGUI()
@@ -29,14 +29,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             if (GUILayout.Button("Apply"))
             {
                 Close();
-                ProjectBundle = _inputText;
+                Value = _inputText;
             }
         }
 
         [MenuItem("Vivify/Set Bundle Name")]
         private static void CreatePopup()
         {
-            BundleName window = CreateInstance<BundleName>();
+            ProjectBundle window = CreateInstance<ProjectBundle>();
             window.minSize = new Vector2(400, 80);
             window.maxSize = window.minSize;
             window.ShowUtility();
