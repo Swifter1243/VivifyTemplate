@@ -286,7 +286,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
-			if (outputDirectory == "") return; // window was exited
 
 			if (ExportAssetInfo)
 			{
@@ -340,7 +339,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
-			if (outputDirectory == "") return; // window was exited
 
 			List<BuildReport> builds = new List<BuildReport>
 			{
@@ -382,17 +380,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		private static string GetOutputDirectory()
 		{
-			if (
-				!PlayerPrefs.HasKey("bundleDir") ||
-				PlayerPrefs.GetString("bundleDir") == ""
-			)
+			if (PlayerPrefs.HasKey("bundleDir"))
 			{
-				string assetBundleDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
-				PlayerPrefs.SetString("bundleDir", assetBundleDirectory);
-				return assetBundleDirectory;
+				return PlayerPrefs.GetString("bundleDir");
 			}
-
-			return PlayerPrefs.GetString("bundleDir");
+			
+			string outputDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
+			if (outputDirectory == "")
+			{
+				throw new Exception("User closed the directory window.");
+			}
+			PlayerPrefs.SetString("bundleDir", outputDirectory);
+			return outputDirectory;
 		}
 
 		[MenuItem("Vivify/Clear Asset Bundle Location")]
