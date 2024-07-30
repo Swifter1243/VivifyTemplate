@@ -120,6 +120,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			public string fixedBundlePath;
 			public string outputBundlePath;
 			public bool shaderKeywordsFixed;
+			public uint? crc;
 			public bool isAndroid;
 			public BuildTarget buildTarget;
 			public BuildVersion buildVersion;
@@ -259,6 +260,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			File.Copy(builtBundlePath, outputBundlePath, true);
 			Debug.Log($"Successfully built bundle '{projectBundleName}' to '{outputBundlePath}'.");
+			
+			// Get CRC if shader keywords not fixed
+			uint? crc = null;
+			if (!shaderKeywordsFixed)
+			{
+				BuildPipeline.GetCRCForAssetBundle(builtBundlePath, out uint crcOut);
+				crc = crcOut;
+			}
 
 			return new BuildReport
 			{
@@ -266,6 +275,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				fixedBundlePath = fixedBundlePath,
 				outputBundlePath = outputBundlePath,
 				shaderKeywordsFixed = shaderKeywordsFixed,
+				crc = crc,
 				isAndroid = isAndroid,
 				buildTarget = buildTarget,
 				buildVersion = buildVersion
@@ -284,7 +294,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
 				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
 				string versionPrefix = VersionTools.GetVersionPrefix(WorkingVersion);
-				uint crc = await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
+				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 				assetInfo.bundleCRCs[versionPrefix] = crc;
 				GenerateAssetJson.Run(build.outputBundlePath, outputDirectory, assetInfo);
 			}
@@ -292,6 +302,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			{
 				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
 			}
+			
+			Debug.Log("Build done!");
 		}
 
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
@@ -320,7 +332,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				
 				IEnumerable<Task> tasks = builds.Select(async build =>
 				{
-					uint crc = await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
+					uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 					string versionPrefix = VersionTools.GetVersionPrefix(build.buildVersion);
 					assetInfo.bundleCRCs[versionPrefix] = crc;
 				});
