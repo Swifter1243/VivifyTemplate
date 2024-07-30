@@ -12,36 +12,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class CreateAssetBundles
 	{
-		private static bool ExportAssetInfo
-		{
-			get => PlayerPrefs.GetInt("exportAssetInfo", 1) == 1;
-			set => PlayerPrefs.SetInt("exportAssetInfo", value ? 1 : 0);
-		}
-
 		private static bool BuildAndroidVersions
 		{
 			get => PlayerPrefs.GetInt("buildAndroidVersions", 1) == 1;
 			set => PlayerPrefs.SetInt("buildAndroidVersions", value ? 1 : 0);
 		}
-
-		// Set Working Version
-
-		// Export Asset Info
-		[MenuItem("Vivify/Settings/Export Asset Info/True")]
-		private static void ExportAssetInfo_True()
-		{
-			ExportAssetInfo = true;
-		}
-		[MenuItem("Vivify/Settings/Export Asset Info/True", true)]
-		private static bool ValidateExportAssetInfo_True() { return !ExportAssetInfo; }
-
-		[MenuItem("Vivify/Settings/Export Asset Info/False")]
-		private static void ExportAssetInfo_False()
-		{
-			ExportAssetInfo = false;
-		}
-		[MenuItem("Vivify/Settings/Export Asset Info/False", true)]
-		private static bool ValidateExportAssetInfo_False() { return ExportAssetInfo; }
 
 		// Build Android Versions
 		[MenuItem("Vivify/Settings/Build Android Versions/True")]
@@ -259,7 +234,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Debug.Log($"Building bundle '{BundleName.ProjectBundle}' for version '{version.ToString()}'");
 			await AsyncTools.AwaitNextFrame();
 
-			if (ExportAssetInfo)
+			if (ExportAssetInfo.Value)
 			{
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				CreateAssetBundles.BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
@@ -342,7 +317,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				}
 			}
 
-			if (ExportAssetInfo)
+			if (ExportAssetInfo.Value)
 			{
 				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
