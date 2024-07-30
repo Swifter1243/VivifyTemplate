@@ -12,29 +12,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class CreateAssetBundles
 	{
-		private static bool BuildAndroidVersions
-		{
-			get => PlayerPrefs.GetInt("buildAndroidVersions", 1) == 1;
-			set => PlayerPrefs.SetInt("buildAndroidVersions", value ? 1 : 0);
-		}
-
-		// Build Android Versions
-		[MenuItem("Vivify/Settings/Build Android Versions/True")]
-		private static void BuildAndroidVersions_True()
-		{
-			BuildAndroidVersions = true;
-		}
-		[MenuItem("Vivify/Settings/Build Android Versions/True", true)]
-		private static bool ValidateBuildAndroidVersions_True() { return !BuildAndroidVersions; }
-
-		[MenuItem("Vivify/Settings/Build Android Versions/False")]
-		private static void BuildAndroidVersions_False()
-		{
-			BuildAndroidVersions = false;
-		}
-		[MenuItem("Vivify/Settings/Build Android Versions/False", true)]
-		private static bool ValidateBuildAndroidVersions_False() { return BuildAndroidVersions; }
-
 		private static string GetCachePath()
 		{
 			string path = Path.Combine(Application.temporaryCachePath, "bundleBuilds");
@@ -104,7 +81,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return File.Exists(expectedOutput);
 		}
 
-		private static BuildReport Build(
+		private static CreateAssetBundles.BuildReport Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion
@@ -301,7 +278,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021)
 			};
 
-			if (BuildAndroidVersions)
+			if (BuildAndroidVersion.Value)
 			{
 				Debug.Log($"Building Android versions for bundle '{BundleName.ProjectBundle}' compressed.");
 				await AsyncTools.AwaitNextFrame();
