@@ -61,7 +61,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		[MenuItem("Vivify/Settings/Set Working Version/Android 2021")]
 		private static void SetWorkingVersionAndroid2021() => WorkingVersion = BuildVersion.Android2021;
 		[MenuItem("Vivify/Settings/Set Working Version/Android 2021", true)]
-		private static bool ValidateWorkingVersionAndroid2021() => WorkingVersion != BuildVersion.Windows2021;
+		private static bool ValidateWorkingVersionAndroid2021() => WorkingVersion != BuildVersion.Android2021;
 
 		// Export Asset Info
 		[MenuItem("Vivify/Settings/Export Asset Info/True")]
