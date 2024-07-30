@@ -12,24 +12,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class CreateAssetBundles
 	{
-		private static BuildVersion WorkingVersion
-		{
-			get
-			{
-				string pref = PlayerPrefs.GetString("workingVersion", null);
-
-				if (!Enum.TryParse(pref, out BuildVersion ver))
-				{
-					BuildVersion defaultVersion = BuildVersion.Windows2019;
-					PlayerPrefs.SetString("workingVersion", defaultVersion.ToString());
-					return defaultVersion;
-				}
-
-				return ver;
-			}
-			set => PlayerPrefs.SetString("workingVersion", value.ToString());
-		}
-
 		private static bool ExportAssetInfo
 		{
 			get => PlayerPrefs.GetInt("exportAssetInfo", 1) == 1;
@@ -43,25 +25,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		}
 
 		// Set Working Version
-		[MenuItem("Vivify/Settings/Set Working Version/Windows 2019")]
-		private static void SetWorkingVersionWindows2019() => WorkingVersion = BuildVersion.Windows2019;
-		[MenuItem("Vivify/Settings/Set Working Version/Windows 2019", true)]
-		private static bool ValidateWorkingWindows2019() => WorkingVersion != BuildVersion.Windows2019;
-
-		[MenuItem("Vivify/Settings/Set Working Version/Windows 2021")]
-		private static void SetWorkingVersionWindows2021() => WorkingVersion = BuildVersion.Windows2021;
-		[MenuItem("Vivify/Settings/Set Working Version/Windows 2021", true)]
-		private static bool ValidateWorkingVersionWindows2021() => WorkingVersion != BuildVersion.Windows2021;
-		
-		[MenuItem("Vivify/Settings/Set Working Version/Android 2019")]
-		private static void SetWorkingVersionAndroid2019() => WorkingVersion = BuildVersion.Android2019;
-		[MenuItem("Vivify/Settings/Set Working Version/Android 2019", true)]
-		private static bool ValidateWorkingAndroid2019() => WorkingVersion != BuildVersion.Android2019;
-
-		[MenuItem("Vivify/Settings/Set Working Version/Android 2021")]
-		private static void SetWorkingVersionAndroid2021() => WorkingVersion = BuildVersion.Android2021;
-		[MenuItem("Vivify/Settings/Set Working Version/Android 2021", true)]
-		private static bool ValidateWorkingVersionAndroid2021() => WorkingVersion != BuildVersion.Android2021;
 
 		// Export Asset Info
 		[MenuItem("Vivify/Settings/Export Asset Info/True")]
@@ -166,7 +129,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return File.Exists(expectedOutput);
 		}
 
-		private static BuildReport Build(
+		private static CreateAssetBundles.BuildReport Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion
@@ -275,7 +238,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				crc = crcOut;
 			}
 
-			return new BuildReport
+			return new CreateAssetBundles.BuildReport
 			{
 				tempBundlePath = tempBundlePath,
 				fixedBundlePath = fixedBundlePath,
@@ -299,7 +262,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (ExportAssetInfo)
 			{
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
-				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				CreateAssetBundles.BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				
 				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
@@ -344,7 +307,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		[MenuItem("Vivify/Build/Build Working Version Uncompressed _F5")]
 		private static void BuildWorkingVersionUncompressed()
 		{
-			BuildSingleUncompressed(WorkingVersion);
+			BuildSingleUncompressed(WorkingVersion.Value);
 		}
 
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
@@ -356,7 +319,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Debug.Log($"Building Windows versions for bundle '{BundleName.ProjectBundle}' compressed.");
 			await AsyncTools.AwaitNextFrame();
 
-			List<BuildReport> builds = new List<BuildReport>
+			List<CreateAssetBundles.BuildReport> builds = new List<CreateAssetBundles.BuildReport>
 			{
 				// Build Asset Bundle
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019),
