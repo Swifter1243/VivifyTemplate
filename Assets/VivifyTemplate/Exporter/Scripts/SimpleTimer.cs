@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts
 {
     public class SimpleTimer
     {

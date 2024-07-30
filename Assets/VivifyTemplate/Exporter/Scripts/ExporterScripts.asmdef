@@ -1,5 +1,5 @@
 {
-    "name": "TemplateEditor",
+    "name": "ExporterScripts",
     "references": [],
     "includePlatforms": [
         "Editor"

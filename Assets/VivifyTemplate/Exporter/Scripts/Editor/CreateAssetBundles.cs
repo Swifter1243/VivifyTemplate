@@ -12,7 +12,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class CreateAssetBundles
 	{
-		private static SimpleTimer timer = new SimpleTimer();
+		private static readonly SimpleTimer Timer = new SimpleTimer();
 		
 		private static string GetCachePath()
 		{
@@ -229,7 +229,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string outputDirectory = OutputDirectory.Get();
 			
 			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{version.ToString()}'");
-			timer.Mark();
+			Timer.Mark();
 			await AsyncTools.AwaitNextFrame();
 
 			if (ExportAssetInfo.Value)
@@ -250,7 +250,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 			}
 			
-			Debug.Log($"Build done in {timer.Mark()}s!");
+			Debug.Log($"Build done in {Timer.Mark()}s!");
 		}
 
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
@@ -260,7 +260,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string outputDirectory = OutputDirectory.Get();
 			
 			Debug.Log($"Building Windows versions for bundle '{ProjectBundle.Value}' compressed.");
-			timer.Mark();
+			Timer.Mark();
 			await AsyncTools.AwaitNextFrame();
 
 			List<BuildReport> builds = new List<BuildReport>
@@ -304,7 +304,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				GenerateBundleInfo.Run(builds[0].outputBundlePath, outputDirectory, bundleInfo);
 			}
 
-			Debug.Log($"All builds done in {timer.Mark()}s!");
+			Debug.Log($"All builds done in {Timer.Mark()}s!");
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AssetsTools.NET.Extra;
 using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts
 {
     public static class CRCGrabber
     {

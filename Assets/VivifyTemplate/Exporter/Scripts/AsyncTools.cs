@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts
 {
     public static class AsyncTools
     {

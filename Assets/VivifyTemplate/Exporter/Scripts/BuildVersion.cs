@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts
 {
     public enum BuildVersion
     {

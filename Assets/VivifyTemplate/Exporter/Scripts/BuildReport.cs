@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
+using VivifyTemplate.Exporter.Scripts.Editor;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts
 {
     public struct BuildReport
     {

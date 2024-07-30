@@ -5,8 +5,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts
 {
 	public static class GenerateBundleInfo
 	{
