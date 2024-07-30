@@ -99,7 +99,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			string json = JsonConvert.SerializeObject(assetInfo);
-			File.WriteAllText(outputPath + "/assetinfo.json", json);
+			string assetInfoPath = Path.Combine(outputPath, "assetinfo.json");
+			File.WriteAllText(assetInfoPath, json);
+			Debug.Log($"Successfully wrote assetinfo.json for bundle '{BundleName.ProjectBundle}' to '{assetInfoPath}'");
 		}
 
 		[Serializable]
