@@ -33,18 +33,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return xrManagerSettingsType != null;
 		}
 
-		private struct BuildReport
-		{
-			public string tempBundlePath;
-			public string fixedBundlePath;
-			public string outputBundlePath;
-			public bool shaderKeywordsFixed;
-			public uint? crc;
-			public bool isAndroid;
-			public BuildTarget buildTarget;
-			public BuildVersion buildVersion;
-		}
-
 		private static bool FixShaderKeywords(string bundlePath, string expectedOutput)
 		{
 			// Run Process
@@ -81,7 +69,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return File.Exists(expectedOutput);
 		}
 
-		private static CreateAssetBundles.BuildReport Build(
+		private static BuildReport Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion
@@ -190,7 +178,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				crc = crcOut;
 			}
 
-			return new CreateAssetBundles.BuildReport
+			return new BuildReport
 			{
 				tempBundlePath = tempBundlePath,
 				fixedBundlePath = fixedBundlePath,
@@ -214,7 +202,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (ExportAssetInfo.Value)
 			{
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
-				CreateAssetBundles.BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				
 				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
@@ -271,7 +259,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Debug.Log($"Building Windows versions for bundle '{BundleName.ProjectBundle}' compressed.");
 			await AsyncTools.AwaitNextFrame();
 
-			List<CreateAssetBundles.BuildReport> builds = new List<CreateAssetBundles.BuildReport>
+			List<BuildReport> builds = new List<BuildReport>
 			{
 				// Build Asset Bundle
 				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019),
