@@ -282,8 +282,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			};
 		}
 
-		[MenuItem("Vivify/Build/Build Working Version Quick _F5")]
-		private static async void QuickBuild()
+		private static async void BuildSingleUncompressed(BuildVersion version)
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
@@ -292,22 +291,52 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (ExportAssetInfo)
 			{
 				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
-				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
-				string versionPrefix = VersionTools.GetVersionPrefix(WorkingVersion);
+				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 				assetInfo.bundleCRCs[versionPrefix] = crc;
 				GenerateAssetJson.Run(build.outputBundlePath, outputDirectory, assetInfo);
 			}
 			else
 			{
-				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, WorkingVersion);
+				Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 			}
 			
 			Debug.Log("Build done!");
 		}
 
+		[MenuItem("Vivify/Build/Build Windows 2019 Uncompressed")]
+		private static void BuildWindows2019Uncompressed()
+		{
+			BuildSingleUncompressed(BuildVersion.Windows2019);
+		}
+		
+		[MenuItem("Vivify/Build/Build Windows 2021 Uncompressed")]
+		private static void BuildWindows2021Uncompressed()
+		{
+			BuildSingleUncompressed(BuildVersion.Windows2021);
+		}
+		
+		[MenuItem("Vivify/Build/Build Android 2019 Uncompressed")]
+		private static void BuildAndroid2019Uncompressed()
+		{
+			BuildSingleUncompressed(BuildVersion.Android2019);
+		}
+		
+		[MenuItem("Vivify/Build/Build Android 2021 Uncompressed")]
+		private static void BuildAndroid2021Uncompressed()
+		{
+			BuildSingleUncompressed(BuildVersion.Android2021);
+		}
+
+		[MenuItem("Vivify/Build/Build Working Version Uncompressed _F5")]
+		private static void BuildWorkingVersionUncompressed()
+		{
+			BuildSingleUncompressed(WorkingVersion);
+		}
+
 		[MenuItem("Vivify/Build/Build All Versions Compressed")]
-		private static async void FinalBuild()
+		private static async void BuildAllCompressed()
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
