@@ -43,21 +43,25 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		}
 
 		// Set Working Version
-		[MenuItem("Vivify/Settings/Set Working Version/2019")]
-		private static void SetWorkingVersion_2019()
-		{
-			WorkingVersion = BuildVersion.Windows2019;
-		}
-		[MenuItem("Vivify/Settings/Set Working Version/2019", true)]
-		private static bool ValidateWorkingVersion_2019() { return WorkingVersion != BuildVersion.Windows2019; }
+		[MenuItem("Vivify/Settings/Set Working Version/Windows 2019")]
+		private static void SetWorkingVersionWindows2019() => WorkingVersion = BuildVersion.Windows2019;
+		[MenuItem("Vivify/Settings/Set Working Version/Windows 2019", true)]
+		private static bool ValidateWorkingWindows2019() => WorkingVersion != BuildVersion.Windows2019;
 
-		[MenuItem("Vivify/Settings/Set Working Version/2021")]
-		private static void SetWorkingVersion_2021()
-		{
-			WorkingVersion = BuildVersion.Windows2021;
-		}
-		[MenuItem("Vivify/Settings/Set Working Version/2021", true)]
-		private static bool ValidateWorkingVersion_2021() { return WorkingVersion != BuildVersion.Windows2021; }
+		[MenuItem("Vivify/Settings/Set Working Version/Windows 2021")]
+		private static void SetWorkingVersionWindows2021() => WorkingVersion = BuildVersion.Windows2021;
+		[MenuItem("Vivify/Settings/Set Working Version/Windows 2021", true)]
+		private static bool ValidateWorkingVersionWindows2021() => WorkingVersion != BuildVersion.Windows2021;
+		
+		[MenuItem("Vivify/Settings/Set Working Version/Android 2019")]
+		private static void SetWorkingVersionAndroid2019() => WorkingVersion = BuildVersion.Android2019;
+		[MenuItem("Vivify/Settings/Set Working Version/Android 2019", true)]
+		private static bool ValidateWorkingAndroid2019() => WorkingVersion != BuildVersion.Android2019;
+
+		[MenuItem("Vivify/Settings/Set Working Version/Android 2021")]
+		private static void SetWorkingVersionAndroid2021() => WorkingVersion = BuildVersion.Android2021;
+		[MenuItem("Vivify/Settings/Set Working Version/Android 2021", true)]
+		private static bool ValidateWorkingVersionAndroid2021() => WorkingVersion != BuildVersion.Windows2021;
 
 		// Export Asset Info
 		[MenuItem("Vivify/Settings/Export Asset Info/True")]
@@ -286,6 +290,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
+			
+			Debug.Log($"Building bundle '{BundleName.ProjectBundle}' for version '{version.ToString()}'");
 
 			if (ExportAssetInfo)
 			{
@@ -339,6 +345,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			// Get Directory
 			string outputDirectory = GetOutputDirectory();
+			
+			Debug.Log($"Building Windows versions for bundle '{BundleName.ProjectBundle}' compressed.");
 
 			List<BuildReport> builds = new List<BuildReport>
 			{
@@ -349,6 +357,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (BuildAndroidVersions)
 			{
+				Debug.Log($"Building Android versions for bundle '{BundleName.ProjectBundle}' compressed.");
+				
 				try
 				{
 					builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019));
