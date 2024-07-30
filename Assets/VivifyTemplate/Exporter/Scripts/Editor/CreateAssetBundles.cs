@@ -245,6 +245,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			bool shaderKeywordsFixed = !is2019;
 			if (shaderKeywordsFixed)
 			{
+				Debug.Log("2021 version detected, attempting to rebuild shader keywords...");
+				
 				string expectedOutput = Path.ChangeExtension(tempBundlePath, ".mod.avatar");
 				bool success = FixShaderKeywords(tempBundlePath, expectedOutput);
 				if (success)
