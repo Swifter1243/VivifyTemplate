@@ -43,54 +43,54 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		}
 
 		// Set Working Version
-		[MenuItem("Vivify/Set Working Version/2019")]
+		[MenuItem("Vivify/Settings/Set Working Version/2019")]
 		private static void SetWorkingVersion_2019()
 		{
 			WorkingVersion = BuildVersion.Windows2019;
 		}
-		[MenuItem("Vivify/Set Working Version/2019", true)]
+		[MenuItem("Vivify/Settings/Set Working Version/2019", true)]
 		private static bool ValidateWorkingVersion_2019() { return WorkingVersion != BuildVersion.Windows2019; }
 
-		[MenuItem("Vivify/Set Working Version/2021")]
+		[MenuItem("Vivify/Settings/Set Working Version/2021")]
 		private static void SetWorkingVersion_2021()
 		{
 			WorkingVersion = BuildVersion.Windows2021;
 		}
-		[MenuItem("Vivify/Set Working Version/2021", true)]
+		[MenuItem("Vivify/Settings/Set Working Version/2021", true)]
 		private static bool ValidateWorkingVersion_2021() { return WorkingVersion != BuildVersion.Windows2021; }
 
 		// Export Asset Info
-		[MenuItem("Vivify/Export Asset Info/True")]
+		[MenuItem("Vivify/Settings/Export Asset Info/True")]
 		private static void ExportAssetInfo_True()
 		{
 			ExportAssetInfo = true;
 		}
-		[MenuItem("Vivify/Export Asset Info/True", true)]
+		[MenuItem("Vivify/Settings/Export Asset Info/True", true)]
 		private static bool ValidateExportAssetInfo_True() { return !ExportAssetInfo; }
 
-		[MenuItem("Vivify/Export Asset Info/False")]
+		[MenuItem("Vivify/Settings/Export Asset Info/False")]
 		private static void ExportAssetInfo_False()
 		{
 			ExportAssetInfo = false;
 		}
-		[MenuItem("Vivify/Export Asset Info/False", true)]
+		[MenuItem("Vivify/Settings/Export Asset Info/False", true)]
 		private static bool ValidateExportAssetInfo_False() { return ExportAssetInfo; }
 
 		// Build Android Versions
-		[MenuItem("Vivify/Build/Build Android Versions/True")]
+		[MenuItem("Vivify/Settings/Build Android Versions/True")]
 		private static void BuildAndroidVersions_True()
 		{
 			BuildAndroidVersions = true;
 		}
-		[MenuItem("Vivify/Build/Build Android Versions/True", true)]
+		[MenuItem("Vivify/Settings/Build Android Versions/True", true)]
 		private static bool ValidateBuildAndroidVersions_True() { return !BuildAndroidVersions; }
 
-		[MenuItem("Vivify/Build/Build Android Versions/False")]
+		[MenuItem("Vivify/Settings/Build Android Versions/False")]
 		private static void BuildAndroidVersions_False()
 		{
 			BuildAndroidVersions = false;
 		}
-		[MenuItem("Vivify/Build/Build Android Versions/False", true)]
+		[MenuItem("Vivify/Settings/Build Android Versions/False", true)]
 		private static bool ValidateBuildAndroidVersions_False() { return BuildAndroidVersions; }
 
 		private static string GetCachePath()
