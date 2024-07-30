@@ -8,9 +8,11 @@ using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
-	public static class GenerateAssetJson
+	public static class GenerateBundleInfo
 	{
-		public static void Run(string bundlePath, string outputPath, AssetInfo assetInfo)
+		public const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
+
+		public static void Run(string bundlePath, string outputPath, BundleInfo bundleInfo)
 		{
 			var bundle = AssetBundle.LoadFromFile(bundlePath);
 			var names = bundle.GetAllAssetNames();
@@ -79,11 +81,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				string filename = Path.GetFileNameWithoutExtension(name);
 				string key = filename;
 				int variation = 0;
-				while (assetInfo.materials.ContainsKey(key))
+				while (bundleInfo.materials.ContainsKey(key))
 				{
 					key = $"{filename} ({++variation})";
 				}
-				assetInfo.materials.Add(key, materialInfo);
+				bundleInfo.materials.Add(key, materialInfo);
 			}
 
 			foreach (string name in prefabNames)
@@ -91,21 +93,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				string filename = Path.GetFileNameWithoutExtension(name);
 				string key = filename;
 				int variation = 0;
-				while (assetInfo.prefabs.ContainsKey(key))
+				while (bundleInfo.prefabs.ContainsKey(key))
 				{
 					key = $"{filename} ({++variation})";
 				}
-				assetInfo.prefabs.Add(key, name);
+				bundleInfo.prefabs.Add(key, name);
 			}
 
-			string json = JsonConvert.SerializeObject(assetInfo);
-			string assetInfoPath = Path.Combine(outputPath, "assetinfo.json");
+			string json = JsonConvert.SerializeObject(bundleInfo);
+			string assetInfoPath = Path.Combine(outputPath, BUNDLE_INFO_FILENAME);
 			File.WriteAllText(assetInfoPath, json);
-			Debug.Log($"Successfully wrote assetinfo.json for bundle '{BundleName.ProjectBundle}' to '{assetInfoPath}'");
+			Debug.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' to '{assetInfoPath}'");
 		}
 
 		[Serializable]
-		public class AssetInfo
+		public class BundleInfo
 		{
 			public Dictionary<string, MaterialInfo> materials = new Dictionary<string, MaterialInfo>();
 			public Dictionary<string, string> prefabs = new Dictionary<string, string>();

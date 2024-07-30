@@ -298,16 +298,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ExportAssetInfo)
 			{
-				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
+				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				
-				Debug.Log($"Writing the assetinfo.json for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
+				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
 				
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
-				assetInfo.bundleCRCs[versionPrefix] = crc;
-				GenerateAssetJson.Run(build.outputBundlePath, outputDirectory, assetInfo);
+				bundleInfo.bundleCRCs[versionPrefix] = crc;
+				GenerateBundleInfo.Run(build.outputBundlePath, outputDirectory, bundleInfo);
 			}
 			else
 			{
@@ -381,20 +381,20 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ExportAssetInfo)
 			{
-				Debug.Log($"Writing the assetinfo.json for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
+				Debug.Log($"Writing the {GenerateBundleInfo.BUNDLE_INFO_FILENAME} for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
 				await AsyncTools.AwaitNextFrame();
 				
-				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
+				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				
 				IEnumerable<Task> tasks = builds.Select(async build =>
 				{
 					uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 					string versionPrefix = VersionTools.GetVersionPrefix(build.buildVersion);
-					assetInfo.bundleCRCs[versionPrefix] = crc;
+					bundleInfo.bundleCRCs[versionPrefix] = crc;
 				});
 				await Task.WhenAll(tasks);
 				
-				GenerateAssetJson.Run(builds[0].outputBundlePath, outputDirectory, assetInfo);
+				GenerateBundleInfo.Run(builds[0].outputBundlePath, outputDirectory, bundleInfo);
 			}
 
 			Debug.Log("All builds done!");
