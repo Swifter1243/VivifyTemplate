@@ -9,7 +9,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
     {
         public static async Task<uint> GetCRCFromFile(string bundlePath)
         {
-            Debug.Log($"Calculating CRC for {bundlePath}...");
+            Debug.Log($"Calculating CRC for '{bundlePath}' (this can take a long time for big bundles)");
+            await AsyncTools.AwaitNextFrame();
+            
             Crc32 crc = new Crc32();
             AssetsManager manager = new AssetsManager();
             BundleFileInstance bundleFileInstance = manager.LoadBundleFile(bundlePath);

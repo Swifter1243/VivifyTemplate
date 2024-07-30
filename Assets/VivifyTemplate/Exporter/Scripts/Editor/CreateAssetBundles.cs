@@ -294,11 +294,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string outputDirectory = GetOutputDirectory();
 			
 			Debug.Log($"Building bundle '{BundleName.ProjectBundle}' for version '{version.ToString()}'");
+			await AsyncTools.AwaitNextFrame();
 
 			if (ExportAssetInfo)
 			{
 				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
 				BuildReport build = Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				
+				Debug.Log($"Writing the assetinfo.json for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
+				await AsyncTools.AwaitNextFrame();
+				
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 				assetInfo.bundleCRCs[versionPrefix] = crc;
@@ -349,6 +354,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string outputDirectory = GetOutputDirectory();
 			
 			Debug.Log($"Building Windows versions for bundle '{BundleName.ProjectBundle}' compressed.");
+			await AsyncTools.AwaitNextFrame();
 
 			List<BuildReport> builds = new List<BuildReport>
 			{
@@ -360,6 +366,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (BuildAndroidVersions)
 			{
 				Debug.Log($"Building Android versions for bundle '{BundleName.ProjectBundle}' compressed.");
+				await AsyncTools.AwaitNextFrame();
 				
 				try
 				{
@@ -374,6 +381,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ExportAssetInfo)
 			{
+				Debug.Log($"Writing the assetinfo.json for bundle '{BundleName.ProjectBundle}' at '{outputDirectory}'");
+				await AsyncTools.AwaitNextFrame();
+				
 				GenerateAssetJson.AssetInfo assetInfo = new GenerateAssetJson.AssetInfo();
 				
 				IEnumerable<Task> tasks = builds.Select(async build =>
