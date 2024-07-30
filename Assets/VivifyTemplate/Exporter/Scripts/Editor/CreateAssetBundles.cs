@@ -322,8 +322,15 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (BuildAndroidVersions)
 			{
-				builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019));
-				builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021));
+				try
+				{
+					builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019));
+					builds.Add(Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021));
+				}
+				catch (Exception e)
+				{
+					Debug.LogError($"Error trying to build for Android: {e}");
+				}
 			}
 
 			if (ExportAssetInfo)
