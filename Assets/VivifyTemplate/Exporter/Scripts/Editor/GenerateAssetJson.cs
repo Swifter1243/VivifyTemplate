@@ -76,14 +76,26 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 					}
 				}
 
-				var filename = Path.GetFileNameWithoutExtension(name);
-				assetInfo.materials.Add(filename, materialInfo);
+				string filename = Path.GetFileNameWithoutExtension(name);
+				string key = filename;
+				int variation = 0;
+				while (assetInfo.materials.ContainsKey(key))
+				{
+					key = $"{filename} ({++variation})";
+				}
+				assetInfo.materials.Add(key, materialInfo);
 			}
 
-			foreach (var name in prefabNames)
+			foreach (string name in prefabNames)
 			{
-				var filename = Path.GetFileNameWithoutExtension(name);
-				assetInfo.prefabs.Add(filename, name);
+				string filename = Path.GetFileNameWithoutExtension(name);
+				string key = filename;
+				int variation = 0;
+				while (assetInfo.prefabs.ContainsKey(key))
+				{
+					key = $"{filename} ({++variation})";
+				}
+				assetInfo.prefabs.Add(key, name);
 			}
 
 			string json = JsonConvert.SerializeObject(assetInfo);
