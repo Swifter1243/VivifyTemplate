@@ -130,7 +130,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Build
 			string tempBundlePath = Path.Combine(tempDir, projectBundleName);
 			string builtBundlePath = tempBundlePath;
-			string fixedBundlePath = "";
+			string fixedBundlePath = null;
 			BuildTarget buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
 
 			AssetBundleBuild[] builds = {
@@ -256,27 +256,28 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
 
-			List<Task<BuildReport>> windowsBuilds = new List<Task<BuildReport>>()
-			{
-				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019),
-				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021)
-			};
-			List<Task<BuildReport>> androidBuilds = new List<Task<BuildReport>>()
-			{
-				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019),
-				Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021)
-			};
-			
-			List<BuildReport> builds = new List<BuildReport>();
-			builds.AddRange(await Task.WhenAll(windowsBuilds));
+			Debug.Log($"Building Windows versions for bundle '{ProjectBundle.Value}' compressed.");
 
-			try
+			List<BuildReport> builds = new List<BuildReport>
 			{
-				builds.AddRange(await Task.WhenAll(androidBuilds));
-			}
-			catch (Exception e)
+				// Build Asset Bundle
+				await Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2019),
+				await Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Windows2021)
+			};
+
+			if (BuildAndroidVersion.Value)
 			{
-				Debug.LogError($"Error trying to build for Android: {e}");
+				Debug.Log($"Building Android versions for bundle '{ProjectBundle.Value}' compressed.");
+				
+				try
+				{
+					builds.Add(await Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2019));
+					builds.Add(await Build(outputDirectory, BuildAssetBundleOptions.None, BuildVersion.Android2021));
+				}
+				catch (Exception e)
+				{
+					Debug.LogError($"Error trying to build for Android: {e}");
+				}
 			}
 
 			if (ExportAssetInfo.Value)
