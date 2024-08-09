@@ -20,7 +20,8 @@ Shader "Vivify/CustomObjects/CustomBomb"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_instancing
+            #pragma multi_compile_instancing // Insert for GPU instancing
+            // Ensure to check "Enable GPU Instancing" on the material
 
             #include "UnityCG.cginc"
             #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
@@ -36,11 +37,11 @@ Shader "Vivify/CustomObjects/CustomBomb"
             {
                 float4 vertex : SV_POSITION;
                 float3 localPos : TEXCOORD0;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_INPUT_INSTANCE_ID // Insert for GPU instancing
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            // Register instanced properties (apply per-bomb)
+            // Register GPU instanced properties (apply per-bomb)
             UNITY_INSTANCING_BUFFER_START(Props)
             UNITY_DEFINE_INSTANCED_PROP(float, _Cutout)
             UNITY_DEFINE_INSTANCED_PROP(float3, _Color)
@@ -53,7 +54,7 @@ Shader "Vivify/CustomObjects/CustomBomb"
             {
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                UNITY_TRANSFER_INSTANCE_ID(v, o); // Insert for GPU instancing
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -64,8 +65,7 @@ Shader "Vivify/CustomObjects/CustomBomb"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                UNITY_SETUP_INSTANCE_ID(i);
+                UNITY_SETUP_INSTANCE_ID(i); // Insert for GPU instancing
 
                 // Cutout represents dissolve
                 // 0 = fully dissolved, 1 = fully visible
