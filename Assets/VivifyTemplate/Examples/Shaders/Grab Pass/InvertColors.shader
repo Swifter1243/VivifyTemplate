@@ -9,7 +9,7 @@ Shader "Vivify/Grab Pass/InvertColors"
         Tags { "RenderType"="Opaque" }
         LOD 100
 
-        GrabPass { "_GrabPass" }
+        GrabPass { "_GrabTexture1" } // Base game also uses this grab pass texture name so it's best to reuse it
 
         Pass
         {
