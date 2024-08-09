@@ -3,14 +3,14 @@
     Properties
     {
         /*
-        The trail color can be passed in 2 ways.
+        The trail color can be passed in 2 ways. Remove lines from the option you aren't using.
         
         A) As demonstrated in this shader, they can be passed in through the vertex color.
         The issue with this approach is that there is some potentially unwanted desaturation of the colors toward the saber.
         
         B) As demonstrated in the note and saber base shaders, the colors get passed through the instanced "_Color" property.
         You'll need to add the necessary macros and enable instancing on the material for GPU instancing.
-        Also remove "color" from the appdata and v2f structs.
+       
         */
         _Color ("Saber Color", Color) = (1,1,1) // Option B
     }
@@ -73,16 +73,16 @@
                 // The color of the saber (if going with option B)
                 float3 Color = UNITY_ACCESS_INSTANCED_PROP(Props, _Color);
                 
+                //float3 col = i.color; // option A
+                float3 col = Color; // option B
+
                 /*
                 The UV value is a little unintuitive for trails, so here's the breakdown:
-                i.uv.x: 0 <-- top   bottom --> 1
-                i.uv.y: 0 <-- left   right --> 1
+                i.uv.x: 0 <-- top                             bottom --> 1
+                i.uv.y: 0 <-- closest to saber   furthest from saber --> 1
                 */
                 
-                float3 col = i.color; // option A
-                // float3 col = Color; // option B
-                
-                col *= pow(1 - i.uv.y, 7);
+                col *= pow(1 - i.uv.y, 7); // brighter to the left and fall off quickly
                 return float4(col, 0);
             }
             ENDCG
