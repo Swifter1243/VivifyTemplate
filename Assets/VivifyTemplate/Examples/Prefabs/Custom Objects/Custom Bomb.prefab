@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f32c0e3167c8b45418ff52e3bdd9e49c,
         type: 3}
       propertyPath: m_Name
-      value: Custom Bomb Variant
+      value: Custom Bomb
       objectReference: {fileID: 0}
     - target: {fileID: 7637188017281961393, guid: f32c0e3167c8b45418ff52e3bdd9e49c,
         type: 3}
@@ -76,6 +76,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 7741732252734590940, guid: f32c0e3167c8b45418ff52e3bdd9e49c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f32c0e3167c8b45418ff52e3bdd9e49c, type: 3}

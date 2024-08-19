@@ -87,6 +87,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dot
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e3bd563e61ef5ac429a70a72a9aa065d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3bd563e61ef5ac429a70a72a9aa065d, type: 3}
 --- !u!1001 &2559393253814494063
@@ -156,10 +161,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Base
       objectReference: {fileID: 0}
+    - target: {fileID: -7997877599010138414, guid: 9b95e17d1c153774e8edee1baa5b3b91,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9b95e17d1c153774e8edee1baa5b3b91,
         type: 3}
       propertyPath: m_Name
-      value: Custom Note Dot Variant
+      value: Custom Note Dot
       objectReference: {fileID: 0}
     - target: {fileID: 1226753351416469113, guid: 9b95e17d1c153774e8edee1baa5b3b91,
         type: 3}

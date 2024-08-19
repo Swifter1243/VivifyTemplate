@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 54922596061592463}
   m_Layer: 0
-  m_Name: Saber
+  m_Name: Custom Saber Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5013960546259084834}
   - component: {fileID: 7532176320585281791}
   - component: {fileID: 4230474287248875825}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
