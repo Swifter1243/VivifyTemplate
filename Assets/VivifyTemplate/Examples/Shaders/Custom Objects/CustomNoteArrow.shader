@@ -66,14 +66,14 @@ Shader "Vivify/CustomObjects/CustomNoteArrow"
                 UNITY_SETUP_INSTANCE_ID(i); // Insert for GPU instancing
 
                 // Since arrows don't appear in debris, we only need to use Cutout for dissolve
-                // 0 = fully dissolved, 1 = fully visible
+                // 0 = visible, 1 = dissolved
                 float Cutout = UNITY_ACCESS_INSTANCED_PROP(Props, _Cutout);
 
                 // Calculate 3D simplex noise based on the fragment position
                 float noise = simplex(i.localPos * 2);
 
                 // Use cutout to lower the values of the noise into the negatives, clipping them
-                float c = Cutout - noise;
+                float c = noise - Cutout;
 
                 // Negative values of c will discard the pixel
                 clip(c);

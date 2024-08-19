@@ -68,7 +68,7 @@ Shader "Vivify/CustomObjects/CustomBomb"
                 UNITY_SETUP_INSTANCE_ID(i); // Insert for GPU instancing
 
                 // Cutout represents dissolve
-                // 0 = fully dissolved, 1 = fully visible
+                // 0 = visible, 1 = dissolved
                 float Cutout = UNITY_ACCESS_INSTANCED_PROP(Props, _Cutout);
 
                 // The color of the bomb
@@ -78,7 +78,7 @@ Shader "Vivify/CustomObjects/CustomBomb"
                 float noise = simplex(i.localPos * 2);
 
                 // Use cutout to lower the values of the noise into the negatives, clipping them
-                float c = Cutout - noise;
+                float c = noise - Cutout;
 
                 // Negative values of c will discard the pixel
                 clip(c);

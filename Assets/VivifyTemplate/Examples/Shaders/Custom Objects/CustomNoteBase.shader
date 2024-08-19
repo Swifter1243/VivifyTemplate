@@ -80,7 +80,7 @@ Shader "Vivify/CustomObjects/CustomNote"
 
                 // Cutout works differently depending on if this note is used as debris:
                 // - using debris -> 0 = just hit, 1 = dissolved away
-                // - not using debris (driven by "dissolve") -> 0 = dissolved, 1 = visible
+                // - not using debris (driven by "dissolve") -> 0 = visible, 1 = dissolved
                 float Cutout = UNITY_ACCESS_INSTANCED_PROP(Props, _Cutout);
 
                 // The color of the note
@@ -112,7 +112,7 @@ Shader "Vivify/CustomObjects/CustomNote"
                     float noise = simplex(i.localPos * 2);
 
                     // Use cutout to lower the values of the noise into the negatives, clipping them
-                    c = Cutout - noise;
+                    c = noise - Cutout;
                 }
 
                 // Negative values of c will discard the pixel
