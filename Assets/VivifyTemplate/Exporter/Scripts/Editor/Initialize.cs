@@ -59,18 +59,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty layersProp = tagManager.FindProperty("layers");
 
-            SerializedProperty layerSP = layersProp.GetArrayElementAtIndex(index);
-            if (layerSP != null)
+            SerializedProperty layersSerializedProperty = layersProp.GetArrayElementAtIndex(index);
+            if (layersSerializedProperty != null)
             {
-                if (string.IsNullOrEmpty(layerSP.stringValue))
+                if (string.IsNullOrEmpty(layersSerializedProperty.stringValue))
                 {
-                    layerSP.stringValue = layerName;
+                    layersSerializedProperty.stringValue = layerName;
                     tagManager.ApplyModifiedProperties();
                     Debug.Log($"Layer {index}: \"{layerName}\" has been added.");
                 }
-                else if (layerSP.stringValue != layerName)
+                else if (layersSerializedProperty.stringValue != layerName)
                 {
-                    Debug.LogWarning($"Layer {index} is already assigned to \"{layerSP.stringValue}\" and will not be overwritten.");
+                    Debug.LogWarning($"Layer {index} is already assigned to \"{layersSerializedProperty.stringValue}\" and will not be overwritten.");
                 }
                 else
                 {
