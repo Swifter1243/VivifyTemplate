@@ -13,6 +13,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 	public static class CreateAssetBundles
 	{
 		private static readonly SimpleTimer Timer = new SimpleTimer();
+		private static readonly Dictionary<string, uint> InternalBuildCRCs = new Dictionary<string, uint>();
 
 		private static bool IsNewXRPluginInstalled()
 		{
@@ -237,7 +238,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
-				bundleInfo.bundleCRCs[versionPrefix] = crc;
+				InternalBuildCRCs[versionPrefix] = crc;
+				bundleInfo.bundleCRCs = InternalBuildCRCs;
 				GenerateBundleInfo.Run(build.outputBundlePath, outputDirectory, bundleInfo);
 			}
 			else
@@ -288,10 +290,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				{
 					uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
 					string versionPrefix = VersionTools.GetVersionPrefix(build.buildVersion);
-					bundleInfo.bundleCRCs[versionPrefix] = crc;
+					InternalBuildCRCs[versionPrefix] = crc;
 				});
 				await Task.WhenAll(tasks);
-				
+
+				bundleInfo.bundleCRCs = InternalBuildCRCs;
 				GenerateBundleInfo.Run(builds[0].outputBundlePath, outputDirectory, bundleInfo);
 			}
 
