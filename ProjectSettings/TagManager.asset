@@ -13,30 +13,30 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Note
+  - NoteDebris
+  - Avatar
+  - Obstacle
+  - Saber
+  - NeonLight
+  - Environment
+  - GrabPassTexture1
+  - CutEffectParticles
+  - HmdOnly
+  - DesktopOnly
+  - NonReflectedParticles
+  - EnvironmentPhysics
+  - AlwaysVisible
+  - Event
+  - DesktopOnlyAndReflected
+  - HmdOnlyAndReflected
+  - FixMRAlpha
+  - AlwaysVisibleAndReflected
+  - DontShowInExternalMRCamera
+  - PlayersPlace
+  - Skybox
+  - MRForegroundClipPlane
+  - Reserved
   m_SortingLayers:
   - name: Default
     uniqueID: 0
