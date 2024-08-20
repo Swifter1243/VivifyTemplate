@@ -57,6 +57,8 @@ Shader "Vivify/Grab Pass/Distort"
 
             fixed4 frag (v2f i) : SV_Target
             {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+                
                 // Get the position of this fragment on the screen
                 float4 screenUV = (i.screenUV) / i.screenUV.w;
 
