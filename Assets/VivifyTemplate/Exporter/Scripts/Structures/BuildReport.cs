@@ -1,8 +1,7 @@
 ﻿using JetBrains.Annotations;
 using UnityEditor;
-using VivifyTemplate.Exporter.Scripts.Editor;
 
-namespace VivifyTemplate.Exporter.Scripts
+namespace VivifyTemplate.Exporter.Scripts.Structures
 {
     public struct BuildReport
     {

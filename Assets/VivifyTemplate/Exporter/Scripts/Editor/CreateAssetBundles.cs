@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
+using VivifyTemplate.Exporter.Scripts.Structures;
 using Debug = UnityEngine.Debug;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor

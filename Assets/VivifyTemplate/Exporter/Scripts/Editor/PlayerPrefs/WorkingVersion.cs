@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEditor;
+using VivifyTemplate.Exporter.Scripts.Structures;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
 {
