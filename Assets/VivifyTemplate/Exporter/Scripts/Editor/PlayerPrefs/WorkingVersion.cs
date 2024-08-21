@@ -6,7 +6,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
 {
     public static class WorkingVersion
     {
-        private static readonly string PlayerPrefsKey = "projectBundle";
+        private static readonly string PlayerPrefsKey = "workingVersion";
 
         public static BuildVersion Value
         {
