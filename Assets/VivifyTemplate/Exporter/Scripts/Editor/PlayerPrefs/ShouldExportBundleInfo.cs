@@ -1,16 +1,15 @@
 ﻿using UnityEditor;
-using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
 {
-    public static class ExportBundleInfo
+    public static class ShouldExportBundleInfo
     {
-        private static readonly string PlayerPrefsKey = "exportAssetInfo";
+        private static readonly string PlayerPrefsKey = "shouldExportAssetInfo";
 
         public static bool Value
         {
-            get => PlayerPrefs.GetInt(PlayerPrefsKey, 1) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsKey, value ? 1 : 0);
+            get => UnityEngine.PlayerPrefs.GetInt(PlayerPrefsKey, 1) == 1;
+            set => UnityEngine.PlayerPrefs.SetInt(PlayerPrefsKey, value ? 1 : 0);
         }
 
         [MenuItem("Vivify/Settings/Export Bundle Info/True")]

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor;
+using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 
 namespace VivifyTemplate.Exporter.Scripts
 {

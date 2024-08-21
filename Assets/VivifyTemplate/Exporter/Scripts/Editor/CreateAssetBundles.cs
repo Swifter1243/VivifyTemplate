@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 using Debug = UnityEngine.Debug;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
@@ -171,7 +172,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
 
-			if (ExportBundleInfo.Value)
+			if (ShouldExportBundleInfo.Value)
 			{
 				BundleInfo bundleInfo = new BundleInfo();
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
@@ -211,7 +212,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				Debug.LogError($"Error trying to build: {e}");
 			}
 
-			if (ExportBundleInfo.Value)
+			if (ShouldExportBundleInfo.Value)
 			{
 				BundleInfo bundleInfo = new BundleInfo();
 

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
 {
     public class ProjectBundle : EditorWindow
     {
@@ -10,8 +10,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
         public static string Value
         {
-            get => PlayerPrefs.GetString(PlayerPrefsKey, "bundle");
-            set => PlayerPrefs.SetString(PlayerPrefsKey, value);
+            get => UnityEngine.PlayerPrefs.GetString(PlayerPrefsKey, "bundle");
+            set => UnityEngine.PlayerPrefs.SetString(PlayerPrefsKey, value);
         }
 
         private void OnEnable()
