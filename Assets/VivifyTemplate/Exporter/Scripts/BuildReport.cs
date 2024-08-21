@@ -7,17 +7,17 @@ namespace VivifyTemplate.Exporter.Scripts
     public struct BuildReport
     {
         /** This is the path to the bundle built by BuildPipeline. */
-        public string builtBundlePath;
+        public string BuiltBundlePath;
         /** This is the path to the bundle built by ShaderKeywordsRewriter. */
-        [CanBeNull] public string fixedBundlePath;
+        [CanBeNull] public string FixedBundlePath;
         /** This is the path to the bundle actually cloned to the chosen output directory. */
-        public string usedBundlePath;
+        public string UsedBundlePath;
         /** This is the path to the bundle in the chosen output directory. */
-        public string outputBundlePath;
-        public bool shaderKeywordsFixed;
-        public uint? crc;
-        public bool isAndroid;
-        public BuildTarget buildTarget;
-        public BuildVersion buildVersion;
+        public string OutputBundlePath;
+        public bool ShaderKeywordsFixed;
+        public uint? CRC;
+        public bool IsAndroid;
+        public BuildTarget BuildTarget;
+        public BuildVersion BuildVersion;
     }
 }

@@ -147,14 +147,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			return new BuildReport
 			{
-				builtBundlePath = builtBundlePath,
-				fixedBundlePath = fixedBundlePath,
-				outputBundlePath = outputBundlePath,
-				shaderKeywordsFixed = shaderKeywordsFixed,
-				crc = crc,
-				isAndroid = isAndroid,
-				buildTarget = buildTarget,
-				buildVersion = buildVersion
+				BuiltBundlePath = builtBundlePath,
+				FixedBundlePath = fixedBundlePath,
+				OutputBundlePath = outputBundlePath,
+				ShaderKeywordsFixed = shaderKeywordsFixed,
+				CRC = crc,
+				IsAndroid = isAndroid,
+				BuildTarget = buildTarget,
+				BuildVersion = buildVersion
 			};
 		}
 
@@ -176,9 +176,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.fixedBundlePath);
+				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath);
 				bundleInfo.bundleCRCs[versionPrefix] = crc;
-				GenerateBundleInfo.Run(build.outputBundlePath, outputDirectory, bundleInfo);
+				GenerateBundleInfo.Run(build.OutputBundlePath, outputDirectory, bundleInfo);
 			}
 			else
 			{
@@ -217,13 +217,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				IEnumerable<Task> tasks = builds.Select(async build =>
 				{
-					uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
-					string versionPrefix = VersionTools.GetVersionPrefix(build.buildVersion);
+					uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.OutputBundlePath);
+					string versionPrefix = VersionTools.GetVersionPrefix(build.BuildVersion);
 					bundleInfo.bundleCRCs[versionPrefix] = crc;
 				});
 				await Task.WhenAll(tasks);
 
-				GenerateBundleInfo.Run(builds[0].outputBundlePath, outputDirectory, bundleInfo);
+				GenerateBundleInfo.Run(builds[0].OutputBundlePath, outputDirectory, bundleInfo);
 			}
 
 			Debug.Log($"All builds done in {Timer.Mark()}s!");
