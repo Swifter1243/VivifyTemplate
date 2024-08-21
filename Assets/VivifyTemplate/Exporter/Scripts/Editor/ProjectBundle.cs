@@ -33,11 +33,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             }
         }
 
-        [MenuItem("Vivify/Set Bundle Name")]
+        [MenuItem("Vivify/Settings/Set Project Bundle Name")]
         private static void CreatePopup()
         {
             ProjectBundle window = CreateInstance<ProjectBundle>();
-            window.titleContent = new GUIContent("Set Bundle Name");
+            window.titleContent = new GUIContent("Set Project Bundle Name");
             window.minSize = new Vector2(400, 80);
             window.maxSize = window.minSize;
             window.ShowUtility();

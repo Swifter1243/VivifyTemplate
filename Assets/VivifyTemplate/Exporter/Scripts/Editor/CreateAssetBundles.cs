@@ -158,30 +158,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			};
 		}
 
-		[MenuItem("Vivify/Build/Build Windows 2019 Uncompressed")]
-		private static void BuildWindows2019Uncompressed()
-		{
-			BuildSingleUncompressed(BuildVersion.Windows2019);
-		}
-
-		[MenuItem("Vivify/Build/Build Windows 2021 Uncompressed")]
-		private static void BuildWindows2021Uncompressed()
-		{
-			BuildSingleUncompressed(BuildVersion.Windows2021);
-		}
-
-		[MenuItem("Vivify/Build/Build Android 2019 Uncompressed")]
-		private static void BuildAndroid2019Uncompressed()
-		{
-			BuildSingleUncompressed(BuildVersion.Android2019);
-		}
-
-		[MenuItem("Vivify/Build/Build Android 2021 Uncompressed")]
-		private static void BuildAndroid2021Uncompressed()
-		{
-			BuildSingleUncompressed(BuildVersion.Android2021);
-		}
-
 		[MenuItem("Vivify/Build/Build Working Version Uncompressed _F5")]
 		private static void BuildWorkingVersionUncompressed()
 		{

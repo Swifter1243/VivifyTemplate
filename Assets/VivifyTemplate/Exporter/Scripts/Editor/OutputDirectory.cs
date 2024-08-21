@@ -12,7 +12,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             {
                 return PlayerPrefs.GetString("bundleDir");
             }
-			
+
             string outputDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
             if (outputDirectory == "")
             {
@@ -22,7 +22,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             return outputDirectory;
         }
 
-        [MenuItem("Vivify/Forget Output Directory")]
+        [MenuItem("Vivify/Settings/Forget Output Directory")]
         private static void Forget()
         {
             PlayerPrefs.DeleteKey("bundleDir");
