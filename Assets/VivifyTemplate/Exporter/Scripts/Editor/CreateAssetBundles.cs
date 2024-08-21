@@ -180,7 +180,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath);
 				bundleInfo.bundleCRCs[versionPrefix] = crc;
-				GenerateBundleInfo.Run(build.OutputBundlePath, outputDirectory, bundleInfo);
+				SerializeBundleInfo.Serialize(build.OutputBundlePath, outputDirectory, bundleInfo);
 			}
 			else
 			{
@@ -225,7 +225,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				});
 				await Task.WhenAll(tasks);
 
-				GenerateBundleInfo.Run(builds[0].OutputBundlePath, outputDirectory, bundleInfo);
+				SerializeBundleInfo.Serialize(builds[0].OutputBundlePath, outputDirectory, bundleInfo);
 			}
 
 			Debug.Log($"All builds done in {Timer.Mark()}s!");
