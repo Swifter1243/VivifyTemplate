@@ -29,46 +29,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return xrManagerSettingsType != null;
 		}
 
-		private static async Task<bool> FixShaderKeywords(string bundlePath, string expectedOutput)
+		private static Task<bool> FixShaderKeywords(string bundlePath, string targetPath)
 		{
-			// Run Process
-			string processPath = Path.Combine(
-				Application.dataPath,
-				@"VivifyTemplate\Exporter\Dependencies\ShaderKeywordRewriter\ShaderKeywordRewriter.exe"
-			);
-			ProcessStartInfo processInfo = new ProcessStartInfo(processPath,  $"\"{bundlePath}\"")
-			{
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false, // Required for redirection
-				CreateNoWindow = true
-			};
-
-			string output = null;
-			string error = null;
-
-			await Task.Run(() =>
-			{
-				Process process = Process.Start(processInfo);
-				if (process == null)
-				{
-					throw new InvalidOperationException("Shader Keyword Rewriter program was null.");
-				}
-			
-				output = process.StandardOutput.ReadToEnd();
-				error = process.StandardError.ReadToEnd();
-					
-				process.WaitForExit();
-			});
-				
-			Debug.Log($"ShaderKeywordRewriter: {output}");
-			if (!string.IsNullOrEmpty(error))
-			{
-				throw new Exception($"Error from ShaderKeywordsRewriter: {error}");
-			}
-			
-			// Check if fixed bundle generated
-			return File.Exists(expectedOutput);
+			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath));
 		}
 
 		private static async Task<BuildReport> Build(
@@ -154,8 +117,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (shaderKeywordsFixed)
 			{
 				Debug.Log("2021 version detected, attempting to rebuild shader keywords...");
-				
-				string expectedOutput = Path.ChangeExtension(builtBundlePath, ".mod.avatar");
+
+				string expectedOutput = builtBundlePath + ".fixed";
 				bool success = await FixShaderKeywords(builtBundlePath, expectedOutput);
 				if (success)
 				{
