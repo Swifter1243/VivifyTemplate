@@ -32,7 +32,8 @@ namespace VivifyTemplate.Exporter.Scripts
 				SerializePrefab(bundleInfo, name);
 			}
 
-			string json = JsonConvert.SerializeObject(bundleInfo);
+			Formatting formatting = ShouldPrettifyBundleInfo.Value ? Formatting.Indented : Formatting.None;
+			string json = JsonConvert.SerializeObject(bundleInfo, formatting);
 			string assetInfoPath = Path.Combine(outputPath, BUNDLE_INFO_FILENAME);
 			File.WriteAllText(assetInfoPath, json);
 			Debug.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' to '{assetInfoPath}'");
