@@ -180,6 +180,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath);
 				bundleInfo.bundleCRCs[versionPrefix] = crc;
+				bundleInfo.isCompressed = false;
 				SerializeBundleInfo.Serialize(build.OutputBundlePath, outputDirectory, bundleInfo);
 			}
 			else
@@ -224,6 +225,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 					bundleInfo.bundleCRCs[versionPrefix] = crc;
 				});
 				await Task.WhenAll(tasks);
+
+				bool isNotCompressed = (BuildAssetBundleOptions.UncompressedAssetBundle & buildOptions) != 0;
+				bundleInfo.isCompressed = !isNotCompressed;
 
 				SerializeBundleInfo.Serialize(builds[0].OutputBundlePath, outputDirectory, bundleInfo);
 			}
