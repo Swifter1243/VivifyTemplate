@@ -14,7 +14,9 @@ namespace VivifyTemplate.Exporter.Scripts
             AssetsManager manager = new AssetsManager();
             BundleFileInstance bundleFileInstance = await LoadBundleFileAsync(manager, bundlePath);
             await crc.AppendAsync(bundleFileInstance.DataStream);
-            return crc.GetCurrentHashAsUInt32();
+            uint result = crc.GetCurrentHashAsUInt32();
+            manager.UnloadAll(true);
+            return result;
         }
         
         private static Task<BundleFileInstance> LoadBundleFileAsync(AssetsManager manager, string bundlePath)
