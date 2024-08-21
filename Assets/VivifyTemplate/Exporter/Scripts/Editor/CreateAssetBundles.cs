@@ -129,9 +129,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Directory.CreateDirectory(tempDir);
 
 			// Build
-			string tempBundlePath = Path.Combine(tempDir, projectBundleName);
-			string builtBundlePath = tempBundlePath;
-			string fixedBundlePath = null;
+			string builtBundlePath = Path.Combine(tempDir, projectBundleName); // This is the path to the bundle built by BuildPipeline.
+			string fixedBundlePath = null; // This is the path to the bundle built by ShaderKeywordsRewriter.
+			string usedBundlePath = builtBundlePath; // This is the path to the bundle actually cloned to the chosen output directory.
+			
 			BuildTarget buildTarget = isAndroid ? BuildTarget.Android : EditorUserBuildSettings.activeBuildTarget;
 
 			AssetBundleBuild[] builds = {
@@ -154,12 +155,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			{
 				Debug.Log("2021 version detected, attempting to rebuild shader keywords...");
 				
-				string expectedOutput = Path.ChangeExtension(tempBundlePath, ".mod.avatar");
-				bool success = await FixShaderKeywords(tempBundlePath, expectedOutput);
+				string expectedOutput = Path.ChangeExtension(builtBundlePath, ".mod.avatar");
+				bool success = await FixShaderKeywords(builtBundlePath, expectedOutput);
 				if (success)
 				{
 					fixedBundlePath = expectedOutput;
-					builtBundlePath = expectedOutput;
+					usedBundlePath = expectedOutput;
 				}
 				else
 				{
@@ -171,20 +172,20 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string fileName = VersionTools.GetBundleFileName(buildVersion);
 			string outputBundlePath = outputDirectory + "/" + fileName;
 
-			File.Copy(builtBundlePath, outputBundlePath, true);
+			File.Copy(usedBundlePath, outputBundlePath, true);
 			Debug.Log($"Successfully built bundle '{projectBundleName}' to '{outputBundlePath}'.");
 			
 			// Get CRC if shader keywords not fixed
 			uint? crc = null;
 			if (!shaderKeywordsFixed)
 			{
-				BuildPipeline.GetCRCForAssetBundle(builtBundlePath, out uint crcOut);
+				BuildPipeline.GetCRCForAssetBundle(usedBundlePath, out uint crcOut);
 				crc = crcOut;
 			}
 
 			return new BuildReport
 			{
-				tempBundlePath = tempBundlePath,
+				builtBundlePath = builtBundlePath,
 				fixedBundlePath = fixedBundlePath,
 				outputBundlePath = outputBundlePath,
 				shaderKeywordsFixed = shaderKeywordsFixed,
@@ -237,7 +238,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.outputBundlePath);
+				uint crc = build.crc ?? await CRCGrabber.GetCRCFromFile(build.fixedBundlePath);
 				InternalBuildCRCs[versionPrefix] = crc;
 				bundleInfo.bundleCRCs = InternalBuildCRCs;
 				GenerateBundleInfo.Run(build.outputBundlePath, outputDirectory, bundleInfo);
