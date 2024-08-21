@@ -14,9 +14,16 @@ namespace VivifyTemplate.Exporter.Scripts
 	{
 		private const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
 
-		public static void Serialize(string bundlePath, string outputPath, BundleInfo bundleInfo)
+		public static void Serialize(string outputPath, List<string> bundleFiles, Dictionary<string, uint> bundleCRCs, bool isCompressed)
 		{
-			AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
+			BundleInfo bundleInfo = new BundleInfo
+			{
+				bundleFiles = bundleFiles,
+				bundleCRCs = bundleCRCs,
+				isCompressed = isCompressed
+			};
+
+			AssetBundle bundle = AssetBundle.LoadFromFile(bundleInfo.bundleFiles[0]);
 			string[] names = bundle.GetAllAssetNames();
 
 			IEnumerable<string> materialNames = names.Where(x => x.Contains(".mat"));

@@ -175,13 +175,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ShouldExportBundleInfo.Value)
 			{
-				BundleInfo bundleInfo = new BundleInfo();
+				List<string> bundleFiles = new List<string>();
+				Dictionary<string, uint> bundleCRCs = new Dictionary<string, uint>();
+
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath);
-				bundleInfo.bundleCRCs[versionPrefix] = crc;
-				bundleInfo.isCompressed = false;
-				SerializeBundleInfo.Serialize(build.OutputBundlePath, outputDirectory, bundleInfo);
+				bundleCRCs[versionPrefix] = crc;
+				bundleFiles.Add(build.OutputBundlePath);
+
+				SerializeBundleInfo.Serialize(outputDirectory, bundleFiles, bundleCRCs, false);
 			}
 			else
 			{
@@ -216,20 +219,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ShouldExportBundleInfo.Value)
 			{
-				BundleInfo bundleInfo = new BundleInfo();
+				List<string> bundleFiles = new List<string>();
+				Dictionary<string, uint> bundleCRCs = new Dictionary<string, uint>();
 
 				IEnumerable<Task> tasks = builds.Select(async build =>
 				{
 					uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.OutputBundlePath);
 					string versionPrefix = VersionTools.GetVersionPrefix(build.BuildVersion);
-					bundleInfo.bundleCRCs[versionPrefix] = crc;
+
+					bundleFiles.Add(build.OutputBundlePath);
+					bundleCRCs[versionPrefix] = crc;
 				});
 				await Task.WhenAll(tasks);
 
 				bool isNotCompressed = (BuildAssetBundleOptions.UncompressedAssetBundle & buildOptions) != 0;
-				bundleInfo.isCompressed = !isNotCompressed;
-
-				SerializeBundleInfo.Serialize(builds[0].OutputBundlePath, outputDirectory, bundleInfo);
+				SerializeBundleInfo.Serialize(outputDirectory, bundleFiles, bundleCRCs, !isNotCompressed);
 			}
 
 			Debug.Log($"All builds done in {Timer.Mark()}s!");
