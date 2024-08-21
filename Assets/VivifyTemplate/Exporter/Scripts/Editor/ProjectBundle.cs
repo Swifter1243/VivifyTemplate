@@ -37,6 +37,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private static void CreatePopup()
         {
             ProjectBundle window = CreateInstance<ProjectBundle>();
+            window.titleContent = new GUIContent("Set Bundle Name");
             window.minSize = new Vector2(400, 80);
             window.maxSize = window.minSize;
             window.ShowUtility();
