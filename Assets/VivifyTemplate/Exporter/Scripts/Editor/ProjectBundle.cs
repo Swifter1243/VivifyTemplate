@@ -6,11 +6,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
     public class ProjectBundle : EditorWindow
     {
         private string _inputText;
+        private static readonly string PlayerPrefsKey = "projectBundle";
 
         public static string Value
         {
-            get => PlayerPrefs.GetString("projectBundle", "bundle");
-            set => PlayerPrefs.SetString("projectBundle", value);
+            get => PlayerPrefs.GetString(PlayerPrefsKey, "bundle");
+            set => PlayerPrefs.SetString(PlayerPrefsKey, value);
         }
 
         private void OnEnable()

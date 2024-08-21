@@ -6,22 +6,24 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
     public static class WorkingVersion
     {
+        private static readonly string PlayerPrefsKey = "projectBundle";
+
         public static BuildVersion Value
         {
             get
             {
-                string pref = PlayerPrefs.GetString("workingVersion", null);
+                string pref = PlayerPrefs.GetString(PlayerPrefsKey, null);
 
                 if (!Enum.TryParse(pref, out BuildVersion ver))
                 {
                     BuildVersion defaultVersion = BuildVersion.Windows2019;
-                    PlayerPrefs.SetString("workingVersion", defaultVersion.ToString());
+                    PlayerPrefs.SetString(PlayerPrefsKey, defaultVersion.ToString());
                     return defaultVersion;
                 }
 
                 return ver;
             }
-            set => PlayerPrefs.SetString("workingVersion", value.ToString());
+            set => PlayerPrefs.SetString(PlayerPrefsKey, value.ToString());
         }
 
         [MenuItem("Vivify/Settings/Set Working Version/Windows 2019")]

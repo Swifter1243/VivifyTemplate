@@ -6,11 +6,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
     public static class OutputDirectory
     {
+        private static readonly string PlayerPrefsKey = "outputDirectory";
+
         public static string Get()
         {
-            if (PlayerPrefs.HasKey("bundleDir"))
+            if (PlayerPrefs.HasKey(PlayerPrefsKey))
             {
-                return PlayerPrefs.GetString("bundleDir");
+                return PlayerPrefs.GetString(PlayerPrefsKey);
             }
 
             string outputDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
@@ -18,14 +20,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             {
                 throw new Exception("User closed the directory window.");
             }
-            PlayerPrefs.SetString("bundleDir", outputDirectory);
+            PlayerPrefs.SetString(PlayerPrefsKey, outputDirectory);
             return outputDirectory;
         }
 
         [MenuItem("Vivify/Settings/Forget Output Directory")]
         private static void Forget()
         {
-            PlayerPrefs.DeleteKey("bundleDir");
+            PlayerPrefs.DeleteKey(PlayerPrefsKey);
         }
     }
 }

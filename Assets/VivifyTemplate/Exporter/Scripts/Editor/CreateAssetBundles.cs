@@ -171,7 +171,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
 
-			if (ExportAssetInfo.Value)
+			if (ExportBundleInfo.Value)
 			{
 				BundleInfo bundleInfo = new BundleInfo();
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
@@ -211,7 +211,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				Debug.LogError($"Error trying to build: {e}");
 			}
 
-			if (ExportAssetInfo.Value)
+			if (ExportBundleInfo.Value)
 			{
 				BundleInfo bundleInfo = new BundleInfo();
 
