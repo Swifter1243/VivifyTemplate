@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,7 @@ using VivifyTemplate.Exporter.Scripts.Editor;
 
 namespace VivifyTemplate.Exporter.Scripts
 {
-	public static class GenerateBundleInfo
+	public static partial class GenerateBundleInfo
 	{
 		public const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
 
@@ -105,21 +104,6 @@ namespace VivifyTemplate.Exporter.Scripts
 			string assetInfoPath = Path.Combine(outputPath, BUNDLE_INFO_FILENAME);
 			File.WriteAllText(assetInfoPath, json);
 			Debug.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' to '{assetInfoPath}'");
-		}
-
-		[Serializable]
-		public class BundleInfo
-		{
-			public Dictionary<string, MaterialInfo> materials = new Dictionary<string, MaterialInfo>();
-			public Dictionary<string, string> prefabs = new Dictionary<string, string>();
-			public Dictionary<string, uint> bundleCRCs = new Dictionary<string, uint>();
-		}
-
-		[Serializable]
-		public class MaterialInfo
-		{
-			public string path;
-			public Dictionary<string, Dictionary<string, string>> properties = new Dictionary<string, Dictionary<string, string>>();
 		}
 	}
 }

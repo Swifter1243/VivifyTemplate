@@ -173,7 +173,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ExportAssetInfo.Value)
 			{
-				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
+				BundleInfo bundleInfo = new BundleInfo();
 				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
 				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath);
@@ -213,7 +213,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ExportAssetInfo.Value)
 			{
-				GenerateBundleInfo.BundleInfo bundleInfo = new GenerateBundleInfo.BundleInfo();
+				BundleInfo bundleInfo = new BundleInfo();
 
 				IEnumerable<Task> tasks = builds.Select(async build =>
 				{
