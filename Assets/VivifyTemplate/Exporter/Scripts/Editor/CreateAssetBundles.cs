@@ -266,7 +266,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static void ExportBundleInfo(BuildAssetBundleOptions buildOptions, IEnumerable<BuildReport> builds,
 			BuildProgressWindow buildProgressWindow, BuildSettings buildSettings)
 		{
-			bool isCompressed = buildOptions.HasFlag(BuildAssetBundleOptions.UncompressedAssetBundle);
+			bool isCompressed = !buildOptions.HasFlag(BuildAssetBundleOptions.UncompressedAssetBundle);
 
 			BundleInfo bundleInfo = new BundleInfo
 			{
