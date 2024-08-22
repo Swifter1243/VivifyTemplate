@@ -14,7 +14,7 @@ namespace VivifyTemplate.Exporter.Scripts.Structures
         /** This is the path to the bundle in the chosen output directory. */
         public string OutputBundlePath;
         public bool ShaderKeywordsFixed;
-        public uint? CRC;
+        public uint CRC;
         public bool IsAndroid;
         public BuildTarget BuildTarget;
         public BuildVersion BuildVersion;

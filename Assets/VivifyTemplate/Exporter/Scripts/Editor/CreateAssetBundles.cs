@@ -53,7 +53,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return xrManagerSettingsType != null;
 		}
 
-		private static Task<bool> FixShaderKeywords(string bundlePath, string targetPath, Logger logger)
+		private static Task<uint?> FixShaderKeywords(string bundlePath, string targetPath, Logger logger)
 		{
 			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger));
 		}
@@ -136,15 +136,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 
 			// Fix new shader keywords
+			uint crc = 0;
+
 			bool shaderKeywordsFixed = !is2019;
 			if (shaderKeywordsFixed)
 			{
 				logger.Log("2021 version detected, attempting to rebuild shader keywords...");
 
 				string expectedOutput = builtBundlePath + ".fixed";
-				bool success = await FixShaderKeywords(builtBundlePath, expectedOutput, logger);
-				if (success)
+				uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, logger);
+				if (resultCRC.HasValue)
 				{
+					crc = resultCRC.Value;
 					fixedBundlePath = expectedOutput;
 					usedBundlePath = expectedOutput;
 				}
@@ -154,20 +157,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				}
 			}
 
+			if (!shaderKeywordsFixed)
+			{
+				BuildPipeline.GetCRCForAssetBundle(usedBundlePath, out uint crcOut);
+				crc = crcOut;
+			}
+
 			// Move into project
 			string fileName = VersionTools.GetBundleFileName(buildVersion);
 			string outputBundlePath = buildSettings.OutputDirectory + "/" + fileName;
 
 			File.Copy(usedBundlePath, outputBundlePath, true);
 			logger.Log($"Successfully built bundle '{buildSettings.OutputDirectory}' to '{outputBundlePath}'.");
-
-			// Get CRC if shader keywords not fixed
-			uint? crc = null;
-			if (!shaderKeywordsFixed)
-			{
-				BuildPipeline.GetCRCForAssetBundle(usedBundlePath, out uint crcOut);
-				crc = crcOut;
-			}
 
 			return new BuildReport
 			{
@@ -198,7 +199,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				BuildReport build = await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, logger);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath, logger);
+				uint crc = build.CRC;
 				bundleCRCs[versionPrefix] = crc;
 				bundleFiles.Add(build.OutputBundlePath);
 
@@ -246,13 +247,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (buildSettings.ShouldExportBundleInfo)
 			{
-				await ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
+				ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
 			}
 
 			buildProgressWindow.FinishBuild($"Build done in {Timer.Mark()}s!");
 		}
 
-		private static async Task ExportBundleInfo(BuildAssetBundleOptions buildOptions, IEnumerable<BuildReport> builds,
+		private static void ExportBundleInfo(BuildAssetBundleOptions buildOptions, IEnumerable<BuildReport> builds,
 			BuildProgressWindow buildProgressWindow, BuildSettings buildSettings)
 		{
 			bool isCompressed = buildOptions.HasFlag(BuildAssetBundleOptions.UncompressedAssetBundle);
@@ -264,13 +265,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				isCompressed = isCompressed
 			};
 
-			IEnumerable<Task<BuildSerializeInfo?>> buildInfoTasks = builds.Select(build => GetBuildInfo(build, buildProgressWindow));
-			BuildSerializeInfo?[] buildInfos = await Task.WhenAll(buildInfoTasks);
-
-			foreach (BuildSerializeInfo buildInfo in buildInfos.OfType<BuildSerializeInfo>())
+			foreach (BuildReport build in builds)
 			{
-				bundleInfo.bundleFiles.Add(buildInfo.File);
-				bundleInfo.bundleCRCs[buildInfo.CRCkey] = buildInfo.CRC;
+				string versionPrefix = VersionTools.GetVersionPrefix(build.BuildVersion);
+				bundleInfo.bundleFiles.Add(build.OutputBundlePath);
+				bundleInfo.bundleCRCs.Add(versionPrefix, build.CRC);
 			}
 
 			SerializeBundleInfo(buildProgressWindow, buildSettings, bundleInfo);
@@ -288,40 +287,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			catch (Exception e)
 			{
 				serializeTask.Fail($"Error trying to serialize: {e}");
-			}
-		}
-
-		private static async Task<BuildSerializeInfo?> GetBuildInfo(BuildReport build, BuildProgressWindow buildProgressWindow)
-		{
-			string versionPrefix = VersionTools.GetVersionPrefix(build.BuildVersion);
-
-			if (build.CRC != null)
-			{
-				return new BuildSerializeInfo
-				{
-					File = build.OutputBundlePath,
-					CRCkey = versionPrefix,
-					CRC = build.CRC.Value
-				};
-			}
-
-			BuildTask task = buildProgressWindow.AddCRCCalculationTask(build.BuildVersion);
-
-			try
-			{
-				uint crc = await CRCGrabber.GetCRCFromFile(build.OutputBundlePath, task.GetLogger());
-				task.Success();
-				return new BuildSerializeInfo
-				{
-					File = build.OutputBundlePath,
-					CRCkey = versionPrefix,
-					CRC = crc
-				};
-			}
-			catch (Exception e)
-			{
-				task.Fail($"Error trying to get bundle info: {e}");
-				return null;
 			}
 		}
 	}

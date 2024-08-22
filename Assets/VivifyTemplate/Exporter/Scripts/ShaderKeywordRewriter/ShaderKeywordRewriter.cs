@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Hashing;
 using System.Threading.Tasks;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
@@ -11,7 +12,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
     public static class ShaderKeywordRewriter
     {
         // Adapted from: https://github.com/nicoco007/AssetBundleLoadingTools/blob/shader-keyword-rewriter/ShaderKeywordRewriter/Program.cs
-        public static bool Rewrite(string filePath, string targetPath, Logger logger)
+        public static async Task<uint?> Rewrite(string filePath, string targetPath, Logger logger)
         {
             logger.Log($"Loading asset bundle from '{filePath}'");
 
@@ -113,7 +114,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                 if (!anyKeywordsUpdated)
                 {
                     logger.Log("No shader keywords found in any materials; no changes needed");
-                    return false;
+                    return null;
                 }
 
                 typeTreeType.Nodes[0].Version =
@@ -132,6 +133,9 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                     // Pack doesn't use content replacers so we need to write uncompressed first
                     bundleInstance.file.Write(writer);
                 }
+
+                logger.Log($"Grabbing CRC from temporary file `{tempPath}`");
+                uint crc = await CRCGrabber.GetCRCFromFile(tempPath);
 
                 if (compressionType == AssetBundleCompressionType.None)
                 {
@@ -165,7 +169,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 
                 File.Delete(tempPath);
 
-                return true;
+                return crc;
             }
         }
     }
