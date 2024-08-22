@@ -206,8 +206,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				BuildReport build = await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, logger);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				uint crc = build.CRC;
-				bundleCRCs[versionPrefix] = crc;
+				bundleCRCs[versionPrefix] = build.CRC;
 				bundleFiles.Add(build.OutputBundlePath);
 
 				BundleInfo bundleInfo = new BundleInfo
