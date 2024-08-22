@@ -16,6 +16,29 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 	{
 		private static readonly SimpleTimer Timer = new SimpleTimer();
 
+		[MenuItem("Vivify/Build/Build Working Version Uncompressed _F5")]
+		private static void BuildWorkingVersionUncompressed()
+		{
+			BuildSingleUncompressed(WorkingVersion.Value);
+		}
+
+		[MenuItem("Vivify/Build/Build All Versions Compressed")]
+		private static void BuildAllVersionsCompressed()
+		{
+			IEnumerable<BuildVersion> versions = Enum.GetValues(typeof(BuildVersion)).OfType<BuildVersion>();
+			BuildAll(new List<BuildVersion>(versions), BuildAssetBundleOptions.None);
+		}
+
+		[MenuItem("Vivify/Build/Build Windows Versions Compressed")]
+		private static void BuildWindowsVersionsCompressed()
+		{
+			BuildAll(new List<BuildVersion>
+			{
+				BuildVersion.Windows2019,
+				BuildVersion.Windows2021
+			}, BuildAssetBundleOptions.None);
+		}
+
 		private static bool IsNewXRPluginInstalled()
 		{
 			// Check if the XR Management namespace exists
@@ -158,12 +181,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				BuildTarget = buildTarget,
 				BuildVersion = buildVersion
 			};
-		}
-
-		[MenuItem("Vivify/Build/Build Working Version Uncompressed _F5")]
-		private static void BuildWorkingVersionUncompressed()
-		{
-			BuildSingleUncompressed(WorkingVersion.Value);
 		}
 
 		private static async void BuildSingleUncompressed(BuildVersion version)
