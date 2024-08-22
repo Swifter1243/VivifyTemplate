@@ -12,7 +12,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
     public static class ShaderKeywordRewriter
     {
         // Adapted from: https://github.com/nicoco007/AssetBundleLoadingTools/blob/shader-keyword-rewriter/ShaderKeywordRewriter/Program.cs
-        public static async Task<uint?> Rewrite(string filePath, string targetPath, Logger logger)
+        public static async Task<uint?> Rewrite(string filePath, string targetPath, Logger logger, bool compress)
         {
             logger.Log($"Loading asset bundle from '{filePath}'");
 
@@ -23,15 +23,6 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                 BundleFileInstance bundleInstance = manager.LoadBundleFile(readStream, false);
 
                 logger.Log("Bundle created in Unity " + bundleInstance.file.Header.EngineVersion);
-
-                AssetBundleCompressionType compressionType = AssetBundleCompressionType.None;
-
-                if (bundleInstance.file.DataIsCompressed)
-                {
-                    compressionType = bundleInstance.file.GetCompressionType();
-                    logger.Log($"Decompressing using {compressionType}");
-                    bundleInstance.file = BundleHelper.UnpackBundle(bundleInstance.file);
-                }
 
                 int fileIndex = 0;
                 AssetsFileInstance assetsFileInstance = manager.LoadAssetsFileFromBundle(bundleInstance, fileIndex);
@@ -139,7 +130,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                     crc = null;
                 }
 
-                if (compressionType == AssetBundleCompressionType.None)
+                if (!compress)
                 {
                     logger.Log($"Saving to '{targetPath}'");
                     File.Copy(tempPath, targetPath, true);
@@ -162,7 +153,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                         using (AssetsFileWriter writer = new AssetsFileWriter(writeStream))
                         {
                             // LZMA is the modern default
-                            compressedBundle.Pack(writer, compressionType);
+                            compressedBundle.Pack(writer, AssetBundleCompressionType.LZMA);
                         }
                     }
 

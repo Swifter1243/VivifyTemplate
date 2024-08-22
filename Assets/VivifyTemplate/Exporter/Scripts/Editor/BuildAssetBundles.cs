@@ -39,9 +39,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}, BuildAssetBundleOptions.None);
 		}
 
-		private static Task<uint?> FixShaderKeywords(string bundlePath, string targetPath, Logger logger)
+		private static Task<uint?> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
 		{
-			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger));
+			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger, compress));
 		}
 
 		private static BuildVersionBuildInfo BuildVersionBuildInfo(BuildVersion version)
@@ -78,6 +78,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Check that the right XR packages are being used
 			CheckXRPackages(buildVersion, buildVersionBuildInfo);
 
+			// Check if bundle is compressed
+			bool isCompressed = !buildOptions.HasFlag(BuildAssetBundleOptions.UncompressedAssetBundle);
+
 			// Adjust build options
 			buildOptions = AdjustBuildOptionsForBuild(buildOptions, buildVersionBuildInfo);
 
@@ -110,7 +113,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				try
 				{
-					uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, buildTask.GetLogger());
+					uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, buildTask.GetLogger(), isCompressed);
 					fixedBundlePath = expectedOutput;
 					usedBundlePath = expectedOutput;
 
@@ -220,7 +223,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Logger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			Debug.Log($"Building '{buildSettings.OutputDirectory}' uncompressed...");
+			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{version}' uncompressed to '{buildSettings.OutputDirectory}'...");
 
 			void OnShaderKeywordsRewritten(BuildTask buildTask)
 			{
