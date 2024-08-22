@@ -10,6 +10,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 {
     public static class ShaderKeywordRewriter
     {
+        // Adapted from: https://github.com/nicoco007/AssetBundleLoadingTools/blob/shader-keyword-rewriter/ShaderKeywordRewriter/Program.cs
         public static bool Rewrite(string filePath, string targetPath, Logger logger)
         {
             logger.Log($"Loading asset bundle from '{filePath}'");
