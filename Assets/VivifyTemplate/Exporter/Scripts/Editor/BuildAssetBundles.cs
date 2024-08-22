@@ -267,6 +267,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				try
 				{
+					await Task.Delay(100);
 					BuildReport build = await Build(buildSettings, buildOptions, version, buildTask.GetLogger(),
 						buildProgressWindow.AddShaderKeywordsRewriterTask);
 					buildTask.Success();
@@ -282,6 +283,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (buildSettings.ShouldExportBundleInfo)
 			{
+				await Task.Delay(100);
 				ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
 			}
 
