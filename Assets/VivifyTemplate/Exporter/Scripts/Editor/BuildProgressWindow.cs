@@ -138,7 +138,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 bool isSelected = data.SelectedTaskIndex == i;
                 BuildTask selectedTask = buildTasks[i];
 
-                GUIStyle selectedStyle = new GUIStyle(EditorStyles.miniButton)
+                GUIStyle selectedStyle = new GUIStyle(EditorStyles.miniButton);
+                GUIStyle unselectedStyle = new GUIStyle(EditorStyles.miniButton)
                 {
                     normal =
                     {
@@ -146,7 +147,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     },
                 };
 
-                GUIStyle buttonStyle = isSelected ? selectedStyle : new GUIStyle(EditorStyles.miniButton);
+                GUIStyle buttonStyle = isSelected ? selectedStyle : unselectedStyle;
 
                 Color taskColor = GetTaskColor(selectedTask);
                 buttonStyle.normal.textColor = taskColor;
