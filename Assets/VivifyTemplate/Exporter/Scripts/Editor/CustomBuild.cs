@@ -61,7 +61,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 options |= BuildAssetBundleOptions.UncompressedAssetBundle;
             }
 
-            CreateAssetBundles.BuildAll(_versions.ToList(), options);
+            BuildAssetBundles.BuildAll(_versions.ToList(), options);
         }
 
         [MenuItem("Vivify/Build/Custom Build")]

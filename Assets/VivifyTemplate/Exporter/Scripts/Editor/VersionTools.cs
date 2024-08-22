@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Structures;
 
-namespace VivifyTemplate.Exporter.Scripts
+namespace VivifyTemplate.Exporter.Scripts.Editor
 {
     public static class VersionTools
     {
@@ -38,6 +39,23 @@ namespace VivifyTemplate.Exporter.Scripts
             string path = Path.Combine(Application.temporaryCachePath, version.ToString());
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             return path;
+        }
+
+        public static void SetSinglePassMode(BuildVersion version)
+        {
+            switch (version)
+            {
+                case BuildVersion.Windows2019:
+                case BuildVersion.Android2019:
+                    PlayerSettings.stereoRenderingPath = StereoRenderingPath.SinglePass;
+                    break;
+                case BuildVersion.Windows2021:
+                case BuildVersion.Android2021:
+                    PlayerSettings.stereoRenderingPath = StereoRenderingPath.Instancing;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(version), version, null);
+            }
         }
     }
 }
