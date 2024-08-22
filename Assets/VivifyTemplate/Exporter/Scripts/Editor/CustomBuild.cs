@@ -46,8 +46,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             {
                 if (GUILayout.Button("Build"))
                 {
-                    Build();
                     Close();
+                    Build();
                 }
             }
         }
