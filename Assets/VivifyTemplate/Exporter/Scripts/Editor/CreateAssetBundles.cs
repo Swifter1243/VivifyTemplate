@@ -199,9 +199,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Logger logger = new Logger();
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			// Get Directory
-			string outputDirectory = OutputDirectory.Get();
-
 			if (ShouldExportBundleInfo.Value)
 			{
 				List<string> bundleFiles = new List<string>();
