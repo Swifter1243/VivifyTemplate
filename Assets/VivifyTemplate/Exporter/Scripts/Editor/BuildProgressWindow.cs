@@ -100,9 +100,23 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private void DrawStatus()
         {
             bool finished = _finishMessage != string.Empty;
-            string message = finished ? _finishMessage : "Building...";
 
-            GUILayout.Label(message, EditorStyles.largeLabel);
+            if (finished)
+            {
+                GUILayout.Label(_finishMessage, EditorStyles.largeLabel);
+            }
+            else
+            {
+                int dotAmount = Mathf.FloorToInt(Time.realtimeSinceStartup) % 3 + 1;
+                string message = "Building";
+
+                for (int i = 0; i < dotAmount; i++)
+                {
+                    message += ".";
+                }
+
+                GUILayout.Label(message, EditorStyles.largeLabel);
+            }
         }
 
         private Color GetTaskColor(BuildTask buildTask)
