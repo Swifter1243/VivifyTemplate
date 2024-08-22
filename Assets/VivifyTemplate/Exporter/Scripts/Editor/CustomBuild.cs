@@ -6,7 +6,7 @@ using VivifyTemplate.Exporter.Scripts.Structures;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
-    public class BuildPopup : EditorWindow
+    public class CustomBuild : EditorWindow
     {
         private readonly HashSet<BuildVersion> _versions = new HashSet<BuildVersion>();
         private bool _compressed = false;
@@ -67,7 +67,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         [MenuItem("Vivify/Build/Custom Build")]
         private static void CreatePopup()
         {
-            BuildPopup window = CreateInstance<BuildPopup>();
+            CustomBuild window = CreateInstance<CustomBuild>();
             window.titleContent = new GUIContent("Custom Build");
             window.minSize = new Vector2(400, 240);
             window.maxSize = window.minSize;

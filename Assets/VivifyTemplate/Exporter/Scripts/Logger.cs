@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace VivifyTemplate.Exporter.Scripts
 {
@@ -6,9 +7,13 @@ namespace VivifyTemplate.Exporter.Scripts
     {
         private string _log = string.Empty;
 
-        public void Log(string message)
+        public async void Log(string message)
         {
-            _log += message + Environment.NewLine;
+            await Task.Run(() =>
+            {
+                string time = DateTime.Now.ToString("HH:mm:ss");
+                _log += $"[{time}] " + message + Environment.NewLine;
+            });
         }
 
         public string GetOutput()
