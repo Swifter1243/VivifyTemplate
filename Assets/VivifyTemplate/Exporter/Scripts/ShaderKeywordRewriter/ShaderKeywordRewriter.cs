@@ -111,12 +111,6 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                     materialInfo.SetNewData(materialBaseField);
                 }
 
-                if (!anyKeywordsUpdated)
-                {
-                    logger.Log("No shader keywords found in any materials; no changes needed");
-                    return null;
-                }
-
                 typeTreeType.Nodes[0].Version =
                     8; // necessary for new fields to be read - doesn't seem to affect loading in 2019
                 typeTreeType.Nodes = typeTreeTypeWorkingCopy.Nodes;
@@ -134,8 +128,16 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                     bundleInstance.file.Write(writer);
                 }
 
-                logger.Log($"Grabbing CRC from temporary file `{tempPath}`");
-                uint crc = await CRCGrabber.GetCRCFromFile(tempPath);
+                uint? crc;
+                if (anyKeywordsUpdated)
+                {
+                    logger.Log($"Grabbing CRC from temporary file `{tempPath}`");
+                    crc = await CRCGrabber.GetCRCFromFile(tempPath);
+                }
+                else
+                {
+                    crc = null;
+                }
 
                 if (compressionType == AssetBundleCompressionType.None)
                 {

@@ -83,6 +83,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Check correct packages are being used for XR
 			bool isAndroid = buildVersion == BuildVersion.Android2019 || buildVersion == BuildVersion.Android2021;
 			bool is2019 = buildVersion == BuildVersion.Windows2019 || buildVersion == BuildVersion.Android2019;
+			bool tryToFixShaderKeywords = !is2019;
 
 			if (is2019 && IsNewXRPluginInstalled()) {
 				string name = Enum.GetName(typeof(BuildVersion), buildVersion);
@@ -93,6 +94,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			// Ensure rebuild
 			buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
+
 
 			// Set Single Pass Mode
 			switch (buildVersion)
@@ -113,6 +115,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string tempDir = VersionTools.GetTempDirectory(buildVersion);
 			Directory.Delete(tempDir, true);
 			Directory.CreateDirectory(tempDir);
+
+			// Set build to uncompressed if it will be compressed by ShaderKeywordsRewriter
+			if (tryToFixShaderKeywords)
+			{
+				buildOptions |= BuildAssetBundleOptions.UncompressedAssetBundle;
+			}
 
 			// Build
 			string builtBundlePath = Path.Combine(tempDir, buildSettings.ProjectBundle); // This is the path to the bundle built by BuildPipeline.
@@ -138,18 +146,20 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			// Fix new shader keywords
 			uint crc = 0;
 
-			bool shaderKeywordsFixed = !is2019;
+			bool shaderKeywordsFixed = tryToFixShaderKeywords;
 			if (shaderKeywordsFixed)
 			{
 				logger.Log("2021 version detected, attempting to rebuild shader keywords...");
 
 				string expectedOutput = builtBundlePath + ".fixed";
 				uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, logger);
+
+				fixedBundlePath = expectedOutput;
+				usedBundlePath = expectedOutput;
+
 				if (resultCRC.HasValue)
 				{
 					crc = resultCRC.Value;
-					fixedBundlePath = expectedOutput;
-					usedBundlePath = expectedOutput;
 				}
 				else
 				{
