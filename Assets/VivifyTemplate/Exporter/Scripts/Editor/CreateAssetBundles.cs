@@ -201,20 +201,17 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			if (ShouldExportBundleInfo.Value)
 			{
-				List<string> bundleFiles = new List<string>();
-				Dictionary<string, uint> bundleCRCs = new Dictionary<string, uint>();
+				BundleInfo bundleInfo = new BundleInfo
+				{
+					bundleFiles = new List<string>(),
+					bundleCRCs = new Dictionary<string, uint>(),
+					isCompressed = false
+				};
 
 				BuildReport build = await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, logger);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				bundleCRCs[versionPrefix] = build.CRC;
-				bundleFiles.Add(build.OutputBundlePath);
-
-				BundleInfo bundleInfo = new BundleInfo
-				{
-					bundleFiles = bundleFiles,
-					bundleCRCs = bundleCRCs,
-					isCompressed = false
-				};
+				bundleInfo.bundleCRCs[versionPrefix] = build.CRC;
+				bundleInfo.bundleFiles.Add(build.OutputBundlePath);
 
 				BundleInfoProcessor.Serialize(buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, logger);
 			}
