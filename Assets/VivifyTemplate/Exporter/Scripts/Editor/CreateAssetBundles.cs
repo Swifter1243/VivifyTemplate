@@ -53,18 +53,19 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			return xrManagerSettingsType != null;
 		}
 
-		private static Task<bool> FixShaderKeywords(string bundlePath, string targetPath)
+		private static Task<bool> FixShaderKeywords(string bundlePath, string targetPath, Logger logger)
 		{
-			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath));
+			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger));
 		}
 
 		private static async Task<BuildReport> Build(
 			string outputDirectory,
 			BuildAssetBundleOptions buildOptions,
-			BuildVersion buildVersion
+			BuildVersion buildVersion,
+			Logger logger
 		)
 		{
-			Debug.Log($"Building bundle '{ProjectBundle.Value}' for version '{buildVersion.ToString()}'");
+			logger.Log($"Building bundle '{ProjectBundle.Value}' for version '{buildVersion.ToString()}'");
 
 			// Check output directory exists
 			if (!Directory.Exists(outputDirectory))
@@ -140,10 +141,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			bool shaderKeywordsFixed = !is2019;
 			if (shaderKeywordsFixed)
 			{
-				Debug.Log("2021 version detected, attempting to rebuild shader keywords...");
+				logger.Log("2021 version detected, attempting to rebuild shader keywords...");
 
 				string expectedOutput = builtBundlePath + ".fixed";
-				bool success = await FixShaderKeywords(builtBundlePath, expectedOutput);
+				bool success = await FixShaderKeywords(builtBundlePath, expectedOutput, logger);
 				if (success)
 				{
 					fixedBundlePath = expectedOutput;
@@ -160,7 +161,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string outputBundlePath = outputDirectory + "/" + fileName;
 
 			File.Copy(usedBundlePath, outputBundlePath, true);
-			Debug.Log($"Successfully built bundle '{projectBundleName}' to '{outputBundlePath}'.");
+			logger.Log($"Successfully built bundle '{projectBundleName}' to '{outputBundlePath}'.");
 
 			// Get CRC if shader keywords not fixed
 			uint? crc = null;
@@ -186,6 +187,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static async void BuildSingleUncompressed(BuildVersion version)
 		{
 			Timer.Mark();
+			Logger logger = new Logger();
 
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
@@ -195,25 +197,27 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				List<string> bundleFiles = new List<string>();
 				Dictionary<string, uint> bundleCRCs = new Dictionary<string, uint>();
 
-				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				BuildReport build = await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version, logger);
 				string versionPrefix = VersionTools.GetVersionPrefix(version);
-				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath);
+				uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.FixedBundlePath, logger);
 				bundleCRCs[versionPrefix] = crc;
 				bundleFiles.Add(build.OutputBundlePath);
 
-				SerializeBundleInfo.Serialize(outputDirectory, bundleFiles, bundleCRCs, false);
+				SerializeBundleInfo.Serialize(outputDirectory, logger, bundleFiles, bundleCRCs, false);
 			}
 			else
 			{
-				await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version);
+				await Build(outputDirectory, BuildAssetBundleOptions.UncompressedAssetBundle, version, logger);
 			}
 
 			Debug.Log($"Build done in {Timer.Mark()}s!");
+			Debug.Log($"Output: {logger.GetOutput()}");
 		}
 
 		public static async void BuildAll(List<BuildVersion> buildVersions, BuildAssetBundleOptions buildOptions)
 		{
 			Timer.Mark();
+			Logger logger = new Logger();
 
 			// Get Directory
 			string outputDirectory = OutputDirectory.Get();
@@ -224,7 +228,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			{
 				IEnumerable<Task> tasks = buildVersions.Select(async version =>
 				{
-					BuildReport build = await Build(outputDirectory, buildOptions, version);
+					BuildReport build = await Build(outputDirectory, buildOptions, version, logger);
 					builds.Add(build);
 				});
 				await Task.WhenAll(tasks);
@@ -241,7 +245,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				IEnumerable<Task> tasks = builds.Select(async build =>
 				{
-					uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.OutputBundlePath);
+					uint crc = build.CRC ?? await CRCGrabber.GetCRCFromFile(build.OutputBundlePath, logger);
 					string versionPrefix = VersionTools.GetVersionPrefix(build.BuildVersion);
 
 					bundleFiles.Add(build.OutputBundlePath);
@@ -250,10 +254,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				await Task.WhenAll(tasks);
 
 				bool isNotCompressed = (BuildAssetBundleOptions.UncompressedAssetBundle & buildOptions) != 0;
-				SerializeBundleInfo.Serialize(outputDirectory, bundleFiles, bundleCRCs, !isNotCompressed);
+				SerializeBundleInfo.Serialize(outputDirectory, logger, bundleFiles, bundleCRCs, !isNotCompressed);
 			}
 
-			Debug.Log($"All builds done in {Timer.Mark()}s!");
+			Debug.Log($"Build done in {Timer.Mark()}s!");
+			Debug.Log($"Output: {logger.GetOutput()}");
 		}
 	}
 }

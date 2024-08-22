@@ -9,10 +9,9 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 {
     public static class ShaderKeywordRewriter
     {
-        // Console.WriteLine should be replaced by Debug.Log to be seen, but I didn't want to flood the log
-        public static bool Rewrite(string filePath, string targetPath)
+        public static bool Rewrite(string filePath, string targetPath, Logger logger)
         {
-            Console.WriteLine($"Loading asset bundle from '{filePath}'");
+            logger.Log($"Loading asset bundle from '{filePath}'");
 
             AssetsManager manager = new AssetsManager();
 
@@ -20,14 +19,14 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
             {
                 BundleFileInstance bundleInstance = manager.LoadBundleFile(readStream, false);
 
-                Console.WriteLine("Bundle created in Unity " + bundleInstance.file.Header.EngineVersion);
+                logger.Log("Bundle created in Unity " + bundleInstance.file.Header.EngineVersion);
 
                 AssetBundleCompressionType compressionType = AssetBundleCompressionType.None;
 
                 if (bundleInstance.file.DataIsCompressed)
                 {
                     compressionType = bundleInstance.file.GetCompressionType();
-                    Console.WriteLine($"Decompressing using {compressionType}");
+                    logger.Log($"Decompressing using {compressionType}");
                     bundleInstance.file = BundleHelper.UnpackBundle(bundleInstance.file);
                 }
 
@@ -79,13 +78,13 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 
                 bool anyKeywordsUpdated = false;
 
-                Console.WriteLine("Updating materials");
+                logger.Log("Updating materials");
 
                 foreach (AssetFileInfo materialInfo in assetsFile.GetAssetsOfType(AssetClassID.Material))
                 {
                     AssetTypeValueField materialBaseField = manager.GetBaseField(assetsFileInstance, materialInfo);
 
-                    Console.WriteLine("-> " + materialBaseField["m_Name"].AsString);
+                    logger.Log("-> " + materialBaseField["m_Name"].AsString);
 
                     materialBaseField.InitializeField(typeTreeTypeWorkingCopy, "m_ValidKeywords");
                     materialBaseField.InitializeField(typeTreeTypeWorkingCopy, "m_InvalidKeywords");
@@ -97,7 +96,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 
                     foreach (string shaderKeyword in shaderKeywords)
                     {
-                        Console.WriteLine("--> " + shaderKeyword);
+                        logger.Log("--> " + shaderKeyword);
 
                         AssetTypeValueField arrayValue =
                             ValueBuilder.DefaultValueFieldFromArrayTemplate(validKeywordsArray);
@@ -111,7 +110,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 
                 if (!anyKeywordsUpdated)
                 {
-                    Console.WriteLine("No shader keywords found in any materials; no changes needed");
+                    logger.Log("No shader keywords found in any materials; no changes needed");
                     return false;
                 }
 
@@ -122,7 +121,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 
                 bundleInstance.file.BlockAndDirInfo.DirectoryInfos[fileIndex].SetNewData(assetsFile);
 
-                Console.WriteLine("Writing updated data");
+                logger.Log("Writing updated data");
 
                 string tempPath = Path.GetTempFileName();
                 using (FileStream writeStream = File.Open(tempPath, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -134,12 +133,12 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
 
                 if (compressionType == AssetBundleCompressionType.None)
                 {
-                    Debug.Log($"Saving to '{targetPath}'");
+                    logger.Log($"Saving to '{targetPath}'");
                     File.Copy(tempPath, targetPath, true);
                 }
                 else
                 {
-                    Debug.Log($"Compressing bundle and saving to '{targetPath}'");
+                    logger.Log($"Compressing bundle and saving to '{targetPath}'");
                     AssetBundleFile compressedBundle = new AssetBundleFile();
 
                     using (FileStream uncompressedReadStream = File.OpenRead(tempPath))

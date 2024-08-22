@@ -14,7 +14,13 @@ namespace VivifyTemplate.Exporter.Scripts
 	{
 		private const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
 
-		public static void Serialize(string outputPath, List<string> bundleFiles, Dictionary<string, uint> bundleCRCs, bool isCompressed)
+		public static void Serialize(
+			string outputPath,
+			Logger logger,
+			List<string> bundleFiles,
+			Dictionary<string, uint> bundleCRCs,
+			bool isCompressed
+		)
 		{
 			BundleInfo bundleInfo = new BundleInfo
 			{
@@ -43,7 +49,7 @@ namespace VivifyTemplate.Exporter.Scripts
 			string json = JsonConvert.SerializeObject(bundleInfo, formatting);
 			string assetInfoPath = Path.Combine(outputPath, BUNDLE_INFO_FILENAME);
 			File.WriteAllText(assetInfoPath, json);
-			Debug.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' to '{assetInfoPath}'");
+			logger.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' to '{assetInfoPath}'");
 		}
 
 		private static void SerializePrefab(BundleInfo bundleInfo, string name)
