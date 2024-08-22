@@ -15,12 +15,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         }
 
         private readonly List<BuildTask> _individualBuilds = new List<BuildTask>();
-        private readonly List<BuildTask> _crcCalculationTasks = new List<BuildTask>();
+        private readonly List<BuildTask> _shaderKeywordsRewriterTasks = new List<BuildTask>();
         private BuildTask _serializeTask;
         private string _finishMessage = string.Empty;
 
         private readonly TaskWindowData _individualBuildTaskWindow = new TaskWindowData();
-        private readonly TaskWindowData _crcCalculationTaskWindow = new TaskWindowData();
+        private readonly TaskWindowData _shaderKeywordRewriterTaskWindow = new TaskWindowData();
         private Vector2 _serializeTaskScrollPosition;
 
         public BuildTask AddIndividualBuild(BuildVersion version)
@@ -31,12 +31,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             return buildTask;
         }
 
-        public BuildTask AddCRCCalculationTask(BuildVersion version)
+        public void AddShaderKeywordsRewriterTask(BuildTask task)
         {
-            string taskName = "CRC Calculation for " + version;
-            BuildTask buildTask = new BuildTask(taskName);
-            _crcCalculationTasks.Add(buildTask);
-            return buildTask;
+            _shaderKeywordsRewriterTasks.Add(task);
         }
 
         public BuildTask StartSerialization()
@@ -54,19 +51,19 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private void OnGUI()
         {
             DrawIndividualBuilds();
-            DrawCRCCalculations();
+            DrawShaderKeywordRewriteTasks();
             DrawSerializeTask();
             DrawStatus();
         }
 
         private void DrawIndividualBuilds()
         {
-            DrawTaskWindow("Individual Builds", _individualBuildTaskWindow, _individualBuilds);
+            DrawTaskWindow("Building Bundles", _individualBuildTaskWindow, _individualBuilds);
         }
 
-        private void DrawCRCCalculations()
+        private void DrawShaderKeywordRewriteTasks()
         {
-            DrawTaskWindow("CRC Calculations", _crcCalculationTaskWindow, _crcCalculationTasks);
+            DrawTaskWindow("Shader Keyword Rewrite Tasks", _shaderKeywordRewriterTaskWindow, _shaderKeywordsRewriterTasks);
         }
 
         private void DrawSerializeTask()
