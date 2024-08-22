@@ -220,6 +220,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Logger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
+			Debug.Log($"Building '{buildSettings.OutputDirectory}' uncompressed...");
+
 			void OnShaderKeywordsRewritten(BuildTask buildTask)
 			{
 				shaderKeywordsLogger = buildTask.GetLogger();
