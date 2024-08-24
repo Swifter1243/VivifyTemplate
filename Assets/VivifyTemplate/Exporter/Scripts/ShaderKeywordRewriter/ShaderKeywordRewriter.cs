@@ -137,7 +137,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                 }
                 else
                 {
-                    logger.Log($"Compressing bundle and saving to '{targetPath}'");
+                    logger.Log($"Compressing bundle and saving to '{targetPath}' (this may take multiple minutes)");
                     AssetBundleFile compressedBundle = new AssetBundleFile();
 
                     using (FileStream uncompressedReadStream = File.OpenRead(tempPath))
