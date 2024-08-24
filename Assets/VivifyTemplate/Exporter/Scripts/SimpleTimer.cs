@@ -9,9 +9,11 @@ namespace VivifyTemplate.Exporter.Scripts
 
         public float Reset()
         {
+            UpdateElapsed();
+            float oldElapsed = _elapsed;
             _startTime = Time.realtimeSinceStartup;
-            _elapsed = Time.realtimeSinceStartup - _startTime;
-            return _elapsed;
+            UpdateElapsed();
+            return oldElapsed;
         }
 
         public float UpdateElapsed()
