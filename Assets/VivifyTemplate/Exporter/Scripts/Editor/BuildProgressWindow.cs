@@ -8,6 +8,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
     public class BuildProgressWindow : EditorWindow
     {
+        public SimpleTimer timer = new SimpleTimer();
+
         public enum BuildState
         {
             InProgress,
@@ -18,7 +20,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private readonly List<BuildTask> _individualBuilds = new List<BuildTask>();
         private readonly List<BuildTask> _shaderKeywordsRewriterTasks = new List<BuildTask>();
         private BuildTask _serializeTask;
-        private string _finishMessage = string.Empty;
+        private bool _finished = false;
 
         private readonly TaskWindowData _individualBuildTaskWindow = new TaskWindowData();
         private readonly TaskWindowData _shaderKeywordRewriterTaskWindow = new TaskWindowData();
@@ -44,9 +46,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             return buildTask;
         }
 
-        public void FinishBuild(string message)
+        public void FinishBuild()
         {
-            _finishMessage = message;
+            timer.UpdateElapsed();
+            _finished = true;
         }
 
         private void Update()
@@ -105,22 +108,23 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
         private void DrawStatus()
         {
-            bool finished = _finishMessage != string.Empty;
-
-            if (finished)
+            if (_finished)
             {
-                GUILayout.Label(_finishMessage, EditorStyles.largeLabel);
+                float elapsed = Mathf.Round(timer.GetElapsed() * 100) / 100;
+                string message = $"Build done in {elapsed}s!";
+                GUILayout.Label(message, EditorStyles.largeLabel);
             }
             else
             {
-                string message = "Building" + GetEllipses();
+                float elapsed = Mathf.Floor(timer.UpdateElapsed());
+                string message = $"Building ({elapsed}s elapsed)...";
                 GUILayout.Label(message, EditorStyles.largeLabel);
             }
         }
 
-        private static string GetEllipses()
+        private string GetEllipses()
         {
-            int dotAmount = Mathf.FloorToInt(Time.realtimeSinceStartup) % 3 + 1;
+            int dotAmount = Mathf.FloorToInt(timer.GetElapsed() * 2f) % 3 + 1;
 
             switch (dotAmount)
             {
@@ -239,6 +243,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             window.minSize = new Vector2(800, 150 + 150 + 150 + 100);
             window.maxSize = window.minSize;
             window.ShowUtility();
+            window.timer.Reset();
             return window;
         }
     }

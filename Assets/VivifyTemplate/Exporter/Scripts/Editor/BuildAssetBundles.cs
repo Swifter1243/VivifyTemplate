@@ -218,7 +218,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		private static async void BuildSingleUncompressed(BuildVersion version)
 		{
-			Timer.Mark();
+			Timer.Reset();
 			Logger mainLogger = new Logger();
 			Logger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
@@ -251,7 +251,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, mainLogger, OnShaderKeywordsRewritten);
 			}
 
-			Debug.Log($"Build done in {Timer.Mark()}s!");
+			Debug.Log($"Build done in {Timer.Reset()}s!");
 			Debug.Log($"--- Main Output --- \n{mainLogger.GetOutput()}");
 
 			if (shaderKeywordsLogger != null)
@@ -262,7 +262,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		public static async void BuildAll(List<BuildVersion> buildVersions, BuildAssetBundleOptions buildOptions)
 		{
-			Timer.Mark();
 			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
@@ -292,7 +291,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
 			}
 
-			buildProgressWindow.FinishBuild($"Build done in {Timer.Mark()}s!");
+			buildProgressWindow.FinishBuild();
 		}
 
 		private static void ExportBundleInfo(BuildAssetBundleOptions buildOptions, IEnumerable<BuildReport> builds,
