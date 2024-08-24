@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Structures;
@@ -46,6 +47,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         public void FinishBuild(string message)
         {
             _finishMessage = message;
+        }
+
+        private void Update()
+        {
+            Repaint();
         }
 
         private void OnGUI()
@@ -107,16 +113,22 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             }
             else
             {
-                int dotAmount = Mathf.FloorToInt(Time.realtimeSinceStartup) % 3 + 1;
-                string message = "Building";
-
-                for (int i = 0; i < dotAmount; i++)
-                {
-                    message += ".";
-                }
-
+                string message = "Building" + GetEllipses();
                 GUILayout.Label(message, EditorStyles.largeLabel);
             }
+        }
+
+        private static string GetEllipses()
+        {
+            int dotAmount = Mathf.FloorToInt(Time.realtimeSinceStartup) % 3 + 1;
+
+            switch (dotAmount)
+            {
+                case 1: return ".";
+                case 2: return "..";
+                case 3: return "...";
+                default: return "...";
+            };
         }
 
         private Color GetTaskColor(BuildTask buildTask)
@@ -182,7 +194,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             if (data.SelectedTaskIndex != -1 && buildTasks.Count > data.SelectedTaskIndex)
             {
                 BuildTask task = buildTasks[data.SelectedTaskIndex];
+
                 string log = task.GetLogger().GetOutput();
+
+                if (task.GetState() == BuildState.InProgress && !task.GetLogger().IsEmpty())
+                {
+                    log += "\n" + GetEllipses();
+                }
+
                 data.ContentScrollPosition = EditorGUILayout.BeginScrollView(data.ContentScrollPosition, GUILayout.MaxHeight(height));
 
                 GUIStyle textAreaStyle = new GUIStyle(EditorStyles.textArea)

@@ -10,13 +10,19 @@ namespace VivifyTemplate.Exporter.Scripts
 
         public async void Log(string message)
         {
-            _empty = false;
-
             await Task.Run(() =>
             {
                 string time = DateTime.Now.ToString("HH:mm:ss");
-                _log += $"[{time}] " + message + Environment.NewLine;
+
+                if (!_empty)
+                {
+                    _log += Environment.NewLine;
+                }
+
+                _log += $"[{time}] " + message;
             });
+
+            _empty = false;
         }
 
         public string GetOutput()
