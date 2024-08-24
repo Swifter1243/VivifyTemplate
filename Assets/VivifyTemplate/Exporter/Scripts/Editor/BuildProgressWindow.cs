@@ -202,8 +202,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     log += "\n" + GetEllipses();
                 }
 
-                data.ContentScrollPosition = EditorGUILayout.BeginScrollView(data.ContentScrollPosition, GUILayout.MaxHeight(height));
-
                 GUIStyle textAreaStyle = new GUIStyle(EditorStyles.textArea)
                 {
                     wordWrap = true,
@@ -212,6 +210,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                         background = EditorStyles.textArea.normal.background // Use normal background
                     }
                 };
+
+                float contentHeight = Math.Max(height, textAreaStyle.CalcHeight(new GUIContent(log), width));
+
+                // Convert Y position (distance from top -> distance from bottom)
+                data.ContentScrollPosition.y = contentHeight + data.ContentScrollPosition.y;
+
+                data.ContentScrollPosition = EditorGUILayout.BeginScrollView(data.ContentScrollPosition, GUILayout.MaxHeight(height));
+
+                // Convert Y position (distance from bottom -> distance from top)
+                data.ContentScrollPosition.y -= contentHeight;
 
                 EditorGUI.BeginDisabledGroup(true); // Disable editing
                 EditorGUILayout.TextArea(log, textAreaStyle, GUILayout.ExpandHeight(true));
