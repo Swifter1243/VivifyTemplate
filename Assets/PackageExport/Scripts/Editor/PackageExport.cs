@@ -2,56 +2,67 @@
 using UnityEditor;
 using UnityEngine;
 
-public class PackageExport
+namespace PackageExport.Scripts.Editor
 {
-    static void ExportPackage(string[] assetPaths, string packageName)
+    public static class PackageExport
     {
-        string outputPath = "Assets/PackageExport/Output";
-        string packageFile = $"{packageName}.unitypackage";
-        string packagePath = Path.Combine(outputPath, packageFile);
-        AssetDatabase.ExportPackage(assetPaths, packagePath, ExportPackageOptions.Recurse);
-        Debug.Log($"'{packageFile}' was exported to '{outputPath}'");
-    }
+        private const string OUTPUT_PATH = "Assets/PackageExport/Output";
 
-    [MenuItem("Package Export/Run")]
-    static void Run()
-    {
-        ExportAll();
-        ExportExporter();
-        ExportExamples();
-        ExportCgIncludes();
-    }
+        private static void ExportPackage(string[] assetPaths, string packageName)
+        {
+            string packageFile = $"{packageName}.unitypackage";
+            string packagePath = Path.Combine(OUTPUT_PATH, packageFile);
+            AssetDatabase.ExportPackage(assetPaths, packagePath, ExportPackageOptions.Recurse);
+            Debug.Log($"'{packageFile}' was exported to '{OUTPUT_PATH}'");
+        }
 
-    static void ExportAll()
-    {
-        string[] assetPaths = {
-            "Assets/VivifyTemplate"
-        };
-        ExportPackage(assetPaths, "VivifyTemplate-All");
-    }
+        private static void OpenFolderInProject(string projectPath)
+        {
+            string absolutePath = Path.GetFullPath(projectPath);
+            Application.OpenURL($"file://{absolutePath}");
+        }
 
-    static void ExportExporter()
-    {
-        string[] assetPaths = {
-            "Assets/VivifyTemplate/Exporter",
-        };
-        ExportPackage(assetPaths, "VivifyTemplate-Exporter");
-    }
+        [MenuItem("Package Export/Run")]
+        public static void Run()
+        {
+            ExportAll();
+            ExportExporter();
+            ExportExamples();
+            ExportCgIncludes();
+            OpenFolderInProject(OUTPUT_PATH);
+        }
 
-    static void ExportExamples()
-    {
-        string[] assetPaths = {
-            "Assets/VivifyTemplate/Examples",
-            "Assets/VivifyTemplate/CGIncludes",
-        };
-        ExportPackage(assetPaths, "VivifyTemplate-Examples");
-    }
+        private static void ExportAll()
+        {
+            string[] assetPaths = {
+                "Assets/VivifyTemplate"
+            };
+            ExportPackage(assetPaths, "VivifyTemplate-All");
+        }
 
-    static void ExportCgIncludes()
-    {
-        string[] assetPaths = {
-            "Assets/VivifyTemplate/CGIncludes",
-        };
-        ExportPackage(assetPaths, "VivifyTemplate-CGIncludes");
+        private static void ExportExporter()
+        {
+            string[] assetPaths = {
+                "Assets/VivifyTemplate/Exporter",
+            };
+            ExportPackage(assetPaths, "VivifyTemplate-Exporter");
+        }
+
+        private static void ExportExamples()
+        {
+            string[] assetPaths = {
+                "Assets/VivifyTemplate/Examples",
+                "Assets/VivifyTemplate/CGIncludes",
+            };
+            ExportPackage(assetPaths, "VivifyTemplate-Examples");
+        }
+
+        private static void ExportCgIncludes()
+        {
+            string[] assetPaths = {
+                "Assets/VivifyTemplate/CGIncludes",
+            };
+            ExportPackage(assetPaths, "VivifyTemplate-CGIncludes");
+        }
     }
 }
