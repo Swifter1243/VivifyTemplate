@@ -114,16 +114,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				try
 				{
 					uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, buildTask.GetLogger(), isCompressed);
-					fixedBundlePath = expectedOutput;
-					usedBundlePath = expectedOutput;
 
 					if (resultCRC.HasValue)
 					{
 						crc = resultCRC.Value;
+						fixedBundlePath = expectedOutput;
+						usedBundlePath = expectedOutput;
 					}
 					else
 					{
 						shaderKeywordsFixed = false;
+						BuildPipeline.GetCRCForAssetBundle(builtBundlePath, out uint crcOut);
+						crc = crcOut;
 					}
 
 					buildTask.Success();
@@ -133,8 +135,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 					buildTask.Fail("There was an error trying to rewrite shader keywords: " + e);
 				}
 			}
-
-			if (!shaderKeywordsFixed)
+			else
 			{
 				BuildPipeline.GetCRCForAssetBundle(usedBundlePath, out uint crcOut);
 				crc = crcOut;

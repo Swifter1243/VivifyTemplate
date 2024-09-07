@@ -119,7 +119,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                     bundleInstance.file.Write(writer);
                 }
 
-                uint? crc;
+                uint crc;
                 if (anyKeywordsUpdated)
                 {
                     logger.Log($"Grabbing CRC from temporary file `{tempPath}`");
@@ -127,7 +127,8 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                 }
                 else
                 {
-                    crc = null;
+                    logger.Log("No keywords needed to be fixed.");
+                    return null;
                 }
 
                 if (!compress)
