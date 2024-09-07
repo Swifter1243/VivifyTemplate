@@ -114,12 +114,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				try
 				{
 					uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, buildTask.GetLogger(), isCompressed);
+					fixedBundlePath = expectedOutput;
+					usedBundlePath = expectedOutput;
 
 					if (resultCRC.HasValue)
 					{
 						crc = resultCRC.Value;
-						fixedBundlePath = expectedOutput;
-						usedBundlePath = expectedOutput;
 					}
 					else
 					{
