@@ -39,7 +39,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}, BuildAssetBundleOptions.None);
 		}
 
-		private static Task<uint?> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
+		private static Task<uint> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
 		{
 			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger, compress));
 		}
@@ -113,20 +113,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 				try
 				{
-					uint? resultCRC = await FixShaderKeywords(builtBundlePath, expectedOutput, buildTask.GetLogger(), isCompressed);
+					crc = await FixShaderKeywords(builtBundlePath, expectedOutput, buildTask.GetLogger(), isCompressed);
 					fixedBundlePath = expectedOutput;
 					usedBundlePath = expectedOutput;
-
-					if (resultCRC.HasValue)
-					{
-						crc = resultCRC.Value;
-					}
-					else
-					{
-						shaderKeywordsFixed = false;
-						BuildPipeline.GetCRCForAssetBundle(builtBundlePath, out uint crcOut);
-						crc = crcOut;
-					}
 
 					buildTask.Success();
 				}

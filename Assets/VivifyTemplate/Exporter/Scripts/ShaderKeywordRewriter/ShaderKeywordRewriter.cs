@@ -12,7 +12,7 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
     public static class ShaderKeywordRewriter
     {
         // Adapted from: https://github.com/nicoco007/AssetBundleLoadingTools/blob/shader-keyword-rewriter/ShaderKeywordRewriter/Program.cs
-        public static async Task<uint?> Rewrite(string filePath, string targetPath, Logger logger, bool compress)
+        public static async Task<uint> Rewrite(string filePath, string targetPath, Logger logger, bool compress)
         {
             logger.Log($"Loading asset bundle from '{filePath}'");
 
@@ -119,16 +119,8 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                     bundleInstance.file.Write(writer);
                 }
 
-                uint? crc;
-                if (anyKeywordsUpdated)
-                {
-                    logger.Log($"Grabbing CRC from temporary file `{tempPath}`");
-                    crc = await CRCGrabber.GetCRCFromFile(tempPath);
-                }
-                else
-                {
-                    crc = null;
-                }
+                logger.Log($"Grabbing CRC from temporary file `{tempPath}`");
+                uint crc = await CRCGrabber.GetCRCFromFile(tempPath);
 
                 if (!compress)
                 {
