@@ -165,28 +165,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
             for (int i = 0; i < buildTasks.Count; i++)
             {
-                bool isSelected = data.SelectedTaskIndex == i;
-                BuildTask selectedTask = buildTasks[i];
-
-                GUIStyle selectedStyle = new GUIStyle(EditorStyles.miniButton);
-                GUIStyle unselectedStyle = new GUIStyle(EditorStyles.miniButton)
-                {
-                    normal =
-                    {
-                        background = Texture2D.blackTexture,
-                    },
-                };
-
-                GUIStyle buttonStyle = isSelected ? selectedStyle : unselectedStyle;
-
-                Color taskColor = GetTaskColor(selectedTask);
-                buttonStyle.normal.textColor = taskColor;
-                buttonStyle.hover.textColor = taskColor;
-
-                if (GUILayout.Button(selectedTask.GetName(), buttonStyle))
-                {
-                    data.SelectedTaskIndex = i;
-                }
+                DrawTaskButton(data, buildTasks, i);
             }
 
             EditorGUILayout.EndScrollView();
@@ -198,42 +177,72 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             if (data.SelectedTaskIndex != -1 && buildTasks.Count > data.SelectedTaskIndex)
             {
                 BuildTask task = buildTasks[data.SelectedTaskIndex];
-
                 string log = task.GetLogger().GetOutput();
 
-                if (task.GetState() == BuildState.InProgress && !task.GetLogger().IsEmpty())
-                {
-                    log += "\n" + GetEllipses();
-                }
-
-                GUIStyle textAreaStyle = new GUIStyle(EditorStyles.textArea)
-                {
-                    wordWrap = true,
-                    normal = {
-                        textColor = Color.white,  // Override text color
-                        background = EditorStyles.textArea.normal.background // Use normal background
-                    }
-                };
-
-                float contentHeight = Math.Max(height, textAreaStyle.CalcHeight(new GUIContent(log), width));
-
-                // Convert Y position (distance from top -> distance from bottom)
-                data.ContentScrollPosition.y = contentHeight + data.ContentScrollPosition.y;
-
-                data.ContentScrollPosition = EditorGUILayout.BeginScrollView(data.ContentScrollPosition, GUILayout.MaxHeight(height));
-
-                // Convert Y position (distance from bottom -> distance from top)
-                data.ContentScrollPosition.y -= contentHeight;
-
-                EditorGUI.BeginDisabledGroup(true); // Disable editing
-                EditorGUILayout.TextArea(log, textAreaStyle, GUILayout.ExpandHeight(true));
-                EditorGUI.EndDisabledGroup();
-
-                EditorGUILayout.EndScrollView();
+                DrawTaskLog(data, task, log, height, width);
             }
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawTaskButton(TaskWindowData data, List<BuildTask> buildTasks, int i)
+        {
+            bool isSelected = data.SelectedTaskIndex == i;
+            BuildTask selectedTask = buildTasks[i];
+
+            GUIStyle selectedStyle = new GUIStyle(EditorStyles.miniButton);
+            GUIStyle unselectedStyle = new GUIStyle(EditorStyles.miniButton)
+            {
+                normal =
+                {
+                    background = Texture2D.blackTexture,
+                },
+            };
+
+            GUIStyle buttonStyle = isSelected ? selectedStyle : unselectedStyle;
+
+            Color taskColor = GetTaskColor(selectedTask);
+            buttonStyle.normal.textColor = taskColor;
+            buttonStyle.hover.textColor = taskColor;
+
+            if (GUILayout.Button(selectedTask.GetName(), buttonStyle))
+            {
+                data.SelectedTaskIndex = i;
+            }
+        }
+
+        private void DrawTaskLog(TaskWindowData data, BuildTask task, string log, float height, float width)
+        {
+            if (task.GetState() == BuildState.InProgress && !task.GetLogger().IsEmpty())
+            {
+                log += "\n" + GetEllipses();
+            }
+
+            GUIStyle textAreaStyle = new GUIStyle(EditorStyles.textArea)
+            {
+                wordWrap = true,
+                normal = {
+                    textColor = Color.white,  // Override text color
+                    background = EditorStyles.textArea.normal.background // Use normal background
+                }
+            };
+
+            float contentHeight = Math.Max(height, textAreaStyle.CalcHeight(new GUIContent(log), width));
+
+            // Convert Y position (distance from top -> distance from bottom)
+            data.ContentScrollPosition.y = contentHeight + data.ContentScrollPosition.y;
+
+            data.ContentScrollPosition = EditorGUILayout.BeginScrollView(data.ContentScrollPosition, GUILayout.MaxHeight(height));
+
+            // Convert Y position (distance from bottom -> distance from top)
+            data.ContentScrollPosition.y -= contentHeight;
+
+            EditorGUI.BeginDisabledGroup(true); // Disable editing
+            EditorGUILayout.TextArea(log, textAreaStyle, GUILayout.ExpandHeight(true));
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUILayout.EndScrollView();
         }
 
         public static BuildProgressWindow CreatePopup()
