@@ -98,6 +98,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			BuildTarget buildTarget = DoBuild(buildSettings, buildOptions, buildVersionBuildInfo, assetPaths, tempDirectory);
 
+			// Set Single Pass mode back
+			PlayerSettings.stereoRenderingPath = StereoRenderingPath.SinglePass;
+
 			// Fix new shader keywords
 			uint crc = 0;
 
