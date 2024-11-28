@@ -243,6 +243,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndScrollView();
+
+            if (GUILayout.Button("Copy Log"))
+            {
+                GUIUtility.systemCopyBuffer = log;
+            }
         }
 
         public static BuildProgressWindow CreatePopup()
