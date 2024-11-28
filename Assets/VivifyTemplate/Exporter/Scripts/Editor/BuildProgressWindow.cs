@@ -104,9 +104,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUILayout.EndScrollView();
+                LogCopyButton(log);
             }
 
             GUILayout.EndVertical();
+        }
+
+        private static void LogCopyButton(string log)
+        {
+            if (GUILayout.Button("Copy Log"))
+            {
+                GUIUtility.systemCopyBuffer = log;
+            }
         }
 
         private void DrawStatus()
@@ -251,11 +260,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndScrollView();
-
-            if (GUILayout.Button("Copy Log"))
-            {
-                GUIUtility.systemCopyBuffer = log;
-            }
+            LogCopyButton(log);
         }
 
         public static BuildProgressWindow CreatePopup()
