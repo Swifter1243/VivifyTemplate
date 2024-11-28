@@ -20,6 +20,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private readonly List<BuildTask> _individualBuilds = new List<BuildTask>();
         private readonly List<BuildTask> _shaderKeywordsRewriterTasks = new List<BuildTask>();
         private BuildTask _serializeTask;
+        private BuildSettings _buildSettings;
         private bool _finished = false;
 
         private readonly TaskWindowData _individualBuildTaskWindow = new TaskWindowData();
@@ -39,10 +40,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             _shaderKeywordsRewriterTasks.Add(task);
         }
 
-        public BuildTask StartSerialization()
+        public BuildTask StartSerialization(BuildSettings buildSettings)
         {
             BuildTask buildTask = new BuildTask("Serialization");
             _serializeTask = buildTask;
+            _buildSettings = buildSettings;
             return buildTask;
         }
 
@@ -113,6 +115,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 float elapsed = Mathf.Round(timer.GetElapsed() * 100) / 100;
                 string message = $"Build done in {elapsed}s!";
                 GUILayout.Label(message, EditorStyles.largeLabel);
+
+                if (GUILayout.Button("Open Output Folder"))
+                {
+                    FolderOpener.OpenFolder(_buildSettings.OutputDirectory);
+                }
             }
             else
             {

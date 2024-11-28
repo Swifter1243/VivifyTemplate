@@ -311,7 +311,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		private static void SerializeBundleInfo(BuildProgressWindow buildProgressWindow, BuildSettings buildSettings, BundleInfo bundleInfo)
 		{
-			BuildTask serializeTask = buildProgressWindow.StartSerialization();
+			BuildTask serializeTask = buildProgressWindow.StartSerialization(buildSettings);
 
 			try
 			{
