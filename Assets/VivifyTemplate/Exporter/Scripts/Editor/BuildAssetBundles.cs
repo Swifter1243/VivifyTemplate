@@ -195,7 +195,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			string[] assetPaths = AssetDatabase.GetAssetPathsFromAssetBundle(bundleName);
 			if (assetPaths.Length == 0)
 			{
-				throw new Exception($"The bundle '{bundleName}' is empty.");
+				throw new Exception($"The bundle '{bundleName}' contained no assets. Try adding assets to the asset bundle.");
 			}
 
 			return assetPaths;
