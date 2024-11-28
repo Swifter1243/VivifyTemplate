@@ -6,8 +6,10 @@ Shader "Vivify/Grab Pass/Distort"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Tags {
+            "RenderType"="Opaque"
+            "Queue"="Transparent"
+        }
 
         GrabPass { "_GrabTexture1" } // Base game also uses this grab pass texture name so it's best to reuse it
 
