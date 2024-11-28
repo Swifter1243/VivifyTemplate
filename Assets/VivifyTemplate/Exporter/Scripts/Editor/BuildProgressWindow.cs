@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Structures;
@@ -20,8 +21,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private readonly List<BuildTask> _individualBuilds = new List<BuildTask>();
         private readonly List<BuildTask> _shaderKeywordsRewriterTasks = new List<BuildTask>();
         private BuildTask _serializeTask;
-        private BuildSettings _buildSettings;
         private bool _finished = false;
+        private BuildSettings _buildSettings;
 
         private readonly TaskWindowData _individualBuildTaskWindow = new TaskWindowData();
         private readonly TaskWindowData _shaderKeywordRewriterTaskWindow = new TaskWindowData();
@@ -40,16 +41,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             _shaderKeywordsRewriterTasks.Add(task);
         }
 
-        public BuildTask StartSerialization(BuildSettings buildSettings)
+        public BuildTask StartSerialization()
         {
             BuildTask buildTask = new BuildTask("Serialization");
             _serializeTask = buildTask;
-            _buildSettings = buildSettings;
             return buildTask;
         }
 
-        public void FinishBuild()
+        public void FinishBuild(BuildSettings buildSettings)
         {
+            _buildSettings = buildSettings;
             timer.UpdateElapsed();
             _finished = true;
         }

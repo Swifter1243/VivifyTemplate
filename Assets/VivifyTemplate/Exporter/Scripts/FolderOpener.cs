@@ -1,12 +1,9 @@
-﻿
-
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 
 namespace VivifyTemplate.Exporter.Scripts
 {
-    public class FolderOpener
+    public static class FolderOpener
     {
         public static void OpenFolder(string path)
         {

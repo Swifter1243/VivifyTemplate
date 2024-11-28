@@ -284,7 +284,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
 			}
 
-			buildProgressWindow.FinishBuild();
+			buildProgressWindow.FinishBuild(buildSettings);
 		}
 
 		private static void ExportBundleInfo(BuildAssetBundleOptions buildOptions, IEnumerable<BuildReport> builds,
@@ -311,7 +311,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		private static void SerializeBundleInfo(BuildProgressWindow buildProgressWindow, BuildSettings buildSettings, BundleInfo bundleInfo)
 		{
-			BuildTask serializeTask = buildProgressWindow.StartSerialization(buildSettings);
+			BuildTask serializeTask = buildProgressWindow.StartSerialization();
 
 			try
 			{
