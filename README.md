@@ -65,7 +65,7 @@ To use the exporter, you can run anything in the `Vivify > Build` tab. You can a
 - **Uncompressed**: Advised for quick iteration. Do not distribute.
 - **Compressed**: Takes much longer but is necessary for final upload. 
 
-When you first run the exporter, you will be asked for an output directory. This is where your `bundleinfo.json` and asset bundles will end up. The path your set will be remembered for subsequent builds. To change the output directory, run `Vivify > Settings > Forget Output Directory` and build again.
+When you first run the exporter, you will be asked for an output directory. This is where your `bundleinfo.json` and asset bundles will end up. The path you set will be remembered for subsequent builds. To change the output directory, run `Vivify > Settings > Forget Output Directory` and build again.
 
 By default, your project will try to export a bundle called `bundle`. You can change this in `Vivify > Settings > Set Project Bundle Name`.
 
