@@ -9,7 +9,7 @@ VivifyTemplate is a tool designed for the Unity side development of Vivify maps 
 # Setup
 
 1. Create and open a Unity project for version **2019.4.28f1**. The download will be somewhere on [this page](https://unity.com/releases/editor/archive).
-2. Download whatever modules you want from the [latest release](https://github.com/Swifter1243/VivifyTemplate/releases).
+2. Download whatever VivifyTemplate modules you want from the [latest release](https://github.com/Swifter1243/VivifyTemplate/releases).
 3. Install them by double-clicking them. Follow the import instructions in your editor.
 4. In your project, you should see a "Vivify" tab. Setup your project with `Vivify > Setup Project`.
 
