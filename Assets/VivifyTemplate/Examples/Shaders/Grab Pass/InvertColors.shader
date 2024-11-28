@@ -34,14 +34,14 @@ Shader "Vivify/Grab Pass/InvertColors"
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            UNITY_DECLARE_SCREENSPACE_TEXTURE(_GrabPass);
+            UNITY_DECLARE_SCREENSPACE_TEXTURE(_GrabTexture1);
 
             v2f vert (appdata v)
             {
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
+
                 // Clip position
                 o.vertex = UnityObjectToClipPos(v.vertex);
 
@@ -50,19 +50,19 @@ Shader "Vivify/Grab Pass/InvertColors"
 
                 // screenUV
                 o.screenUV = ComputeGrabScreenPos(o.vertex);
-                
+
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                
+
                 // Get the position of this fragment on the screen
                 float2 screenUV = (i.screenUV) / i.screenUV.w;
 
                 // Get screen color
-                float4 screenCol = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabPass, screenUV);
+                float4 screenCol = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabTexture1, screenUV);
 
                 // Returns inverted screen color
                 return 1 - screenCol;
