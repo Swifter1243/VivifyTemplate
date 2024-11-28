@@ -2,8 +2,8 @@
 
 VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 modules: **Exporter**, **Examples**, and **CGIncludes**.
 
-- [**Exporter**](#exporter): Builds asset bundles to your map project.
-- [**Examples**](#examples): Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
+- [**Exporter**](#exporter-module): Builds asset bundles to your map project.
+- [**Examples**](#examples-module): Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
 - **CGIncludes**: Resources for shaders (noise, math... etc.)
 
 # Setup
@@ -17,7 +17,7 @@ VivifyTemplate is a tool designed for the Unity side development of Vivify maps 
 
 If you are trying to update any modules in your project, please delete the old ones before installation to prevent namespace conflicts with potentially remaining files.
 
-# Exporter
+# Exporter Module
 
 The exporter handles exporting bundles for various versions of Unity and Beat Saber.
 - **Windows 2019**: PC Beat Saber 1.29.1, uses `Single Pass`.
@@ -75,7 +75,7 @@ When you press `F5` or use `Vivify > Build > Build Working Version Uncompressed`
 
 The working version just allows you to configure a version to quickly export to for fast iteration. You can change your working version in `Vivify > Settings > Set Working Version`.
 
-# Examples
+# Examples Module
 
 If you installed the "Examples" package, navigate to `Assets/VivifyTemplate/Examples/Scenes`. Here you'll find a bunch of scenes that explore various concepts.
 
