@@ -8,6 +8,7 @@
     SubShader
     {
         Tags { "RenderType"="Opaque" }
+        Cull Front // Render only the back of triangles
 
         Pass
         {
@@ -39,7 +40,7 @@
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.localPosition = v.vertex;
                 return o;
