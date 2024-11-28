@@ -13,6 +13,10 @@ VivifyTemplate is a tool designed for the Unity side development of Vivify maps 
 3. Install them by double-clicking them. Follow the import instructions in your editor.
 4. In your project, you should see a "Vivify" tab. Setup your project with `Vivify > Setup Project`.
 
+### Updating Modules
+
+If you are trying to update any modules in your project, please delete the old ones before installation to prevent namespace conflicts with potentially remaining files.
+
 # Exporter
 
 The exporter handles exporting bundles for various versions of Unity and Beat Saber.
