@@ -56,6 +56,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			};
 		}
 
+		private static void ResetStereoRenderingPath()
+		{
+			PlayerSettings.stereoRenderingPath = StereoRenderingPath.SinglePass;
+			AssetDatabase.SaveAssets();
+		}
+
 		private static async Task<BuildReport> Build(
 			BuildSettings buildSettings,
 			BuildAssetBundleOptions buildOptions,
@@ -99,7 +105,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			BuildTarget buildTarget = DoBuild(buildSettings, buildOptions, buildVersionBuildInfo, assetPaths, tempDirectory);
 
 			// Set Single Pass mode back
-			PlayerSettings.stereoRenderingPath = StereoRenderingPath.SinglePass;
+			ResetStereoRenderingPath();
 
 			// Fix new shader keywords
 			uint crc = 0;
