@@ -73,6 +73,8 @@ crashlytics-build.properties
 
 # Package Outputs
 /[Aa]ssets/PackageExport/Output
+/[Aa]ssets/PackageExport/Output.meta
 
 # Testing
 /[Aa]ssets/Testing
+/[Aa]ssets/Testing.meta
