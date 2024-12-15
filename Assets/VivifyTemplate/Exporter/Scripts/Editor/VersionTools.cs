@@ -12,10 +12,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         {
             switch (version)
             {
-                case BuildVersion.Windows2019: return "bundle_windows2019";
-                case BuildVersion.Windows2021: return "bundle_windows2021";
-                case BuildVersion.Android2019: return "bundle_android2019";
-                case BuildVersion.Android2021: return "bundle_android2021";
+                case BuildVersion.Windows2019: return "bundleWindows2019.vivify";
+                case BuildVersion.Windows2021: return "bundleWindows2021.vivify";
+                case BuildVersion.Android2019: return "bundleAndroid2019.vivify";
+                case BuildVersion.Android2021: return "bundleAndroid2021.vivify";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(version), version, null);
             }
