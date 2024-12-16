@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: CustomNoteDebris
   m_Shader: {fileID: 4800000, guid: 12d89931f8af55c4d9767e132bf7ff2b, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: DEBRIS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0

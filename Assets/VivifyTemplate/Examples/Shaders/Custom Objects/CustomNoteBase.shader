@@ -2,7 +2,7 @@ Shader "Vivify/CustomObjects/CustomNote"
 {
     Properties
     {
-        [ToggleUI] _Debris ("Debris", Int) = 0
+        [Toggle(DEBRIS)] _Debris ("Debris", Int) = 0
         _CutoutEdgeWidth("Cutout Edge Width", Range(0,0.1)) = 0.02
 
         /*
@@ -31,6 +31,7 @@ Shader "Vivify/CustomObjects/CustomNote"
             #pragma fragment frag
             #pragma multi_compile_instancing // Insert for GPU instancing
             // Ensure to check "Enable GPU Instancing" on the material
+            #pragma shader_feature DEBRIS
 
             #include "UnityCG.cginc"
             #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
@@ -58,7 +59,6 @@ Shader "Vivify/CustomObjects/CustomNote"
             UNITY_INSTANCING_BUFFER_END(Props)
 
             // Register regular properties (apply to every note)
-            bool _Debris;
             float _CutoutEdgeWidth;
 
             v2f vert (appdata v)
@@ -94,7 +94,7 @@ Shader "Vivify/CustomObjects/CustomNote"
                 // This "c" value will quantify the note's visibility, where negatives are invisible
                 float c = 0;
 
-                if (_Debris) {
+                #if DEBRIS
                     // Shift our local position along the slice normal by the cut offset
                     float3 samplePoint = i.localPos + CutPlane.xyz * CutPlane.w;
 
@@ -107,13 +107,13 @@ Shader "Vivify/CustomObjects/CustomNote"
                     Cutout acts as an offset to this visibility so that the plane appears to consume the debris
                     */
                     c = planeDistance - Cutout * 0.25;
-                } else {
+                #else
                     // Calculate 3D simplex noise based on the fragment position
                     float noise = simplex(i.localPos * 2);
 
                     // Use cutout to lower the values of the noise into the negatives, clipping them
                     c = noise - Cutout;
-                }
+                #endif
 
                 // Negative values of c will discard the pixel
                 clip(c);
