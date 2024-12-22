@@ -4,7 +4,7 @@ VivifyTemplate is a tool designed for the Unity side development of Vivify maps 
 
 - [**Exporter**](#exporter-module): Builds asset bundles to your map project.
 - [**Examples**](#examples-module): Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
-- **CGIncludes**: Resources for shaders (noise, math... etc.)
+- **CGIncludes**: Dependencies/functions for shaders (noise, math... etc.)
 
 # Setup
 
