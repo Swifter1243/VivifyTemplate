@@ -92,3 +92,15 @@ If you installed the "Examples" package, navigate to `Assets/VivifyTemplate/Exam
 - **Vertex**: How to manipulate vertices in a vertex shader.
 
 When looking at example objects, their names in the hierarchy will tell you what they are doing. Be sure to explore their shaders (`Assets/VivifyTemplate/Examples/Shaders`), as they include in-code comments providing explanations.
+
+# Extra
+
+## TextMeshPro
+
+The version of TextMeshPro that is installed with Unity version **2019.4.28f1** is newer than what Beat Saber uses in 1.29.1, and therefore causes some alignment issues. In order to downgrade:
+- Go to `Window > Package Manager`
+- Find TextMeshPro and remove it.
+- Click the `+` and click "Add package from git URL".
+- Enter `com.unity.textmeshpro@1.4.1`
+
+TextMeshPro should be on the same version that Beat Saber uses now.
