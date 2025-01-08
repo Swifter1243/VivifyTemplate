@@ -61,6 +61,10 @@ It also exports a `bundleinfo.json` file which contains the correct bundle check
 
 ---
 
+Before using the exporter, **make sure the assets you want are in your bundle**. When an asset is selected, there's a dropdown field in the bottom of the inspector which will allow you to attach the asset to an asset bundle.
+
+![image](https://github.com/user-attachments/assets/6f1b945f-d38f-4f8b-ba42-d546adf12dcb)
+
 To use the exporter, you can run anything in the `Vivify > Build` tab. You can also press `F5` to quickly export to your [working version](#working-version).
 - **Uncompressed**: Advised for quick iteration. Do not distribute.
 - **Compressed**: Takes much longer but is necessary for final upload. 
