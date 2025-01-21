@@ -8,27 +8,10 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 public class QuestSetup : EditorWindow
 {
-
-    private static readonly string QuestProjectPlayerPrefsKey = "questPath";
-    private static readonly string UnityEditorPlayerPrefsKey = "unityEditor";
-
-    private static readonly string UnityHubPath = "C:/Program Files/Unity Hub/Unity Hub.exe"; //This *should* be the same for everyone, need more testing
-
-    public static string ProjectPath
-    {
-        get => UnityEngine.PlayerPrefs.GetString(QuestProjectPlayerPrefsKey, "");
-        set => UnityEngine.PlayerPrefs.SetString(QuestProjectPlayerPrefsKey, value);
-    }
-
-    public static string UnityEditor
-    {
-        get => UnityEngine.PlayerPrefs.GetString(UnityEditorPlayerPrefsKey, "");
-        set => UnityEngine.PlayerPrefs.SetString(UnityEditorPlayerPrefsKey, value);
-    }
-
     private ConcurrentDictionary<string, string> _unityVersions = new ConcurrentDictionary<string, string>() { };
 
     private async Task GetUnityVersions()
@@ -36,11 +19,9 @@ public class QuestSetup : EditorWindow
         _unityVersions.Clear();
         using (Process myProcess = new Process())
         {
-            UnityEngine.Debug.Log("skibidi");
-
             myProcess.StartInfo.UseShellExecute = false;
             myProcess.StartInfo.RedirectStandardOutput = true;
-            myProcess.StartInfo.FileName = UnityHubPath;
+            myProcess.StartInfo.FileName = QuestPreferences.UnityHubPath;
             myProcess.StartInfo.Arguments = "-- --headless editors --installed";
 
             myProcess.Start();
@@ -64,7 +45,7 @@ public class QuestSetup : EditorWindow
 
     private void OnEnable()
     {
-        if (UnityEditor == "")
+        if (QuestPreferences.UnityEditor == "")
         {
             new Thread(async () =>
             {
@@ -77,11 +58,11 @@ public class QuestSetup : EditorWindow
 
     private bool EditorChecks()
     {
-        if (UnityEditor != "") //debug
+        if (QuestPreferences.UnityEditor != "") //debug
         {
             if (GUILayout.Button("Reset"))
             {
-                UnityEditor = "";
+                QuestPreferences.UnityEditor = "";
                 new Thread(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
@@ -90,18 +71,18 @@ public class QuestSetup : EditorWindow
                 }).Start();
             }
         }
-        if (UnityEditor == "" && _unityVersions.Count == 0)
+        if (QuestPreferences.UnityEditor == "" && _unityVersions.Count == 0)
         {
             EditorGUILayout.LabelField("Searching for Unity editors...", EditorStyles.boldLabel);
             return false;
         }
-        if (UnityEditor == "" && _unityVersions.Count > 0)
+        if (QuestPreferences.UnityEditor == "" && _unityVersions.Count > 0)
         {
             string foundVersion;
             if (_unityVersions.TryGetValue("2021.3.16f1", out foundVersion))
             {
                 UnityEngine.Debug.Log(foundVersion);
-                UnityEditor = foundVersion;
+                QuestPreferences.UnityEditor = foundVersion;
             }
             else
             {
@@ -113,6 +94,19 @@ public class QuestSetup : EditorWindow
                 return false;
             }
         }
+
+        string editorDirectory = Path.GetDirectoryName(QuestPreferences.UnityEditor);
+        string androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
+        if (!Directory.Exists(androidPlaybackEngine))
+        {
+            EditorGUILayout.LabelField("Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
+            if (GUILayout.Button("Download Android Build Module"))
+            {
+
+            }
+            return false;
+        }
+
         return true;
     }
 
@@ -152,7 +146,7 @@ public class QuestSetup : EditorWindow
 
         EditorGUILayout.LabelField("What?", headerStyle);
         EditorGUILayout.TextArea("To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.16f1", paragraphStyle);
-        EditorGUILayout.TextArea("Luckily, this template will handle all of that for you! It will setup the project for you, copy your assets, and build your bundle all on its own!", paragraphStyle);
+        EditorGUILayout.TextArea("Luckily, this template will handle all of that for you! It will setup the project for you, link your assets, and build your bundle all on its own!", paragraphStyle);
 
         EditorGUILayout.EndVertical();
     }
