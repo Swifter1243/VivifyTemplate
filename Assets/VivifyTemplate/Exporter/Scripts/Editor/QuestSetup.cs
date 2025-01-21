@@ -33,6 +33,7 @@ public class QuestSetup : EditorWindow
 
     private async Task GetUnityVersions()
     {
+        _unityVersions.Clear();
         using (Process myProcess = new Process())
         {
             UnityEngine.Debug.Log("skibidi");
@@ -74,12 +75,25 @@ public class QuestSetup : EditorWindow
         }
     }
 
-    private void OnGUI()
+    private bool EditorChecks()
     {
+        if (UnityEditor != "") //debug
+        {
+            if (GUILayout.Button("Reset"))
+            {
+                UnityEditor = "";
+                new Thread(async () =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    await GetUnityVersions();
+
+                }).Start();
+            }
+        }
         if (UnityEditor == "" && _unityVersions.Count == 0)
         {
-            EditorGUILayout.LabelField("Searching for Unity editors...");
-            return;
+            EditorGUILayout.LabelField("Searching for Unity editors...", EditorStyles.boldLabel);
+            return false;
         }
         if (UnityEditor == "" && _unityVersions.Count > 0)
         {
@@ -96,9 +110,65 @@ public class QuestSetup : EditorWindow
                 {
 
                 }
-                return;
+                return false;
             }
         }
+        return true;
+    }
+
+    private void Header()
+    {
+        var style = new GUIStyle(GUI.skin.button)
+        {
+            fontSize = 40,
+            richText = true,
+            fixedHeight = 50
+        };
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("<color=#E84855>Quest</color> <color=#272635>Setup</color>", style);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(40);
+    }
+
+    private void Info()
+    {
+        var verticalStyle = new GUIStyle(GUI.skin.button);
+        var headerStyle = new GUIStyle(GUI.skin.label)
+        {
+            richText = true,
+            fontStyle = FontStyle.Bold,
+            fontSize = 20
+        };
+        var paragraphStyle = new GUIStyle(GUI.skin.label)
+        {
+            richText = true,
+            fontSize = 14,
+            
+        };
+
+        EditorGUILayout.BeginVertical(verticalStyle);
+
+        EditorGUILayout.LabelField("What?", headerStyle);
+        EditorGUILayout.TextArea("To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.16f1", paragraphStyle);
+        EditorGUILayout.TextArea("Luckily, this template will handle all of that for you! It will setup the project for you, copy your assets, and build your bundle all on its own!", paragraphStyle);
+
+        EditorGUILayout.EndVertical();
+    }
+
+    private void OnGUI()
+    {
+        if (!EditorChecks()) return;
+
+        var style = new GUIStyle(GUI.skin.scrollView);
+
+        Vector2 scrollPos = EditorGUILayout.BeginScrollView(new Vector2(0, 0), style);
+
+        Header();
+        Info();
+
+        EditorGUILayout.EndScrollView();
     }
 
     [MenuItem("Vivify/Quest Setup")]
@@ -106,9 +176,8 @@ public class QuestSetup : EditorWindow
     {
         QuestSetup window = CreateInstance<QuestSetup>();
         window.titleContent = new GUIContent("Setup Quest Project");
-        window.position = new Rect(300, 300, 500, 600);
-        window.minSize = new Vector2(500, 600);
-        window.maxSize = window.minSize;
+        window.position = new Rect(300, 300, 800, 900);
+        window.minSize = new Vector2(800, 900);
         window.ShowUtility();
     }
 }
