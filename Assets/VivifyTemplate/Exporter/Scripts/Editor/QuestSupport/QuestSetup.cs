@@ -234,6 +234,25 @@ public class QuestSetup : EditorWindow
         return hasSymlink;
     }
 
+    private void Footer()
+    {
+        var style = new GUIStyle()
+        {
+            fontSize = 15,
+            richText = true,
+            padding = new RectOffset(10, 10, -10, 0)
+        };
+
+        if (Directory.Exists(QuestPreferences.ProjectPath) && !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")))
+        {
+            EditorGUILayout.LabelField("<color=#88FF88>You are ready to build</color>", style);
+        } 
+        else
+        {
+            EditorGUILayout.LabelField("<color=#FF8888>You are <i>not</i> ready to build</color>", style);
+        }
+    }
+
     private void OnGUI()
     {
         EditorGUILayout.LabelField(State.ToString());
@@ -247,8 +266,8 @@ public class QuestSetup : EditorWindow
         Info();
         GUILayout.Space(15);
 
-        EditorGUILayout.BeginHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
         if (!MakeProject())
         {
             GUILayout.FlexibleSpace();
@@ -256,19 +275,22 @@ public class QuestSetup : EditorWindow
             EditorGUILayout.EndScrollView();
             return;
         }
-
         if (!MakeSymlink())
         {
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndScrollView();
             return;
         }
+        EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.LabelField("Yay symlink!!!");
+
+        EditorGUILayout.BeginHorizontal();
 
         EditorGUILayout.EndHorizontal();
 
+
         EditorGUILayout.EndScrollView();
+        Footer();
     }
 
     [MenuItem("Vivify/Quest Setup")]
