@@ -10,5 +10,4 @@ public enum BackgroundTaskState
     DownloadingAndroidBuildSupport,
     CreatingProject,
     AddingPackages,
-    SymlinkingProject,
 }

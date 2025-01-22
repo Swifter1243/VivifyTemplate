@@ -2,46 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Diagnostics;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 
 public class QuestSetup : EditorWindow
 {
-    private ConcurrentDictionary<string, string> _unityVersions = new ConcurrentDictionary<string, string>() { };
-
-    private async Task GetUnityVersions()
-    {
-        _unityVersions.Clear();
-        using (Process myProcess = new Process())
-        {
-            myProcess.StartInfo.UseShellExecute = false;
-            myProcess.StartInfo.RedirectStandardOutput = true;
-            myProcess.StartInfo.FileName = QuestPreferences.UnityHubPath;
-            myProcess.StartInfo.Arguments = "-- --headless editors --installed";
-
-            myProcess.Start();
-
-            var read = await myProcess.StandardOutput.ReadToEndAsync();
-            myProcess.WaitForExit();
-            UnityEngine.Debug.Log(read);
-
-            var lines = read.Split('\n');
-            foreach (string line in lines)
-            {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                var split = line.Split(',');
-                if (split.Length != 2) continue;
-
-                _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
-            }
-            //TODO: Set dirty here somehow;
-        }
-    }
+    public static BackgroundTaskState State = BackgroundTaskState.Idle;
 
     private void OnEnable()
     {
@@ -50,7 +21,7 @@ public class QuestSetup : EditorWindow
             new Thread(async () =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                await GetUnityVersions();
+                await HubWrapper.GetUnityVersions();
 
             }).Start();
         }
@@ -66,20 +37,20 @@ public class QuestSetup : EditorWindow
                 new Thread(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    await GetUnityVersions();
+                    await HubWrapper.GetUnityVersions();
 
                 }).Start();
             }
         }
-        if (QuestPreferences.UnityEditor == "" && _unityVersions.Count == 0)
+        if (State == BackgroundTaskState.SearchingEditors)
         {
             EditorGUILayout.LabelField("Searching for Unity editors...", EditorStyles.boldLabel);
             return false;
         }
-        if (QuestPreferences.UnityEditor == "" && _unityVersions.Count > 0)
+        if (State == BackgroundTaskState.Idle && QuestPreferences.UnityEditor == "")
         {
             string foundVersion;
-            if (_unityVersions.TryGetValue("2021.3.16f1", out foundVersion))
+            if (HubWrapper.TryGetUnityEditor("2021.3.16f1", out foundVersion))
             {
                 UnityEngine.Debug.Log(foundVersion);
                 QuestPreferences.UnityEditor = foundVersion;
@@ -128,7 +99,10 @@ public class QuestSetup : EditorWindow
 
     private void Info()
     {
-        var verticalStyle = new GUIStyle(GUI.skin.button);
+        var verticalStyle = new GUIStyle(GUI.skin.button)
+        {
+            padding = new RectOffset(10, 10, 10, 10),
+        };
         var headerStyle = new GUIStyle(GUI.skin.label)
         {
             richText = true,
@@ -139,20 +113,130 @@ public class QuestSetup : EditorWindow
         {
             richText = true,
             fontSize = 14,
-            
+            wordWrap = true
         };
 
         EditorGUILayout.BeginVertical(verticalStyle);
 
         EditorGUILayout.LabelField("What?", headerStyle);
-        EditorGUILayout.TextArea("To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.16f1", paragraphStyle);
-        EditorGUILayout.TextArea("Luckily, this template will handle all of that for you! It will setup the project for you, link your assets, and build your bundle all on its own!", paragraphStyle);
+        GUILayout.Space(15);
+        EditorGUILayout.LabelField("To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.16f1", paragraphStyle);
+        EditorGUILayout.LabelField("<b><i>Luckily, this template will handle all of that for you!</i></b> It will setup the project for you, link your assets, and build your bundle all on its own!", paragraphStyle);
 
         EditorGUILayout.EndVertical();
     }
 
+    private bool MakeProject()
+    {
+        bool hasProject = QuestPreferences.ProjectPath != "" && Directory.Exists(QuestPreferences.ProjectPath);
+
+        var verticalStyle = new GUIStyle(GUI.skin.button)
+        {
+             padding = new RectOffset(10, 10, 10, 10)
+        };
+        var headerStyle = new GUIStyle(GUI.skin.label)
+        {
+            richText = true,
+            fontStyle = FontStyle.Bold,
+            fontSize = 20
+        };
+        var paragraphStyle = new GUIStyle(GUI.skin.label)
+        {
+            richText = true,
+            fontSize = 14,
+            wordWrap = true
+        };
+
+        EditorGUILayout.BeginVertical(verticalStyle);
+
+        EditorGUILayout.LabelField("Make Project", headerStyle);
+        GUILayout.Space(15);
+        EditorGUILayout.LabelField("You will be prompted to pick a directory where your project will be created in, it's best to keep this the same across projects for organization.", paragraphStyle);
+        GUI.enabled = !hasProject;
+        if (GUILayout.Button("Create"))
+        {
+            string path = EditorUtility.OpenFolderPanel("Select Directory to Create a Project", "", "");
+            if (path != "")
+            {
+                string projectName = Directory.GetParent(Application.dataPath).Name + "_Quest";
+                string destinationPath = Path.Combine(path, projectName);
+                if (Directory.Exists(destinationPath))
+                {
+                    Debug.LogError($"Folder at {destinationPath} already exists!");
+                    
+                    EditorGUILayout.EndVertical();
+                    return false;
+                }
+
+                string editorPath = QuestPreferences.UnityEditor;
+
+                new Thread(async () =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    await EditorWrapper.MakeProject(destinationPath, editorPath);
+                }).Start();
+
+                QuestPreferences.ProjectPath = destinationPath;
+            }
+        }
+        GUI.enabled = true;
+
+        EditorGUILayout.EndVertical();
+        return hasProject;
+    }
+
+    private bool IsDirectoryNotEmpty(string path)
+    {
+        IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
+        using (IEnumerator<string> en = items.GetEnumerator())
+        {
+            return !en.MoveNext();
+        }
+    }
+
+    private bool MakeSymlink()
+    {
+        string questAssets = Path.Combine(QuestPreferences.ProjectPath, "Assets");
+        if (!Directory.Exists(questAssets)) return false;
+        bool hasSymlink = !IsDirectoryNotEmpty(questAssets);
+
+        var verticalStyle = new GUIStyle(GUI.skin.button)
+        {
+            padding = new RectOffset(10, 10, 10, 10)
+        };
+        var headerStyle = new GUIStyle(GUI.skin.label)
+        {
+            richText = true,
+            fontStyle = FontStyle.Bold,
+            fontSize = 20
+        };
+        var paragraphStyle = new GUIStyle(GUI.skin.label)
+        {
+            richText = true,
+            fontSize = 14,
+            wordWrap = true
+        };
+
+        EditorGUILayout.BeginVertical(verticalStyle);
+
+        EditorGUILayout.LabelField("Make Symlink", headerStyle);
+        GUILayout.Space(15);
+        EditorGUILayout.LabelField("You will be asked for admin permissions to create a symlink between your project into the quest project. Enable Windows \"Developer Mode\" to bypass", paragraphStyle);
+        GUI.enabled = !hasSymlink;
+        if (GUILayout.Button("Create"))
+        {
+            Directory.Delete(questAssets);
+            Symlink.MakeSymlink(Application.dataPath, questAssets);
+        }
+        GUI.enabled = true;
+
+        EditorGUILayout.EndVertical();
+        return hasSymlink;
+    }
+
     private void OnGUI()
     {
+        EditorGUILayout.LabelField(State.ToString());
         if (!EditorChecks()) return;
 
         var style = new GUIStyle(GUI.skin.scrollView);
@@ -161,6 +245,28 @@ public class QuestSetup : EditorWindow
 
         Header();
         Info();
+        GUILayout.Space(15);
+
+        EditorGUILayout.BeginHorizontal();
+
+        if (!MakeProject())
+        {
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndScrollView();
+            return;
+        }
+
+        if (!MakeSymlink())
+        {
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndScrollView();
+            return;
+        }
+
+        EditorGUILayout.LabelField("Yay symlink!!!");
+
+        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.EndScrollView();
     }
