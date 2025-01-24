@@ -14,20 +14,21 @@ public static class InstallPackages
 
     public static void Setup()
     {
-        EditorGUILayout.LabelField("hi");
-        if (GUILayout.Button("Install"))
-        {
-            Requests.Push("com.unity.xr.oculus");
-            Requests.Push("com.unity.xr.openxr");
-            Requests.Push("com.unity.xr.management");
-            Requests.Push("com.unity.inputsystem");
-            EditorApplication.update += Progress;
-            Progress();
-        }
+        Requests.Push("com.unity.xr.oculus");
+        Requests.Push("com.unity.xr.openxr");
+        Requests.Push("com.unity.xr.management");
+        Requests.Push("com.unity.inputsystem");
+        EditorApplication.update += Progress;
+        Progress();
     }
     
     private static void Progress()
     {
+        if (Requests.Count == 0 && (InstallingRequest == null || InstallingRequest.IsCompleted))
+        {
+            Debug.Log("QUIT");
+            //EditorApplication.Exit(1);
+        }
         if (InstallingRequest == null)
         {
             var request = Requests.Pop();
