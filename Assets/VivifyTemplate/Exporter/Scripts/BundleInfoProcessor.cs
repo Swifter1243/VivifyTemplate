@@ -12,7 +12,7 @@ namespace VivifyTemplate.Exporter.Scripts
 {
 	public static class BundleInfoProcessor
 	{
-		private const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
+		public const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
 
 		public static void Serialize(
 			string outputPath,

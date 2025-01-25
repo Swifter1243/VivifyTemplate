@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
@@ -287,10 +289,46 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			if (buildSettings.ShouldExportBundleInfo)
 			{
 				await Task.Delay(100);
-				ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
+				IEnumerable<BuildReport> successfulBuilds = builds.OfType<BuildReport>();
+
+				string bundleInfoPath = Path.Combine(buildSettings.OutputDirectory, BundleInfoProcessor.BUNDLE_INFO_FILENAME);
+				bool bundleInfoExists = File.Exists(bundleInfoPath);
+				if (TryGetAndroid2021Build(successfulBuilds, out BuildReport androidBuild) && bundleInfoExists)
+				{
+					// temp jank fix to prevent me from having to manually merge bundleinfo.json files
+					string bundleInfoText = File.ReadAllText(bundleInfoPath);
+					BundleInfo bundleInfo = JsonConvert.DeserializeObject<BundleInfo>(bundleInfoText);
+					string versionPrefix = VersionTools.GetVersionPrefix(androidBuild.BuildVersion);
+					bundleInfo.bundleCRCs[versionPrefix] = androidBuild.CRC;
+
+					Formatting formatting = buildSettings.ShouldPrettifyBundleInfo ? Formatting.Indented : Formatting.None;
+					bundleInfo.bundleFiles = bundleInfo.bundleFiles.Where(x => x != androidBuild.OutputBundlePath).ToList();
+					bundleInfo.bundleFiles.Add(androidBuild.OutputBundlePath);
+					string bundleInfoOutputText = JsonConvert.SerializeObject(bundleInfo, formatting);
+					File.WriteAllText(bundleInfoPath, bundleInfoOutputText);
+				}
+				else
+				{
+					ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
+				}
 			}
 
 			buildProgressWindow.FinishBuild(buildSettings);
+		}
+
+		private static bool TryGetAndroid2021Build(IEnumerable<BuildReport> builds, out BuildReport androidBuild)
+		{
+			foreach (var build in builds)
+			{
+				if (build.BuildVersion == BuildVersion.Android2021)
+				{
+					androidBuild = build;
+					return true;
+				}
+			}
+
+			androidBuild = default;
+			return false;
 		}
 
 		private static void ExportBundleInfo(BuildAssetBundleOptions buildOptions, IEnumerable<BuildReport> builds,
