@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -51,11 +52,24 @@ public static class HostSocket
             Socket handler = listener.EndAccept(ar);
 
 
+
             Debug.Log("Connected");
         }
         catch (Exception e)
         {
             Debug.LogException(e);
         }
+    }
+
+    [MenuItem("Vivify/StartSocket")]
+    private static void Start()
+    {
+        Initialize();
+    }
+
+    [MenuItem("Vivify/StopSocket")]
+    private static void Stop()
+    {
+        Enabled = false;
     }
 }
