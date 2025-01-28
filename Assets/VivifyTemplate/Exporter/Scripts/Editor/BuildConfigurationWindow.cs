@@ -6,7 +6,7 @@ using VivifyTemplate.Exporter.Scripts.Structures;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
-    public class CustomBuild : EditorWindow
+    public class BuildConfigurationWindow : EditorWindow
     {
         private readonly HashSet<BuildVersion> _versions = new HashSet<BuildVersion>();
         private bool _compressed = false;
@@ -40,10 +40,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             _compressed = EditorGUILayout.ToggleLeft("Compressed", _compressed);
 
             EditorGUILayout.Space(20);
+            GUILayout.FlexibleSpace();
 
             if (_versions.Count > 0)
             {
-                if (GUILayout.Button("Build"))
+                if (GUILayout.Button("Build", GUILayout.Height(40)))
                 {
                     Close();
                     Build();
@@ -64,14 +65,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             BuildAssetBundles.BuildAllRequests(requests.ToList(), options);
         }
 
-        [MenuItem("Vivify/Build/Custom Build")]
-        private static void CreatePopup()
+        [MenuItem("Vivify/Build/Build Configuration Window")]
+        public static void ShowWindow()
         {
-            CustomBuild window = CreateInstance<CustomBuild>();
-            window.titleContent = new GUIContent("Custom Build");
+            BuildConfigurationWindow window = GetWindow<BuildConfigurationWindow>(typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.InspectorWindow"));
+            window.titleContent = new GUIContent("Build Configuration");
             window.minSize = new Vector2(400, 240);
             window.maxSize = window.minSize;
-            window.ShowUtility();
         }
     }
 }
