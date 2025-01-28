@@ -17,8 +17,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         {
             return new BuildRequest
             {
-                buildVersion = buildVersion,
-                bundleBuilder = GetBuilder(buildVersion)
+                BuildVersion = buildVersion,
+                BundleBuilder = GetBuilder(buildVersion)
             };
         }
 

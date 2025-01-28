@@ -199,7 +199,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Logger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.buildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
+			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.BuildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
 
 			void OnShaderKeywordsRewritten(BuildTask buildTask)
 			{
@@ -215,8 +215,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 					isCompressed = false
 				};
 
-				BuildReport build = await request.bundleBuilder.Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.buildVersion, mainLogger, OnShaderKeywordsRewritten);
-				string versionPrefix = VersionTools.GetVersionPrefix(request.buildVersion);
+				BuildReport build = await request.BundleBuilder.Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.BuildVersion, mainLogger, OnShaderKeywordsRewritten);
+				string versionPrefix = VersionTools.GetVersionPrefix(request.BuildVersion);
 				bundleInfo.bundleCRCs[versionPrefix] = build.CRC;
 				bundleInfo.bundleFiles.Add(build.OutputBundlePath);
 
@@ -224,7 +224,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 			else
 			{
-				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.buildVersion, mainLogger, OnShaderKeywordsRewritten);
+				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.BuildVersion, mainLogger, OnShaderKeywordsRewritten);
 			}
 
 			Debug.Log($"Build done in {Timer.Reset()}s!");
@@ -243,12 +243,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			IEnumerable<Task<BuildReport?>> buildTasks = buildRequests.Select(async request =>
 			{
-				BuildTask buildTask = buildProgressWindow.AddIndividualBuild(request.buildVersion);
+				BuildTask buildTask = buildProgressWindow.AddIndividualBuild(request.BuildVersion);
 
 				try
 				{
 					await Task.Delay(100);
-					BuildReport build = await request.bundleBuilder.Build(buildSettings, buildOptions, request.buildVersion, buildTask.GetLogger(),
+					BuildReport build = await request.BundleBuilder.Build(buildSettings, buildOptions, request.BuildVersion, buildTask.GetLogger(),
 						buildProgressWindow.AddShaderKeywordsRewriterTask);
 					buildTask.Success();
 					return (BuildReport?)build;
