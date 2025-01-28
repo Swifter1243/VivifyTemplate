@@ -39,7 +39,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			AssetDatabase.SaveAssets();
 		}
 
-		private static async Task<BuildReport> Build(
+		public static async Task<BuildReport> Build(
 			BuildSettings buildSettings,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion,
@@ -192,14 +192,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 		}
 
-		private static async void BuildSingleUncompressed(BuildVersion version)
+		public static async void BuildSingleRequestUncompressed(BuildRequest request)
 		{
 			Timer.Reset();
 			Logger mainLogger = new Logger();
 			Logger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{version}' uncompressed to '{buildSettings.OutputDirectory}'...");
+			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.buildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
 
 			void OnShaderKeywordsRewritten(BuildTask buildTask)
 			{
@@ -215,8 +215,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 					isCompressed = false
 				};
 
-				BuildReport build = await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, mainLogger, OnShaderKeywordsRewritten);
-				string versionPrefix = VersionTools.GetVersionPrefix(version);
+				BuildReport build = await request.bundleBuilder.Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.buildVersion, mainLogger, OnShaderKeywordsRewritten);
+				string versionPrefix = VersionTools.GetVersionPrefix(request.buildVersion);
 				bundleInfo.bundleCRCs[versionPrefix] = build.CRC;
 				bundleInfo.bundleFiles.Add(build.OutputBundlePath);
 
@@ -224,7 +224,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 			else
 			{
-				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, mainLogger, OnShaderKeywordsRewritten);
+				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.buildVersion, mainLogger, OnShaderKeywordsRewritten);
 			}
 
 			Debug.Log($"Build done in {Timer.Reset()}s!");
@@ -236,19 +236,19 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 		}
 
-		public static async void BuildAll(List<BuildVersion> buildVersions, BuildAssetBundleOptions buildOptions)
+		public static async void BuildAllRequests(List<BuildRequest> buildRequests, BuildAssetBundleOptions buildOptions)
 		{
 			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			IEnumerable<Task<BuildReport?>> buildTasks = buildVersions.Select(async version =>
+			IEnumerable<Task<BuildReport?>> buildTasks = buildRequests.Select(async request =>
 			{
-				BuildTask buildTask = buildProgressWindow.AddIndividualBuild(version);
+				BuildTask buildTask = buildProgressWindow.AddIndividualBuild(request.buildVersion);
 
 				try
 				{
 					await Task.Delay(100);
-					BuildReport build = await Build(buildSettings, buildOptions, version, buildTask.GetLogger(),
+					BuildReport build = await request.bundleBuilder.Build(buildSettings, buildOptions, request.buildVersion, buildTask.GetLogger(),
 						buildProgressWindow.AddShaderKeywordsRewriterTask);
 					buildTask.Success();
 					return (BuildReport?)build;
