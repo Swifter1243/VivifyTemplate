@@ -30,8 +30,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     return nativeBuilder;
                 case BuildVersion.Windows2021:
                     return nativeBuilder;
-                case BuildVersion.Android2019:
-                    throw new NotImplementedException();
                 case BuildVersion.Android2021:
                     throw new NotImplementedException();
                 default:
