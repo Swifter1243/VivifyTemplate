@@ -46,13 +46,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		private static BuildVersionBuildInfo BuildVersionBuildInfo(BuildVersion version)
 		{
-			bool is2019 = version == BuildVersion.Windows2019 || version == BuildVersion.Android2019;
+			bool is2019 = version == BuildVersion.Windows2019;
 
 			return new BuildVersionBuildInfo
 			{
-				IsAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021,
+				IsAndroid = version == BuildVersion.Android2021,
 				Is2019 = is2019,
-				NeedsShaderKeywordsFixed = !is2019,
+				NeedsShaderKeywordsFixed = !is2019 && version != BuildVersion.Android2021,
 			};
 		}
 
