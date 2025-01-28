@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System;
 
 public static class HubWrapper
 {
@@ -40,4 +41,14 @@ public static class HubWrapper
 
     public static bool FinishedGettingEditors() => _unityVersions.Count > 0;
     public static bool TryGetUnityEditor(string version, out string path) => _unityVersions.TryGetValue(version, out path);
+
+    public static bool DownloadUnity2021()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static bool DownloadUnity2021Android()
+    {
+        throw new NotImplementedException();
+    }
 }

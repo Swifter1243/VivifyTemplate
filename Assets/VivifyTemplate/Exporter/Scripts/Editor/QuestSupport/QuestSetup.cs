@@ -60,7 +60,7 @@ public class QuestSetup : EditorWindow
                 EditorGUILayout.LabelField("Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
                 if (GUILayout.Button("Download"))
                 {
-
+                    HubWrapper.DownloadUnity2021();
                 }
                 return false;
             }
@@ -73,7 +73,7 @@ public class QuestSetup : EditorWindow
             EditorGUILayout.LabelField("Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
             if (GUILayout.Button("Download Android Build Module"))
             {
-
+                HubWrapper.DownloadUnity2021Android();
             }
             return false;
         }
@@ -163,7 +163,7 @@ public class QuestSetup : EditorWindow
                 if (Directory.Exists(destinationPath))
                 {
                     Debug.LogError($"Folder at {destinationPath} already exists!");
-                    
+
                     EditorGUILayout.EndVertical();
                     return false;
                 }
@@ -246,7 +246,7 @@ public class QuestSetup : EditorWindow
         if (Directory.Exists(QuestPreferences.ProjectPath) && !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")))
         {
             EditorGUILayout.LabelField("<color=#88FF88>You are ready to build</color>", style);
-        } 
+        }
         else
         {
             EditorGUILayout.LabelField("<color=#FF8888>You are <i>not</i> ready to build</color>", style);
