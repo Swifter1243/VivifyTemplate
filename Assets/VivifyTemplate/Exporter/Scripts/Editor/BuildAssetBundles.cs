@@ -27,19 +27,28 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			IEnumerable<BuildVersion> versions = Enum.GetValues(typeof(BuildVersion)).OfType<BuildVersion>();
 			BuildAll(new List<BuildVersion>(versions), BuildAssetBundleOptions.None);
-		}
+        }
 
-		[MenuItem("Vivify/Build/Build Windows Versions Compressed")]
-		private static void BuildWindowsVersionsCompressed()
-		{
-			BuildAll(new List<BuildVersion>
-			{
-				BuildVersion.Windows2019,
-				BuildVersion.Windows2021
-			}, BuildAssetBundleOptions.None);
-		}
+        [MenuItem("Vivify/Build/Build Windows Versions Compressed")]
+        private static void BuildWindowsVersionsCompressed()
+        {
+            BuildAll(new List<BuildVersion>
+            {
+                BuildVersion.Windows2019,
+                BuildVersion.Windows2021
+            }, BuildAssetBundleOptions.None);
+        }
 
-		private static Task<uint> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
+        [MenuItem("Vivify/Build/Build Android Versions Compressed")]
+        private static void BuildAndroidVersionsCompressed()
+        {
+            BuildAll(new List<BuildVersion>
+            {
+                BuildVersion.Android2021
+            }, BuildAssetBundleOptions.None);
+        }
+
+        private static Task<uint> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
 		{
 			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger, compress));
 		}
