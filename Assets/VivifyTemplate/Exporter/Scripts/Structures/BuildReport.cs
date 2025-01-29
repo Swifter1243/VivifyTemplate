@@ -1,8 +1,10 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using UnityEditor;
 
 namespace VivifyTemplate.Exporter.Scripts.Structures
 {
+    [Serializable]
     public struct BuildReport
     {
         /** This is the path to the bundle built by BuildPipeline. */
