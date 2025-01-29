@@ -351,7 +351,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 return;
             }
             EditorGUILayout.EndHorizontal();
-            
+
             EditorGUILayout.BeginHorizontal();
             if (!InstallPackages())
             {
@@ -373,7 +373,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         }
 
         [MenuItem("Vivify/Quest Setup")]
-        private static void CreatePopup()
+        public static void CreatePopup()
         {
             QuestSetup window = CreateInstance<QuestSetup>();
             window.titleContent = new GUIContent("Setup Quest Project");
