@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
 using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
 using VivifyTemplate.Exporter.Scripts.Structures;
@@ -19,8 +20,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 HostSocket.Initialize(socket =>
                 {
                     Packet.SendPacket(socket, new Packet("Build", "Build quest"));
+                }, packet =>
+                {
+                    Debug.Log(packet.PacketName + ": " + packet.Payload);
                 });
                 await EditorWrapper.BuildProject(editor, project);
+                Debug.Log("Finished...");
                 return new BuildReport();
             });
         }

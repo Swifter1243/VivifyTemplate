@@ -15,12 +15,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
         private static Socket _serverSocket;
         private static ManualResetEvent _accepting = new ManualResetEvent(false);
         private static Action<Socket> _onInitialize;
+        private static Action<Packet> _onPacketReceived;
 
         public static bool Enabled { get; set; } = true;
 
-        public static void Initialize(Action<Socket> onInitialize)
+        public static void Initialize(Action<Socket> onInitialize, Action<Packet> onPacketReceived)
         {
             _onInitialize = onInitialize;
+            _onPacketReceived = onPacketReceived;
             
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, Port);
 
@@ -37,7 +39,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
                     // Start an asynchronous socket to listen for connections.  
                     Debug.Log("Waiting for a connection...");
-                    _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), _serverSocket);
+                    _serverSocket.BeginAccept(AcceptCallback, _serverSocket);
 
                     // Wait until a connection is made before continuing.  
                     _accepting.WaitOne();
@@ -57,6 +59,25 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
                 Debug.Log("Connected");
                 _onInitialize?.Invoke(handler);
+                new Thread(() =>
+                {
+                    while (Enabled)
+                    {
+                        while (true)
+                        {
+                            if (handler.Connected)
+                            {
+                                Packet response = Packet.ReceivePacket(handler);
+                                if (response != null)
+                                {
+                                    _onPacketReceived?.Invoke(response);
+                                }
+                            }
+
+                            Thread.Sleep(10);
+                        }
+                    }
+                }).Start();
             }
             catch (Exception e)
             {

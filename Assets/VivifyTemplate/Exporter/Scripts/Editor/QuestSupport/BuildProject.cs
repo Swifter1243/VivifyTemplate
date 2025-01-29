@@ -1,11 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using UnityEditor;
-using UnityEditor.PackageManager;
-using UnityEditor.PackageManager.Requests;
+using JetBrains.Annotations;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
 
@@ -13,9 +6,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
     public static class BuildProject
     {
+        [UsedImplicitly]
         public static void Build()
         {
-            RemoteSocket.Initialize();
+            RemoteSocket.Initialize((packet, socket) =>
+            {
+                Debug.Log(packet.PacketName + ": " + packet.Payload);
+                Packet.SendPacket(socket, new Packet("Building", "ques"));
+            });
         }
     }
 }
