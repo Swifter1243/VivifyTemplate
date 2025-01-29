@@ -188,7 +188,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     {
                         Thread.CurrentThread.IsBackground = true;
                         await EditorWrapper.MakeProject(destinationPath, editorPath);
-                    }).Start();
+                    });
 
                     QuestPreferences.ProjectPath = destinationPath;
                 }
@@ -290,7 +290,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     Thread.CurrentThread.IsBackground = true;
                     await EditorWrapper.InstallPackages(editor, project);
-                }).Start();
+                });
             }
 
             GUI.enabled = true;
