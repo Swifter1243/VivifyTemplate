@@ -43,5 +43,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
             _clientSocket.Connect(remoteEndPoint);
         }
+
+        public static void Send(Packet packet)
+        {
+            Packet.SendPacket(_clientSocket, packet);
+        }
     }
 }
