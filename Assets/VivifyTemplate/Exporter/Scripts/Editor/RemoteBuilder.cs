@@ -24,6 +24,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     Packet.SendPacket(socket, new Packet("Build", payload));
                 }, (packet, socket) =>
                 {
+                    Debug.Log(packet.PacketName + ": " + packet.Payload);
                     switch (packet.PacketName)
                     {
                         case "Log":
@@ -52,6 +53,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 {
                     await Task.Delay(100);
                 }
+
+                HostSocket.Enabled = false;
                 return report.Value;
             });
         }

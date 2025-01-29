@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 {
@@ -30,7 +31,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                             Packet response = Packet.ReceivePacket(_clientSocket);
                             if (response != null)
                             {
-                                onPacketReceived?.Invoke(response, _clientSocket);
+                                Debug.Log(response.PacketName);
+                                UnityThread.ExecuteInUpdate(() =>
+                                {
+                                    onPacketReceived?.Invoke(response, _clientSocket); 
+                                });
                             }
                         }
 

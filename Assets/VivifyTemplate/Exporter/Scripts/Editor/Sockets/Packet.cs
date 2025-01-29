@@ -92,7 +92,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
                 if (received == 0)
                 {
-                    Debug.LogError("Server closed the connection.");
                     return null;
                 }
 

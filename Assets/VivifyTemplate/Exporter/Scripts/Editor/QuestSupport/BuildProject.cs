@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEditor;
+using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
 using VivifyTemplate.Exporter.Scripts.Structures;
 
@@ -17,6 +18,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             Task<BuildReport> buildReport = null;
             RemoteSocket.Initialize((packet, socket) =>
             {
+                Debug.Log(packet.PacketName + ": " + packet.Payload);
                 switch (packet.PacketName)
                 {
                     case "Build":
@@ -34,6 +36,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                             ShouldPrettifyBundleInfo = bool.Parse(payload[3]),
                             WorkingVersion = (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[4])
                         };
+                        
                         buildReport = BuildAssetBundles.Build(buildSettings,
                             (BuildAssetBundleOptions)Enum.Parse(typeof(BuildAssetBundleOptions), payload[5]),
                             (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[6]), mainLogger, null);
@@ -50,6 +53,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     {
                         RemoteSocket.Send(new Packet("BuildReport", buildReport.Result.ToString()));
                         //EditorApplication.Exit(1);
+                        RemoteSocket.Enabled = false;
                         break;
                     }
                 }
