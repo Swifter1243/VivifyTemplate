@@ -16,5 +16,10 @@ namespace VivifyTemplate.Exporter.Scripts
             string result = $"[{time}] " + message;
             OnLog?.Invoke(result);
         }
+
+        public void LogUnformatted(string message)
+        {
+            OnLog?.Invoke(message);
+        }
     }
 }

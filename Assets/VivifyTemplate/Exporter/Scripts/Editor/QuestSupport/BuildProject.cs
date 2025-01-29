@@ -14,7 +14,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         [UsedImplicitly]
         public static void Build()
         {
-            var mainLogger = new AccumulatingLogger();
+            var mainLogger = new Logger();
             Task<BuildReport> buildReport = null;
             RemoteSocket.Initialize((packet, socket) =>
             {
@@ -34,16 +34,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                             ProjectBundle = payload[1],
                             ShouldExportBundleInfo = bool.Parse(payload[2]),
                             ShouldPrettifyBundleInfo = bool.Parse(payload[3]),
-                            WorkingVersion = (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[4]) 
+                            WorkingVersion = (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[4])
                         };
-                        buildReport = BuildAssetBundles.Build(buildSettings, 
-                            (BuildAssetBundleOptions)Enum.Parse(typeof(BuildAssetBundleOptions), payload[5]), 
+                        buildReport = BuildAssetBundles.Build(buildSettings,
+                            (BuildAssetBundleOptions)Enum.Parse(typeof(BuildAssetBundleOptions), payload[5]),
                             (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[6]), mainLogger, null);
                         break;
                 }
             });
             mainLogger.OnLog += message => RemoteSocket.Send(new Packet("Log", message));
-            
+
             new Thread(() =>
             {
                 while (true)

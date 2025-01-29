@@ -27,7 +27,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     switch (packet.PacketName)
                     {
                         case "Log":
-                            mainLogger.Log(packet.Payload);
+                            mainLogger.LogUnformatted(packet.Payload);
                             break;
                         case "BuildReport":
                             var payload = packet.Payload.Split(';');
