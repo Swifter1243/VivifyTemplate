@@ -2,7 +2,7 @@
 {
     public class BuildTask
     {
-        private Logger _logger = new Logger();
+        private AccumulatingLogger _logger = new AccumulatingLogger();
         private readonly string _name;
         BuildProgressWindow.BuildState _state = BuildProgressWindow.BuildState.InProgress;
 
@@ -16,7 +16,7 @@
             return _name;
         }
 
-        public Logger GetLogger()
+        public AccumulatingLogger GetLogger()
         {
             return _logger;
         }

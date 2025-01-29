@@ -195,8 +195,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		public static async void BuildSingleRequestUncompressed(BuildRequest request)
 		{
 			Timer.Reset();
-			Logger mainLogger = new Logger();
-			Logger shaderKeywordsLogger = null;
+			AccumulatingLogger mainLogger = new AccumulatingLogger();
+			AccumulatingLogger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
 			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.BuildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
