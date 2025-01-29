@@ -202,6 +202,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private static bool IsDirectoryNotEmpty(string path)
         {
+            if (!Directory.Exists(path)) return false;
             var items = Directory.EnumerateFileSystemEntries(path);
             using (var en = items.GetEnumerator())
             {
