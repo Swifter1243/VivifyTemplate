@@ -1,40 +1,38 @@
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEditor;
-using UnityEngine;
-using UnityEngine.XR;
 
-public static class RemoteSocket
+namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 {
-    const int PORT = 5162;
-
-    private static Socket clientSocket;
-    private static ManualResetEvent accepting = new ManualResetEvent(false);
-
-    public static bool Enabled { get; set; } = true;
-
-    public static void Initialize()
+    public static class RemoteSocket
     {
-        IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Loopback, PORT);
+        private const int Port = 5162;
 
-        clientSocket = new Socket(IPAddress.Loopback.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        private static Socket _clientSocket;
 
-        clientSocket.Connect(remoteEndPoint);
-    }
+        public static bool Enabled { get; set; } = true;
 
-    [MenuItem("Vivify/StartSocket Local Connect")]
-    private static void Start()
-    {
-        Initialize();
-    }
+        public static void Initialize()
+        {
+            IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Loopback, Port);
 
-    [MenuItem("Vivify/StopSocket Local Connect")]
-    private static void Stop()
-    {
-        clientSocket.Disconnect(false);
-        clientSocket.Dispose();
+            _clientSocket = new Socket(IPAddress.Loopback.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+            _clientSocket.Connect(remoteEndPoint);
+        }
+
+        [MenuItem("Vivify/Socket/StartSocket Local Connect")]
+        private static void Start()
+        {
+            Initialize();
+        }
+
+        [MenuItem("Vivify/Socket/StopSocket Local Connect")]
+        private static void Stop()
+        {
+            _clientSocket.Disconnect(false);
+            _clientSocket.Dispose();
+        }
     }
 }

@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BackgroundTaskState
+namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
-    Idle,
-    SearchingEditors,
-    DownloadingEditor,
-    DownloadingAndroidBuildSupport,
-    CreatingProject,
-    AddingPackages,
+    public enum BackgroundTaskState
+    {
+        Idle,
+        SearchingEditors,
+        DownloadingEditor,
+        DownloadingAndroidBuildSupport,
+        CreatingProject,
+        AddingPackages,
+    }
 }

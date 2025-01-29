@@ -3,86 +3,89 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public static class EditorWrapper
+namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
-    public static async Task MakeProject(string path, string editor)
+    public static class EditorWrapper
     {
-        try
+        public static async Task MakeProject(string path, string editor)
         {
-            QuestSetup.State = BackgroundTaskState.CreatingProject;
-            using (var process = new System.Diagnostics.Process())
+            try
             {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.FileName = editor;
-                process.StartInfo.Arguments = $"-createProject \"{path}\" -quit";
+                QuestSetup.State = BackgroundTaskState.CreatingProject;
+                using (var process = new System.Diagnostics.Process())
+                {
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.FileName = editor;
+                    process.StartInfo.Arguments = $"-createProject \"{path}\" -quit";
 
-                process.Start();
+                    process.Start();
 
-                var read = await process.StandardOutput.ReadToEndAsync();
-                process.WaitForExit();
-                UnityEngine.Debug.Log(read);
+                    var read = await process.StandardOutput.ReadToEndAsync();
+                    process.WaitForExit();
+                    UnityEngine.Debug.Log(read);
 
-                QuestSetup.State = BackgroundTaskState.Idle;
+                    QuestSetup.State = BackgroundTaskState.Idle;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
         }
-        catch(Exception e)
-        {
-            Debug.LogException(e);
-        }
-    }
 
-    public static async Task InstallPackages(string path, string editor)
-    {
-        try
+        public static async Task InstallPackages()
         {
-            QuestSetup.State = BackgroundTaskState.AddingPackages;
-            using (var process = new System.Diagnostics.Process())
+            try
             {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.FileName = editor;
-                process.StartInfo.Arguments = $"-projectPath \"{path}\" -executeMethod InstallPackages.Setup -quit";
+                QuestSetup.State = BackgroundTaskState.AddingPackages;
+                using (var process = new System.Diagnostics.Process())
+                {
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.FileName = QuestPreferences.UnityEditor;
+                    process.StartInfo.Arguments = $"-projectPath \"{QuestPreferences.ProjectPath}\" -executeMethod InstallPackages.Setup -quit";
 
-                process.Start();
+                    process.Start();
 
-                var read = await process.StandardOutput.ReadToEndAsync();
-                process.WaitForExit();
-                UnityEngine.Debug.Log(read);
+                    var read = await process.StandardOutput.ReadToEndAsync();
+                    process.WaitForExit();
+                    UnityEngine.Debug.Log(read);
 
-                QuestSetup.State = BackgroundTaskState.Idle;
+                    QuestSetup.State = BackgroundTaskState.Idle;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
         }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-    }
 
-    public static async Task BuildProject(string path, string editor, string outputPath, string bundleName)
-    {
-        try
+        public static async Task BuildProject()
         {
-            QuestSetup.State = BackgroundTaskState.AddingPackages;
-            using (var process = new System.Diagnostics.Process())
+            try
             {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.FileName = editor;
-                process.StartInfo.Arguments = $"-projectPath \"{path}\" -executeMethod BuildProject.Build -output \"{outputPath}\" -bundle \"{bundleName}\"";
-                    
-                process.Start();
+                QuestSetup.State = BackgroundTaskState.AddingPackages;
+                using (var process = new System.Diagnostics.Process())
+                {
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.FileName = QuestPreferences.UnityEditor;
+                    process.StartInfo.Arguments = $"-projectPath \"{QuestPreferences.ProjectPath}\" -executeMethod BuildProject.Build";
 
-                var read = await process.StandardOutput.ReadToEndAsync();
-                process.WaitForExit();
-                UnityEngine.Debug.Log(read);
+                    process.Start();
 
-                QuestSetup.State = BackgroundTaskState.Idle;
+                    var read = await process.StandardOutput.ReadToEndAsync();
+                    process.WaitForExit();
+                    UnityEngine.Debug.Log(read);
+
+                    QuestSetup.State = BackgroundTaskState.Idle;
+                }
             }
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
     }
 }

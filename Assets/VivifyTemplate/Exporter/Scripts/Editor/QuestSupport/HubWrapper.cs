@@ -4,51 +4,54 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System;
 
-public static class HubWrapper
+namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
-    private static ConcurrentDictionary<string, string> _unityVersions = new ConcurrentDictionary<string, string>() { };
-
-    public static async Task GetUnityVersions()
+    public static class HubWrapper
     {
-        QuestSetup.State = BackgroundTaskState.SearchingEditors;
-        _unityVersions.Clear();
-        using (Process myProcess = new Process())
+        private static ConcurrentDictionary<string, string> _unityVersions = new ConcurrentDictionary<string, string>() { };
+
+        public static async Task GetUnityVersions()
         {
-            myProcess.StartInfo.UseShellExecute = false;
-            myProcess.StartInfo.RedirectStandardOutput = true;
-            myProcess.StartInfo.FileName = QuestPreferences.UnityHubPath;
-            myProcess.StartInfo.Arguments = "-- --headless editors --installed";
-
-            myProcess.Start();
-
-            var read = await myProcess.StandardOutput.ReadToEndAsync();
-            myProcess.WaitForExit();
-            UnityEngine.Debug.Log(read);
-
-            var lines = read.Split('\n');
-            foreach (string line in lines)
+            QuestSetup.State = BackgroundTaskState.SearchingEditors;
+            _unityVersions.Clear();
+            using (Process myProcess = new Process())
             {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                var split = line.Split(',');
-                if (split.Length != 2) continue;
+                myProcess.StartInfo.UseShellExecute = false;
+                myProcess.StartInfo.RedirectStandardOutput = true;
+                myProcess.StartInfo.FileName = QuestPreferences.UnityHubPath;
+                myProcess.StartInfo.Arguments = "-- --headless editors --installed";
 
-                _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
+                myProcess.Start();
+
+                var read = await myProcess.StandardOutput.ReadToEndAsync();
+                myProcess.WaitForExit();
+                UnityEngine.Debug.Log(read);
+
+                var lines = read.Split('\n');
+                foreach (string line in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+                    var split = line.Split(',');
+                    if (split.Length != 2) continue;
+
+                    _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
+                }
+
+                QuestSetup.State = BackgroundTaskState.Idle;
             }
-
-            QuestSetup.State = BackgroundTaskState.Idle;
         }
-    }
 
-    public static bool FinishedGettingEditors() => _unityVersions.Count > 0;
-    public static bool TryGetUnityEditor(string version, out string path) => _unityVersions.TryGetValue(version, out path);
+        public static bool FinishedGettingEditors() => _unityVersions.Count > 0;
+        public static bool TryGetUnityEditor(string version, out string path) => _unityVersions.TryGetValue(version, out path);
 
-    public static bool DownloadUnity2021()
-    {
-        throw new NotImplementedException();
-    }
+        public static bool DownloadUnity2021()
+        {
+            throw new NotImplementedException();
+        }
 
-    public static bool DownloadUnity2021Android()
-    {
-        throw new NotImplementedException();
+        public static bool DownloadUnity2021Android()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
