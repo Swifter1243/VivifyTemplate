@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -10,6 +11,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
     {
         private readonly HashSet<BuildVersion> _versions = new HashSet<BuildVersion>();
         private bool _compressed = false;
+
+        private Texture2D _tbsLogo;
+
+        private void OnEnable()
+        {
+            // there has to be better way to do this lol
+            _tbsLogo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/VivifyTemplate/Exporter/Textures/TBS_trans.png");
+        }
 
         private void VersionToggle(string label, BuildVersion version)
         {
@@ -29,6 +38,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
         private void OnGUI()
         {
+            GUILogo();
+
             EditorGUILayout.LabelField("Versions", EditorStyles.boldLabel);
             VersionToggle("Windows 2019", BuildVersion.Windows2019);
             VersionToggle("Windows 2021", BuildVersion.Windows2021);
@@ -49,6 +60,23 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     Build();
                 }
             }
+        }
+
+        private void GUILogo()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUIStyle style = new GUIStyle
+            {
+                normal =
+                {
+                    background = Texture2D.blackTexture
+                },
+                fixedWidth = 80
+            };
+            GUILayout.Box(_tbsLogo, style, GUILayout.Height(80));
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
         }
 
         private void Build()
