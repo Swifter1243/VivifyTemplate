@@ -20,7 +20,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 HostSocket.Initialize(socket =>
                 {
                     Packet.SendPacket(socket, new Packet("Build", "Build quest"));
-                }, packet =>
+                }, (packet, socket) =>
                 {
                     Debug.Log(packet.PacketName + ": " + packet.Payload);
                 });

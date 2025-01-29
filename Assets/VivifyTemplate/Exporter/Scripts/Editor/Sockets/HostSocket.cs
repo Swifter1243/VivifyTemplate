@@ -15,11 +15,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
         private static Socket _serverSocket;
         private static ManualResetEvent _accepting = new ManualResetEvent(false);
         private static Action<Socket> _onInitialize;
-        private static Action<Packet> _onPacketReceived;
+        private static Action<Packet, Socket> _onPacketReceived;
 
         public static bool Enabled { get; set; } = true;
 
-        public static void Initialize(Action<Socket> onInitialize, Action<Packet> onPacketReceived)
+        public static void Initialize(Action<Socket> onInitialize, Action<Packet, Socket> onPacketReceived)
         {
             _onInitialize = onInitialize;
             _onPacketReceived = onPacketReceived;
@@ -70,7 +70,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                                 Packet response = Packet.ReceivePacket(handler);
                                 if (response != null)
                                 {
-                                    _onPacketReceived?.Invoke(response);
+                                    _onPacketReceived?.Invoke(response, handler);
                                 }
                             }
 
