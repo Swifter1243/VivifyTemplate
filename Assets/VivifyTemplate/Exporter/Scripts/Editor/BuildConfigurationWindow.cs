@@ -106,7 +106,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 options |= BuildAssetBundleOptions.UncompressedAssetBundle;
             }
 
-            IEnumerable<BuildRequest> requests = _versions.Select(v => PlatformManager.Instance.MakeRequest(v));
+            IEnumerable<BuildRequest> requests = _versions.Select(v => PlatformManager.Instance.CreateRequestFromVersion(v));
             BuildAssetBundles.BuildAllRequests(requests.ToList(), options);
         }
 

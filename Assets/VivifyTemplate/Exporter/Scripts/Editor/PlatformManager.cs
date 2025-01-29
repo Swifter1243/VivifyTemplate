@@ -15,7 +15,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             questBuilder = new RemoteBuilder();
         }
 
-        public BuildRequest MakeRequest(BuildVersion buildVersion)
+        public BuildRequest CreateRequestFromVersion(BuildVersion buildVersion)
         {
             return new BuildRequest
             {
