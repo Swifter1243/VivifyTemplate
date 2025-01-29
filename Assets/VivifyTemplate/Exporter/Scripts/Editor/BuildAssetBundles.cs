@@ -260,6 +260,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				try
 				{
 					await Task.Delay(100);
+					buildProgressWindow.OnClose += request.BundleBuilder.Cancel;
 					BuildReport build = await request.BundleBuilder.Build(buildSettings, buildOptions, request.BuildVersion, buildTask.GetLogger(),
 						buildProgressWindow.AddShaderKeywordsRewriterTask);
 					buildTask.Success();

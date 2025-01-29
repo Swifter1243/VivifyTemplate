@@ -7,7 +7,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 {
     public class NativeBuilder : BundleBuilder
     {
-        public override Task<BuildReport> Build(BuildSettings buildSettings, BuildAssetBundleOptions buildOptions, BuildVersion buildVersion,
+        protected override Task<BuildReport> BuildInternal(BuildSettings buildSettings, BuildAssetBundleOptions buildOptions, BuildVersion buildVersion,
             Logger mainLogger, Action<BuildTask> shaderKeywordRewriterAction)
         {
             return BuildAssetBundles.Build(buildSettings, buildOptions, buildVersion, mainLogger, shaderKeywordRewriterAction);

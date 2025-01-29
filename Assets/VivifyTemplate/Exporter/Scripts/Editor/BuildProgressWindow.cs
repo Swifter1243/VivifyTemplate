@@ -28,6 +28,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private readonly TaskWindowData _shaderKeywordRewriterTaskWindow = new TaskWindowData();
         private Vector2 _serializeTaskScrollPosition;
 
+        public delegate void CloseFn();
+
+        public event CloseFn OnClose;
+
+        private void OnDestroy()
+        {
+            OnClose?.Invoke();
+        }
+
+
         public BuildTask AddIndividualBuild(BuildVersion version)
         {
             string taskName = "Building " + version;
