@@ -194,6 +194,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		public static async void BuildSingleRequestUncompressed(BuildRequest request)
 		{
+			EnsureQuestProjectReady();
 			Timer.Reset();
 			AccumulatingLogger mainLogger = new AccumulatingLogger();
 			AccumulatingLogger shaderKeywordsLogger = null;
@@ -236,8 +237,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 		}
 
+		private static void EnsureQuestProjectReady()
+		{
+			if (!QuestSetup.IsQuestProjectReady())
+			{
+				QuestSetup.CreatePopup();
+				throw new Exception("Your quest project is not setup!");
+			}
+		}
+
 		public static async void BuildAllRequests(List<BuildRequest> buildRequests, BuildAssetBundleOptions buildOptions)
 		{
+			EnsureQuestProjectReady();
 			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
