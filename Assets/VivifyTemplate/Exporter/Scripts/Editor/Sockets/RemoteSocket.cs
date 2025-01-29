@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
         public static bool Enabled { get; set; } = true;
 
-        public static void Initialize()
+        public static void Initialize(Action<Packet, Socket> onPacketReceived)
         {
             IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Loopback, Port);
 
@@ -31,18 +32,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                             Packet response = Packet.ReceivePacket(_clientSocket);
                             if (response != null)
                             {
-                                Debug.Log($"Received Packet: {response.PacketName}");
-                                Debug.Log($"Payload: {response.Payload}");
+                                onPacketReceived?.Invoke(response, _clientSocket);
                             }
                         }
 
-                        // Optional: Sleep to prevent busy looping
-                        Thread.Sleep(10); // Adjust sleep duration as needed
+                        Thread.Sleep(10);
                     }
                 }
             }).Start();
 
             _clientSocket.Connect(remoteEndPoint);
+        }
+
+        public static void Send(Packet packet)
+        {
+            Packet.SendPacket(_clientSocket, packet);
         }
     }
 }
