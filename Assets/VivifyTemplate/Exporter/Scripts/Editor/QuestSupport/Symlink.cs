@@ -7,24 +7,27 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public static class Symlink
+namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
-    public static void MakeSymlink(string target, string dest)
+    public static class Symlink
     {
-        using (Process myProcess = new Process())
+        public static void MakeSymlink(string target, string dest)
         {
-            myProcess.StartInfo = new ProcessStartInfo("cmd.exe", $"/k mklink /D \"{dest}\" \"{target}\"");
-            myProcess.StartInfo.CreateNoWindow = true;
-            myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            myProcess.StartInfo.UseShellExecute = true;
-            myProcess.StartInfo.Verb = "runas";
-            //myProcess.StartInfo.RedirectStandardOutput = true;
+            using (Process myProcess = new Process())
+            {
+                myProcess.StartInfo = new ProcessStartInfo("cmd.exe", $"/k mklink /D \"{dest}\" \"{target}\"");
+                myProcess.StartInfo.CreateNoWindow = true;
+                myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                myProcess.StartInfo.UseShellExecute = true;
+                myProcess.StartInfo.Verb = "runas";
+                //myProcess.StartInfo.RedirectStandardOutput = true;
 
-            myProcess.Start();
+                myProcess.Start();
 
-            //var read = await myProcess.StandardOutput.ReadToEndAsync();
-            //myProcess.WaitForExit();
-            //UnityEngine.Debug.Log(read);
+                //var read = await myProcess.StandardOutput.ReadToEndAsync();
+                //myProcess.WaitForExit();
+                //UnityEngine.Debug.Log(read);
+            }
         }
     }
 }

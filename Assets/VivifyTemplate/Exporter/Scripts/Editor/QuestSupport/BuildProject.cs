@@ -7,12 +7,15 @@ using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
 
-public static class BuildProject
+namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
-    public static void Build()
+    public static class BuildProject
     {
-        string[] arguments = Environment.GetCommandLineArgs();
-        Debug.Log("GetCommandLineArgs: " + string.Join(", ", arguments));
+        public static void Build()
+        {
+            RemoteSocket.Initialize();
+        }
     }
 }
