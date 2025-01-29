@@ -185,7 +185,7 @@ public class QuestSetup : EditorWindow
         return hasProject;
     }
 
-    private bool IsDirectoryNotEmpty(string path)
+    private static bool IsDirectoryNotEmpty(string path)
     {
         IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
         using (IEnumerator<string> en = items.GetEnumerator())
@@ -243,7 +243,7 @@ public class QuestSetup : EditorWindow
             padding = new RectOffset(10, 10, -10, 0)
         };
 
-        if (Directory.Exists(QuestPreferences.ProjectPath) && !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")))
+        if (IsQuestProjectReady())
         {
             EditorGUILayout.LabelField("<color=#88FF88>You are ready to build</color>", style);
         }
@@ -251,6 +251,11 @@ public class QuestSetup : EditorWindow
         {
             EditorGUILayout.LabelField("<color=#FF8888>You are <i>not</i> ready to build</color>", style);
         }
+    }
+
+    public static bool IsQuestProjectReady()
+    {
+        return Directory.Exists(QuestPreferences.ProjectPath) && !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets"));
     }
 
     private void OnGUI()
