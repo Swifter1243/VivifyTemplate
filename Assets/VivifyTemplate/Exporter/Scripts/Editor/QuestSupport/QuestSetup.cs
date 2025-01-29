@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Threading;
-using Newtonsoft.Json.Linq;
 using System.IO;
-using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
@@ -20,12 +14,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         {
             if (QuestPreferences.UnityEditor == "")
             {
-                new Thread(async () =>
+                Task.Run(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
                     await HubWrapper.GetUnityVersions();
 
-                }).Start();
+                });
             }
         }
 
@@ -36,12 +30,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 if (GUILayout.Button("Reset"))
                 {
                     QuestPreferences.UnityEditor = "";
-                    new Thread(async () =>
+                    Task.Run(async () =>
                     {
                         Thread.CurrentThread.IsBackground = true;
                         await HubWrapper.GetUnityVersions();
 
-                    }).Start();
+                    });
                 }
             }
 
@@ -53,10 +47,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             if (State == BackgroundTaskState.Idle && QuestPreferences.UnityEditor == "")
             {
-                string foundVersion;
-                if (HubWrapper.TryGetUnityEditor("2021.3.16f1", out foundVersion))
+                if (HubWrapper.TryGetUnityEditor("2021.3.16f1", out var foundVersion))
                 {
-                    UnityEngine.Debug.Log(foundVersion);
+                    Debug.Log(foundVersion);
                     QuestPreferences.UnityEditor = foundVersion;
                 }
                 else
@@ -73,16 +66,23 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             }
 
             var editorDirectory = Path.GetDirectoryName(QuestPreferences.UnityEditor);
-            var androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
-            if (!Directory.Exists(androidPlaybackEngine))
+            if (editorDirectory != null)
             {
-                EditorGUILayout.LabelField(
-                    "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
-                if (GUILayout.Button("Download Android Build Module"))
+                var androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
+                if (!Directory.Exists(androidPlaybackEngine))
                 {
-                    HubWrapper.DownloadUnity2021Android();
-                }
+                    EditorGUILayout.LabelField(
+                        "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
+                    if (GUILayout.Button("Download Android Build Module"))
+                    {
+                        HubWrapper.DownloadUnity2021Android();
+                    }
 
+                    return false;
+                }
+            }
+            else
+            {
                 return false;
             }
 
@@ -172,7 +172,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 var path = EditorUtility.OpenFolderPanel("Select Directory to Create a Project", "", "");
                 if (path != "")
                 {
-                    var projectName = Directory.GetParent(Application.dataPath).Name + "_Quest";
+                    var projectName = Directory.GetParent(Application.dataPath)?.Name + "_Quest";
                     var destinationPath = Path.Combine(path, projectName);
                     if (Directory.Exists(destinationPath))
                     {
@@ -309,14 +309,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 padding = new RectOffset(10, 10, -10, 0)
             };
 
-            if (IsQuestProjectReady())
-            {
-                EditorGUILayout.LabelField("<color=#88FF88>You are ready to build</color>", style);
-            }
-            else
-            {
-                EditorGUILayout.LabelField("<color=#FF8888>You are <i>not</i> ready to build</color>", style);
-            }
+            EditorGUILayout.LabelField(
+                IsQuestProjectReady()
+                    ? "<color=#88FF88>You are ready to build</color>"
+                    : "<color=#FF8888>You are <i>not</i> ready to build</color>", style);
         }
 
         public static bool IsQuestProjectReady()

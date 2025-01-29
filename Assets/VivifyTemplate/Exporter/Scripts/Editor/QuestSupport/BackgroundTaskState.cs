@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
+﻿namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
     public enum BackgroundTaskState
     {

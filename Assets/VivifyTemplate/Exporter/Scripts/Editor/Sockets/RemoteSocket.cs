@@ -2,8 +2,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using UnityEditor;
-using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 {
