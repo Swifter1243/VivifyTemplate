@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 {
@@ -80,7 +81,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
         {
             if (socket == null || !socket.Connected)
             {
-                throw new ArgumentException("Socket is not connected.");
+                Debug.LogError("Socket is not connected.");
             }
 
             try
@@ -91,14 +92,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
                 if (received == 0)
                 {
-                    Console.WriteLine("Server closed the connection.");
+                    Debug.LogError("Server closed the connection.");
                     return null;
                 }
 
                 int packetLength = BitConverter.ToInt32(lengthBuffer, 0);
                 if (packetLength <= 0)
                 {
-                    Console.WriteLine("Invalid packet length received.");
+                    Debug.LogError("Invalid packet length received.");
                     return null;
                 }
 
@@ -116,18 +117,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                 if (bytesRead == packetLength)
                 {
                     Packet packet = Packet.Deserialize(packetBuffer);
-                    Console.WriteLine($"Received Packet: {packet.PacketName}");
+                    Debug.Log($"Received Packet: {packet.PacketName}");
                     return packet;
                 }
-                else
-                {
-                    Console.WriteLine("Incomplete packet received.");
-                    return null;
-                }
+
+                Debug.LogError("Incomplete packet received.");
+                return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error receiving packet: {ex.Message}");
+                Debug.LogException(ex);
                 return null;
             }
         }
