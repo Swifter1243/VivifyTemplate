@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEditor;
-using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
 using VivifyTemplate.Exporter.Scripts.Structures;
 
@@ -27,7 +26,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                             RemoteSocket.Send(new Packet("Log", "Invalid payload"));
                             return;
                         }
-
                         var buildSettings = new BuildSettings()
                         {
                             OutputDirectory = payload[0],
