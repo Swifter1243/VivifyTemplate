@@ -117,7 +117,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                 if (bytesRead == packetLength)
                 {
                     Packet packet = Packet.Deserialize(packetBuffer);
-                    Debug.Log($"Received Packet: {packet.PacketName}");
                     return packet;
                 }
 

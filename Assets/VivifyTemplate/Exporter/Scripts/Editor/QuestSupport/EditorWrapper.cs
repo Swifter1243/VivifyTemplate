@@ -44,7 +44,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.FileName = editor;
-                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.InstallPackages.Setup -quit";
+                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.InstallPackages.Setup";
 
                     process.Start();
 

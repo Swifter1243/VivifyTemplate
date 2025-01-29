@@ -20,7 +20,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
             _clientSocket = new Socket(IPAddress.Loopback.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             
-            _ = new Thread(() =>
+            new Thread(() =>
             {
                 while (Enabled)
                 {
@@ -40,7 +40,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                         Thread.Sleep(10); // Adjust sleep duration as needed
                     }
                 }
-            });
+            }).Start();
 
             _clientSocket.Connect(remoteEndPoint);
         }
