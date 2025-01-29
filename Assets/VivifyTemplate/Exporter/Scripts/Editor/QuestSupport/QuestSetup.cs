@@ -72,8 +72,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 }
             }
 
-            string editorDirectory = Path.GetDirectoryName(QuestPreferences.UnityEditor);
-            string androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
+            var editorDirectory = Path.GetDirectoryName(QuestPreferences.UnityEditor);
+            var androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
             if (!Directory.Exists(androidPlaybackEngine))
             {
                 EditorGUILayout.LabelField(
@@ -140,7 +140,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private bool MakeProject()
         {
-            bool hasProject = QuestPreferences.ProjectPath != "" && Directory.Exists(QuestPreferences.ProjectPath);
+            var hasProject = QuestPreferences.ProjectPath != "" && Directory.Exists(QuestPreferences.ProjectPath);
 
             var verticalStyle = new GUIStyle(GUI.skin.button)
             {
@@ -169,11 +169,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             GUI.enabled = !hasProject;
             if (GUILayout.Button("Create"))
             {
-                string path = EditorUtility.OpenFolderPanel("Select Directory to Create a Project", "", "");
+                var path = EditorUtility.OpenFolderPanel("Select Directory to Create a Project", "", "");
                 if (path != "")
                 {
-                    string projectName = Directory.GetParent(Application.dataPath).Name + "_Quest";
-                    string destinationPath = Path.Combine(path, projectName);
+                    var projectName = Directory.GetParent(Application.dataPath).Name + "_Quest";
+                    var destinationPath = Path.Combine(path, projectName);
                     if (Directory.Exists(destinationPath))
                     {
                         Debug.LogError($"Folder at {destinationPath} already exists!");
@@ -182,7 +182,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                         return false;
                     }
 
-                    string editorPath = QuestPreferences.UnityEditor;
+                    var editorPath = QuestPreferences.UnityEditor;
 
                     Task.Run(async () =>
                     {
@@ -202,8 +202,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private static bool IsDirectoryNotEmpty(string path)
         {
-            IEnumerable<string> items = Directory.EnumerateFileSystemEntries(path);
-            using (IEnumerator<string> en = items.GetEnumerator())
+            var items = Directory.EnumerateFileSystemEntries(path);
+            using (var en = items.GetEnumerator())
             {
                 return !en.MoveNext();
             }
@@ -211,9 +211,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private bool MakeSymlink()
         {
-            string questAssets = Path.Combine(QuestPreferences.ProjectPath, "Assets");
+            var questAssets = Path.Combine(QuestPreferences.ProjectPath, "Assets");
             if (!Directory.Exists(questAssets)) return false;
-            bool hasSymlink = !IsDirectoryNotEmpty(questAssets);
+            var hasSymlink = !IsDirectoryNotEmpty(questAssets);
 
             var verticalStyle = new GUIStyle(GUI.skin.button)
             {
@@ -237,7 +237,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             EditorGUILayout.LabelField("Make Symlink", headerStyle);
             GUILayout.Space(15);
             EditorGUILayout.LabelField(
-                "You will be asked for admin permissions to create a symlink between your project into the quest project. Enable Windows \"Developer Mode\" to bypass",
+                "You will be asked for admin permissions to create a symlink between your project into the quest project.",
                 paragraphStyle);
             GUI.enabled = !hasSymlink;
             if (GUILayout.Button("Create"))
@@ -254,8 +254,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private bool InstallPackages()
         {
-            string questPackages = Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.0");
-            bool hasPackages = !IsDirectoryNotEmpty(questPackages);
+            var questPackages = Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.0");
+            var hasPackages = Directory.Exists(questPackages);
 
             var verticalStyle = new GUIStyle(GUI.skin.button)
             {
@@ -284,10 +284,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             GUI.enabled = !hasPackages;
             if (GUILayout.Button("Install"))
             {
+                string project = QuestPreferences.ProjectPath;
+                string editor = QuestPreferences.UnityEditor;
                 Task.Run(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    await EditorWrapper.InstallPackages();
+                    await EditorWrapper.InstallPackages(editor, project);
                 }).Start();
             }
 
@@ -319,8 +321,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         public static bool IsQuestProjectReady()
         {
             return Directory.Exists(QuestPreferences.ProjectPath) &&
-                   !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets"));
+                   !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")) &&
+                   Directory.Exists(Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.0"));
         }
+        
+        Vector2 _scrollPos = Vector2.zero;
 
         private void OnGUI()
         {
@@ -329,7 +334,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             var style = new GUIStyle(GUI.skin.scrollView);
 
-            Vector2 scrollPos = EditorGUILayout.BeginScrollView(new Vector2(0, 0), style);
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, style);
 
             Header();
             Info();
@@ -375,7 +380,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         [MenuItem("Vivify/Quest Setup")]
         public static void CreatePopup()
         {
-            QuestSetup window = CreateInstance<QuestSetup>();
+            var window = CreateInstance<QuestSetup>();
             window.titleContent = new GUIContent("Setup Quest Project");
             window.position = new Rect(300, 300, 800, 900);
             window.minSize = new Vector2(800, 900);
