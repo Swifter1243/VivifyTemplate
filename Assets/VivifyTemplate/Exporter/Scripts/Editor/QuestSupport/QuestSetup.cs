@@ -299,7 +299,7 @@ public class QuestSetup : EditorWindow
     }
 
     [MenuItem("Vivify/Quest Setup")]
-    private static void CreatePopup()
+    public static void CreatePopup()
     {
         QuestSetup window = CreateInstance<QuestSetup>();
         window.titleContent = new GUIContent("Setup Quest Project");

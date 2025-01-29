@@ -53,7 +53,24 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             EditorGUILayout.Space(20);
             GUILayout.FlexibleSpace();
 
-            if (_versions.Count > 0)
+            bool questNotReady = !QuestSetup.IsQuestProjectReady() && _versions.Contains(BuildVersion.Android2021);
+            bool canBuild = _versions.Count > 0 && !questNotReady;
+
+            if (questNotReady)
+            {
+                GUIStyle redTextStyle = new GUIStyle();
+                redTextStyle.normal.textColor = Color.red;
+                redTextStyle.alignment = TextAnchor.MiddleCenter;
+                GUILayout.Label("Your project for quest is not set up.", redTextStyle);
+                EditorGUILayout.Space(10);
+
+                if (GUILayout.Button("Setup", GUILayout.Height(40)))
+                {
+                    QuestSetup.CreatePopup();
+                }
+            }
+
+            if (canBuild)
             {
                 if (GUILayout.Button("Build", GUILayout.Height(40)))
                 {
