@@ -14,11 +14,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
         private static Socket _serverSocket;
         private static ManualResetEvent _accepting = new ManualResetEvent(false);
+        private static Action<Socket> _onInitialize;
 
         public static bool Enabled { get; set; } = true;
 
-        public static void Initialize()
+        public static void Initialize(Action<Socket> onInitialize)
         {
+            _onInitialize = onInitialize;
+            
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, Port);
 
             _serverSocket = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -53,23 +56,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                 Socket handler = listener.EndAccept(ar);
 
                 Debug.Log("Connected");
+                _onInitialize?.Invoke(handler);
             }
             catch (Exception e)
             {
                 Debug.LogException(e);
             }
-        }
-
-        [MenuItem("Vivify/Socket/StartSocket")]
-        private static void Start()
-        {
-            Initialize();
-        }
-
-        [MenuItem("Vivify/Socket/StopSocket")]
-        private static void Stop()
-        {
-            Enabled = false;
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEditor;
+using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 {
@@ -18,21 +19,30 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
             IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Loopback, Port);
 
             _clientSocket = new Socket(IPAddress.Loopback.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            
+            _ = new Thread(() =>
+            {
+                while (Enabled)
+                {
+                    while (true)
+                    {
+                        if (_clientSocket.Connected)
+                        {
+                            Packet response = Packet.ReceivePacket(_clientSocket);
+                            if (response != null)
+                            {
+                                Debug.Log($"Received Packet: {response.PacketName}");
+                                Debug.Log($"Payload: {response.Payload}");
+                            }
+                        }
+
+                        // Optional: Sleep to prevent busy looping
+                        Thread.Sleep(10); // Adjust sleep duration as needed
+                    }
+                }
+            });
 
             _clientSocket.Connect(remoteEndPoint);
-        }
-
-        [MenuItem("Vivify/Socket/StartSocket Local Connect")]
-        private static void Start()
-        {
-            Initialize();
-        }
-
-        [MenuItem("Vivify/Socket/StopSocket Local Connect")]
-        private static void Stop()
-        {
-            _clientSocket.Disconnect(false);
-            _clientSocket.Dispose();
         }
     }
 }

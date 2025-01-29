@@ -34,7 +34,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             }
         }
 
-        public static async Task InstallPackages()
+        public static async Task InstallPackages(string editor, string project)
         {
             try
             {
@@ -43,8 +43,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.FileName = QuestPreferences.UnityEditor;
-                    process.StartInfo.Arguments = $"-projectPath \"{QuestPreferences.ProjectPath}\" -executeMethod InstallPackages.Setup -quit";
+                    process.StartInfo.FileName = editor;
+                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.InstallPackages.Setup -quit";
 
                     process.Start();
 
@@ -61,7 +61,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             }
         }
 
-        public static async Task BuildProject()
+        public static async Task BuildProject(string editor, string project)
         {
             try
             {
@@ -70,8 +70,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.FileName = QuestPreferences.UnityEditor;
-                    process.StartInfo.Arguments = $"-projectPath \"{QuestPreferences.ProjectPath}\" -executeMethod BuildProject.Build";
+                    process.StartInfo.FileName = editor;
+                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.BuildProject.Build";
 
                     process.Start();
 
