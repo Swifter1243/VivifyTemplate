@@ -6,11 +6,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
     public class PlatformManager
     {
         private NativeBuilder nativeBuilder;
+        private RemoteBuilder questBuilder;
         public static PlatformManager Instance = new PlatformManager();
 
         private PlatformManager()
         {
             nativeBuilder = new NativeBuilder();
+            questBuilder = new RemoteBuilder();
         }
 
         public BuildRequest MakeRequest(BuildVersion buildVersion)
@@ -31,7 +33,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 case BuildVersion.Windows2021:
                     return nativeBuilder;
                 case BuildVersion.Android2021:
-                    throw new NotImplementedException();
+                    return questBuilder;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(buildVersion), buildVersion, null);
             }
