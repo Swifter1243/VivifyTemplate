@@ -30,7 +30,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			{
 				IsAndroid = version == BuildVersion.Android2021,
 				Is2019 = is2019,
-				NeedsShaderKeywordsFixed = !is2019,
+				NeedsShaderKeywordsFixed = !is2019 && !(Version.Parse(Application.unityVersion).Major > 2019),
 			};
 		}
 

@@ -44,16 +44,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 }
             });
             mainLogger.OnLog += message => RemoteSocket.Send(new Packet("Log", message));
-
+            
             new Thread(() =>
             {
                 while (true)
                 {
                     if (buildReport != null && buildReport.IsCompleted)
                     {
-                        RemoteSocket.Send(new Packet("BuildReport", buildReport.Result.ToString()));
+                        //RemoteSocket.Send(new Packet("BuildReport", buildReport.Result.ToString()));
                         //EditorApplication.Exit(1);
-                        RemoteSocket.Enabled = false;
+                        //RemoteSocket.Enabled = false;
                         break;
                     }
                 }

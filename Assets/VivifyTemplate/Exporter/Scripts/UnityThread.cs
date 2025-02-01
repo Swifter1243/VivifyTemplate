@@ -15,27 +15,15 @@ namespace VivifyTemplate.Exporter.Scripts
     
     //https://stackoverflow.com/a/41333540
     [ExecuteAlways]
-    public class UnityThread : MonoBehaviour
+    public static class UnityThread
     {
-        private static UnityThread _instance = null;
         private static readonly List<Action> _actionQueuesUpdateFunc = new List<Action>();
-        private readonly List<Action> _actionCopiedQueueUpdateFunc = new List<Action>();
+        private static readonly List<Action> _actionCopiedQueueUpdateFunc = new List<Action>();
         private static volatile bool _noActionQueueToExecuteUpdateFunc = true;
 
         internal static void InitUnityThread()
         {
-            Debug.Log("InitUnityThread");
-            if (_instance != null)
-            {
-                return;
-            }
-            // add an invisible game object to the scene
-            var obj = new GameObject("MainThreadExecute")
-            {
-                hideFlags = HideFlags.HideAndDontSave
-            };
-
-            _instance = obj.AddComponent<UnityThread>();
+            EditorApplication.update += Update;
         }
         
         public static void ExecuteInUpdate(Action action)
@@ -53,7 +41,7 @@ namespace VivifyTemplate.Exporter.Scripts
             }
         }
 
-        public void Update()
+        public static void Update()
         {
             if (_noActionQueueToExecuteUpdateFunc)
             {
@@ -75,14 +63,6 @@ namespace VivifyTemplate.Exporter.Scripts
             {
                 Debug.Log("Update4");
                 func.Invoke();
-            }
-        }
-
-        public void OnDisable()
-        {
-            if (_instance == this)
-            {
-                _instance = null;
             }
         }
     }
