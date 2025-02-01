@@ -36,10 +36,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                             ShouldPrettifyBundleInfo = bool.Parse(payload[3]),
                             WorkingVersion = (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[4])
                         };
-                        
-                        buildReport = BuildAssetBundles.Build(buildSettings,
-                            (BuildAssetBundleOptions)Enum.Parse(typeof(BuildAssetBundleOptions), payload[5]),
-                            (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[6]), mainLogger, null);
+
+                        try
+                        {
+                            buildReport = BuildAssetBundles.Build(buildSettings,
+                                (BuildAssetBundleOptions)Enum.Parse(typeof(BuildAssetBundleOptions), payload[5]),
+                                (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[6]), mainLogger, null);
+                        }
+                        catch (Exception e)
+                        {
+                            mainLogger.Log(e.Message);
+                        }
+
                         break;
                 }
             });

@@ -25,12 +25,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static BuildVersionBuildInfo BuildVersionBuildInfo(BuildVersion version)
 		{
 			bool is2019 = version == BuildVersion.Windows2019;
-
+			
+			string trimmedVersion = Application.unityVersion.Replace("f1", "");
 			return new BuildVersionBuildInfo
 			{
 				IsAndroid = version == BuildVersion.Android2021,
 				Is2019 = is2019,
-				NeedsShaderKeywordsFixed = !is2019 && !(Version.Parse(Application.unityVersion).Major > 2019),
+				NeedsShaderKeywordsFixed = !is2019 && !(Version.Parse(trimmedVersion).Major > 2019),
 			};
 		}
 
