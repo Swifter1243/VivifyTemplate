@@ -31,19 +31,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                             mainLogger.LogUnformatted(packet.Payload);
                             break;
                         case "BuildReport":
-                            var payload = packet.Payload.Split(';');
-                            report = new BuildReport
-                            {
-                                BuiltBundlePath = payload[0],
-                                FixedBundlePath = payload[1],
-                                UsedBundlePath = payload[2],
-                                OutputBundlePath = payload[3],
-                                ShaderKeywordsFixed = bool.Parse(payload[4]),
-                                CRC = uint.Parse(payload[5]),
-                                BuildVersionBuildInfo = JsonUtility.FromJson<BuildVersionBuildInfo>(payload[6]),
-                                BuildTarget = (BuildTarget)Enum.Parse(typeof(BuildTarget), payload[7]),
-                                BuildVersion = (BuildVersion)Enum.Parse(typeof(BuildVersion), payload[8])
-                            };
+                            report = JsonUtility.FromJson<BuildReport>(packet.Payload);
                             break;
                     }
                 });

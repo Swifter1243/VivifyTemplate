@@ -59,7 +59,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     if (buildReport != null && buildReport.IsCompleted)
                     {
-                        //RemoteSocket.Send(new Packet("BuildReport", buildReport.Result.ToString()));
+                        RemoteSocket.Send(new Packet("BuildReport", JsonUtility.ToJson(buildReport.Result)));
                         //EditorApplication.Exit(1);
                         //RemoteSocket.Enabled = false;
                         break;

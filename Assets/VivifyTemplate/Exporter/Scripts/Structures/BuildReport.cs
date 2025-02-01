@@ -20,10 +20,5 @@ namespace VivifyTemplate.Exporter.Scripts.Structures
         public BuildVersionBuildInfo BuildVersionBuildInfo;
         public BuildTarget BuildTarget;
         public BuildVersion BuildVersion;
-        
-        public override string ToString()
-        {
-            return string.Concat(";", BuiltBundlePath, FixedBundlePath, UsedBundlePath, OutputBundlePath, ShaderKeywordsFixed, CRC, BuildVersionBuildInfo, BuildTarget, BuildVersion);
-        }
     }
 }
