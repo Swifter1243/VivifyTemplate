@@ -36,8 +36,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                     // Set the event to nonsignaled state.  
                     _accepting.Reset();
 
-                    // Start an asynchronous socket to listen for connections.  
-                    Debug.Log("Waiting for a connection...");
+                    // Start an asynchronous socket to listen for connections.
                     _serverSocket.BeginAccept(AcceptCallback, _serverSocket);
 
                     // Wait until a connection is made before continuing.  
@@ -56,7 +55,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                 Socket listener = (Socket)ar.AsyncState;
                 Socket handler = listener.EndAccept(ar);
 
-                Debug.Log("Connected");
                 _onInitialize?.Invoke(handler);
                 new Thread(() =>
                 {

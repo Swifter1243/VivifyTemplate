@@ -31,7 +31,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
                             Packet response = Packet.ReceivePacket(_clientSocket);
                             if (response != null)
                             {
-                                Debug.Log(response.PacketName);
                                 UnityThread.ExecuteInUpdate(() =>
                                 {
                                     onPacketReceived?.Invoke(response, _clientSocket); 

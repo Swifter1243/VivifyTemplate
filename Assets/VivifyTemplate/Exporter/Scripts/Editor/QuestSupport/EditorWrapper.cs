@@ -22,7 +22,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
                     var read = await process.StandardOutput.ReadToEndAsync();
                     process.WaitForExit();
-                    UnityEngine.Debug.Log(read);
 
                     QuestSetup.State = BackgroundTaskState.Idle;
                 }
@@ -47,9 +46,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
                     process.Start();
 
-                    var read = await process.StandardOutput.ReadToEndAsync();
                     process.WaitForExit();
-                    UnityEngine.Debug.Log(read);
 
                     QuestSetup.State = BackgroundTaskState.Idle;
                 }
@@ -63,8 +60,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         public static async Task BuildProject(string editor, string project)
         {
             try
-            {
-                QuestSetup.State = BackgroundTaskState.AddingPackages;
+            {;
                 using (var process = new System.Diagnostics.Process())
                 {
                     process.StartInfo.UseShellExecute = false;
@@ -74,11 +70,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
                     process.Start();
 
-                    var read = await process.StandardOutput.ReadToEndAsync();
                     process.WaitForExit();
-                    UnityEngine.Debug.Log(read);
-
-                    QuestSetup.State = BackgroundTaskState.Idle;
                 }
             }
             catch (Exception e)

@@ -24,25 +24,22 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     Packet.SendPacket(socket, new Packet("Build", payload));
                 }, (packet, socket) =>
                 {
-                    Debug.Log(packet.PacketName + ": " + packet.Payload);
                     switch (packet.PacketName)
                     {
                         case "Log":
                             mainLogger.LogUnformatted(packet.Payload);
                             break;
                         case "BuildReport":
+                            HostSocket.Enabled = false;
                             report = JsonUtility.FromJson<BuildReport>(packet.Payload);
                             break;
                     }
                 });
                 await EditorWrapper.BuildProject(editor, project);
-                Debug.Log("Finished...");
                 while (!report.HasValue)
                 {
                     await Task.Delay(100);
                 }
-
-                HostSocket.Enabled = false;
                 return report.Value;
             });
         }

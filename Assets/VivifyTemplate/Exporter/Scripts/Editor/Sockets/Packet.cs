@@ -69,7 +69,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
 
                 socket.Send(lengthPrefix); // Send length prefix
                 socket.Send(data);        // Send actual packet data
-                Console.WriteLine($"Packet '{packet.PacketName}' sent.");
             }
             catch (Exception ex)
             {
@@ -124,6 +123,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
             }
             catch (Exception ex)
             {
+                // Ignore "An existing connection was forcibly closed by the remote host" exception
+                if (ex is SocketException socketEx && socketEx.Message.StartsWith("An existing connection"))
+                {
+                    return null;
+                }
                 Debug.LogException(ex);
                 return null;
             }
