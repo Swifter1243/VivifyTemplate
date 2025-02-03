@@ -25,7 +25,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		private static BuildVersionBuildInfo BuildVersionBuildInfo(BuildVersion version)
 		{
 			bool is2019 = version == BuildVersion.Windows2019;
-			
+
 			string trimmedVersion = Application.unityVersion.Replace("f1", "");
 			return new BuildVersionBuildInfo
 			{
@@ -223,7 +223,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 				bundleInfo.bundleCRCs[versionPrefix] = build.CRC;
 				bundleInfo.bundleFiles.Add(build.OutputBundlePath);
 
-				BundleInfoProcessor.Serialize(buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, mainLogger);
+				BundleInfoProcessor.Serialize(buildSettings.ProjectBundle, buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, mainLogger);
 			}
 			else
 			{
@@ -312,7 +312,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			try
 			{
-				BundleInfoProcessor.Serialize(buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, serializeTask.GetLogger());
+				BundleInfoProcessor.Serialize(buildSettings.ProjectBundle, buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, serializeTask.GetLogger());
 				serializeTask.Success();
 			}
 			catch (Exception e)
