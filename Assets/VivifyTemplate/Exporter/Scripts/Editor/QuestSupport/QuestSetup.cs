@@ -213,7 +213,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         private bool MakeSymlink()
         {
             var questAssets = Path.Combine(QuestPreferences.ProjectPath, "Assets");
-            if (!Directory.Exists(questAssets)) return false;
+            if (!Directory.Exists(questAssets) || State == BackgroundTaskState.CreatingProject) return false;
             var hasSymlink = !IsDirectoryNotEmpty(questAssets);
 
             var verticalStyle = new GUIStyle(GUI.skin.button)

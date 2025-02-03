@@ -8,49 +8,124 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
     public static class InstallPackages
     {
-        static Stack<string> Requests = new Stack<string>();
-        static AddRequest InstallingRequest;
+        static AddRequest InputRequest;
+        static AddRequest ManagementRequest;
+        static AddRequest OpenXRRequest;
+        static AddRequest OculusRequest;
 
+        private static bool Cancel = false;
+        
+        #if UNITY_2021
+        [MenuItem("Vivify/Cancel Packages")]
+        public static void CancelInstall()
+        {
+            Cancel = true;
+        }
+        [MenuItem("Vivify/Install Packages")]
+        #endif
         public static void Setup()
         {
-            Requests.Push("com.unity.xr.oculus");
-            Requests.Push("com.unity.xr.openxr");
-            Requests.Push("com.unity.xr.management");
-            Requests.Push("com.unity.inputsystem");
             EditorApplication.update += Progress;
-            Progress();
         }
-
+        
         private static void Progress()
         {
-            if (Requests.Count == 0 && (InstallingRequest == null || InstallingRequest.IsCompleted))
+            if (Cancel)
             {
-                Debug.Log("QUIT");
-                //EditorApplication.Exit(1);
-            }
-            if (InstallingRequest == null)
-            {
-                var request = Requests.Pop();
-                Debug.Log($"Installing {request}");
-                InstallingRequest = Client.Add(request);
-            }
-            Debug.Log(InstallingRequest.Status);
-            if (InstallingRequest.IsCompleted)
-            {
-                if (InstallingRequest.Status == StatusCode.Success)
-                {
-                    Debug.Log("Installed: " + InstallingRequest.Result.packageId);
-                    InstallingRequest = null;
-                }
-                else if (InstallingRequest.Status >= StatusCode.Failure)
-                {
-                    Debug.Log(InstallingRequest.Error.message);
-                    InstallingRequest = null;
-                }
-                Progress();
+                EditorApplication.update -= Progress;
+                return;
             }
             
+            if (InputRequest == null)
+            {
+                //Install Input System
+                InputRequest = Client.Add("com.unity.inputsystem");
+                return;
+            }
+            if (InputRequest.IsCompleted)
+            {
+                //Input Installed
+                if (InputRequest.Status == StatusCode.Failure)
+                {
+                    Debug.LogError("Failed to install Input System");
+                    //EditorApplication.Exit(1);
+                    return;
+                }
+            }
+            else
+            {
+                //Waiting
+                return;
+            }
             
+            if (ManagementRequest == null)
+            {
+                //Install OpenXR
+                ManagementRequest = Client.Add("com.unity.xr.management");
+                return;
+            }
+            if (ManagementRequest.IsCompleted)
+            {
+                //OpenXR Installed
+                if (ManagementRequest.Status == StatusCode.Failure)
+                {
+                    Debug.LogError("Failed to install Management");
+                    //EditorApplication.Exit(1);
+                    return;
+                }
+            }
+            else
+            {
+                //Waiting
+                return;
+            }
+            
+            if (OpenXRRequest == null)
+            {
+                //Install OpenXR
+                OpenXRRequest = Client.Add("com.unity.xr.openxr");
+                return;
+            }
+            if (OpenXRRequest.IsCompleted)
+            {
+                //OpenXR Installed
+                if (OpenXRRequest.Status == StatusCode.Failure)
+                {
+                    Debug.LogError("Failed to install OpenXR");
+                    //EditorApplication.Exit(1);
+                    return;
+                }
+            }
+            else
+            {
+                //Waiting
+                return;
+            }
+            
+            if (OculusRequest == null)
+            {
+                //Install Oculus
+                OculusRequest = Client.Add("com.unity.xr.oculus");
+                return;
+            }
+            if (OculusRequest.IsCompleted)
+            {
+                //Oculus Installed
+                if (OculusRequest.Status == StatusCode.Failure)
+                {
+                    Debug.LogError("Failed to install Oculus");
+                    //EditorApplication.Exit(1);
+                    return;
+                }
+            }
+            else
+            {
+                //Waiting
+                return;
+            }
+            
+            Debug.Log("All packages installed");
+            EditorApplication.Exit(1);
         }
     }
 }

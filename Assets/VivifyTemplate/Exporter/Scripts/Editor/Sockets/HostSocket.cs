@@ -25,6 +25,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
             
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, Port);
 
+            if (_serverSocket != null)
+            {
+                _serverSocket.Close();
+                _serverSocket.Dispose();
+            }
+
             _serverSocket = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             _serverSocket.Bind(localEndPoint);
