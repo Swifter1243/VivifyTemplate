@@ -45,39 +45,41 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 return false;
             }
 
-            if (State == BackgroundTaskState.Idle && QuestPreferences.UnityEditor == "")
+            if (State == BackgroundTaskState.Idle && (QuestPreferences.UnityEditor == "" || !Directory.Exists(Path.GetDirectoryName(QuestPreferences.UnityEditor))))
             {
-                if (HubWrapper.TryGetUnityEditor("2021.3.16f1", out var foundVersion))
+                if (HubWrapper.TryGetUnityEditor("2021.3.16f1", out var foundVersion) && Directory.Exists(Path.GetDirectoryName(foundVersion)))
                 {
-                    Debug.Log(foundVersion);
                     QuestPreferences.UnityEditor = foundVersion;
                 }
                 else
                 {
                     EditorGUILayout.LabelField(
                         "Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
+                    GUI.enabled = State != BackgroundTaskState.DownloadingEditor;
                     if (GUILayout.Button("Download"))
                     {
-                        HubWrapper.DownloadUnity2021();
+                        Application.OpenURL("unityhub://2021.3.16f1/4016570cf34f");
                     }
-
+                    GUI.enabled = true;
                     return false;
                 }
             }
 
             var editorDirectory = Path.GetDirectoryName(QuestPreferences.UnityEditor);
-            if (editorDirectory != null)
+            if (State == BackgroundTaskState.Idle && editorDirectory != null)
             {
                 var androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
                 if (!Directory.Exists(androidPlaybackEngine))
                 {
                     EditorGUILayout.LabelField(
-                        "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
-                    if (GUILayout.Button("Download Android Build Module"))
+                        "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This modile is required to build quest bundles.");
+                    GUI.enabled = State != BackgroundTaskState.DownloadingAndroidBuildSupport;
+                    if (GUILayout.Button("Download Android Build Module. Under \"Component Installers\""))
                     {
-                        HubWrapper.DownloadUnity2021Android();
+                        Application.OpenURL("https://unity.com/releases/editor/whats-new/2021.3.16#installers");
                     }
 
+                    GUI.enabled = true;
                     return false;
                 }
             }
@@ -362,11 +364,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 EditorGUILayout.EndScrollView();
                 return;
             }
-            EditorGUILayout.EndHorizontal();
-
-
-            EditorGUILayout.BeginHorizontal();
-
             EditorGUILayout.EndHorizontal();
 
 

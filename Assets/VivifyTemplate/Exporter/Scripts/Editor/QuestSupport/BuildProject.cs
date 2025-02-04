@@ -61,7 +61,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     {
                         RemoteSocket.Send(new Packet("BuildReport", JsonUtility.ToJson(buildReport.Result)));
                         RemoteSocket.Enabled = false;
-                        EditorApplication.Exit(1);
+                        UnityThread.ExecuteInUpdate(() =>
+                        {
+                            EditorApplication.Exit(1); 
+                        });
                         break;
                     }
                 }

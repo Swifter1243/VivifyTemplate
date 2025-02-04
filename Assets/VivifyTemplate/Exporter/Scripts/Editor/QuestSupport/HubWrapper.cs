@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
+using System.IO;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
@@ -24,7 +25,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
                 var read = await myProcess.StandardOutput.ReadToEndAsync();
                 myProcess.WaitForExit();
-                UnityEngine.Debug.Log(read);
 
                 var lines = read.Split('\n');
                 foreach (string line in lines)
@@ -32,7 +32,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     if (string.IsNullOrWhiteSpace(line)) continue;
                     var split = line.Split(',');
                     if (split.Length != 2) continue;
-
+                    UnityEngine.Debug.Log(split[0].Trim() + " " + split[1].Trim().Substring(13));
                     _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
                 }
 
@@ -41,16 +41,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         }
 
         public static bool FinishedGettingEditors() => _unityVersions.Count > 0;
-        public static bool TryGetUnityEditor(string version, out string path) => _unityVersions.TryGetValue(version, out path);
 
-        public static bool DownloadUnity2021()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool DownloadUnity2021Android()
-        {
-            throw new NotImplementedException();
-        }
+        public static bool TryGetUnityEditor(string version, out string path) =>
+            _unityVersions.TryGetValue(version, out path);
     }
 }
