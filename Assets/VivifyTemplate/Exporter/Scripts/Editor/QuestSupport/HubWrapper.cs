@@ -32,7 +32,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     if (string.IsNullOrWhiteSpace(line)) continue;
                     var split = line.Split(',');
                     if (split.Length != 2) continue;
-                    UnityEngine.Debug.Log(split[0].Trim() + " " + split[1].Trim().Substring(13));
                     _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
                 }
 
