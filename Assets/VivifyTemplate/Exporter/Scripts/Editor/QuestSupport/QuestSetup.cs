@@ -10,33 +10,27 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
     {
         public static BackgroundTaskState State = BackgroundTaskState.Idle;
 
-        private void OnEnable()
+        private bool EditorChecks()
         {
-            if (QuestPreferences.UnityEditor == "")
+            if (!Directory.Exists(Path.GetDirectoryName(QuestPreferences.UnityHubPath)))
+            {
+                EditorGUILayout.LabelField("You do not have Unity Hub installed. This is required for managing your editor installations.", EditorStyles.boldLabel);
+                if (GUILayout.Button("To download, click the first \"Download\" button."))
+                {
+                    Application.OpenURL("https://unity.com/download");
+                }
+                return false;
+            }
+
+            if ((QuestPreferences.UnityEditor == "" ||
+                 !Directory.Exists(Path.GetDirectoryName(QuestPreferences.UnityEditor))) &&
+                State == BackgroundTaskState.Idle)
             {
                 Task.Run(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
                     await HubWrapper.GetUnityVersions();
-
                 });
-            }
-        }
-
-        private bool EditorChecks()
-        {
-            if (QuestPreferences.UnityEditor != "") //debug
-            {
-                if (GUILayout.Button("Reset"))
-                {
-                    QuestPreferences.UnityEditor = "";
-                    Task.Run(async () =>
-                    {
-                        Thread.CurrentThread.IsBackground = true;
-                        await HubWrapper.GetUnityVersions();
-
-                    });
-                }
             }
 
             if (State == BackgroundTaskState.SearchingEditors)
@@ -328,7 +322,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private void OnGUI()
         {
-            EditorGUILayout.LabelField(State.ToString());
             if (!EditorChecks()) return;
 
             var style = new GUIStyle(GUI.skin.scrollView);
