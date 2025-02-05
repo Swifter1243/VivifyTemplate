@@ -314,9 +314,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         {
             return Directory.Exists(QuestPreferences.ProjectPath) &&
                    !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")) &&
-                   Directory.Exists(Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.0"));
+                   Directory.Exists(Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.0")) &&
+                   Directory.Exists(QuestPreferences.UnityEditor);
         }
-        
+
         Vector2 _scrollPos = Vector2.zero;
 
         private void OnGUI()
