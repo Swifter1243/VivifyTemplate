@@ -22,9 +22,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 return false;
             }
 
-            if ((QuestPreferences.UnityEditor == "" ||
-                 !Directory.Exists(Path.GetDirectoryName(QuestPreferences.UnityEditor))) &&
-                State == BackgroundTaskState.Idle)
+            if ((QuestPreferences.UnityEditor == "" || !Directory.Exists(Path.GetDirectoryName(QuestPreferences.UnityEditor))) &&
+                State == BackgroundTaskState.Idle && !HubWrapper.FinishedGettingEditors())
             {
                 Task.Run(async () =>
                 {
