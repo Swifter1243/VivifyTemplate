@@ -46,13 +46,30 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(
-                        "Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.");
+                    GUIStyle style = new GUIStyle(GUI.skin.label)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 15,
+                    };
+
+                    EditorGUILayout.Space(10);
+                    EditorGUILayout.LabelField("Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.", style);
+                    EditorGUILayout.Space(10);
+
                     GUI.enabled = State != BackgroundTaskState.DownloadingEditor;
-                    if (GUILayout.Button("Download"))
+
+                    if (GUILayout.Button("Download", GUILayout.Height(30)))
                     {
                         Application.OpenURL("unityhub://2021.3.16f1/4016570cf34f");
                     }
+
+                    style.normal.textColor = Color.red;
+                    style.fontStyle = FontStyle.Bold;
+
+                    EditorGUILayout.Space(10);
+                    EditorGUILayout.LabelField("Make sure you check the box that says \"Android Build Support\" when installing.", style);
+                    EditorGUILayout.Space(10);
+
                     GUI.enabled = true;
                     return false;
                 }
