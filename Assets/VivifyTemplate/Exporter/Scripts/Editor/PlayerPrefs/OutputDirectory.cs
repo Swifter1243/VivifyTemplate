@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using UnityEditor;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
@@ -25,7 +26,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
             string outputDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
             if (outputDirectory == "")
             {
-                throw new Exception("User closed the directory window.");
+                throw new NoNullAllowedException("User closed the directory window.");
             }
             UnityEngine.PlayerPrefs.SetString(PlayerPrefsKey, outputDirectory);
             return outputDirectory;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -200,7 +201,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			Timer.Reset();
 			AccumulatingLogger mainLogger = new AccumulatingLogger();
 			AccumulatingLogger shaderKeywordsLogger = null;
-			BuildSettings buildSettings = BuildSettings.Snapshot();
+			BuildSettings buildSettings;
+
+			try
+			{
+				buildSettings = BuildSettings.Snapshot();
+			}
+			catch
+			{
+				return;
+			}
 
 			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.BuildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
 
@@ -256,7 +266,17 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			EnsureQuestProjectReady(buildRequests);
 			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
-			BuildSettings buildSettings = BuildSettings.Snapshot();
+			BuildSettings buildSettings;
+
+			try
+			{
+				buildSettings = BuildSettings.Snapshot();
+			}
+			catch
+			{
+				buildProgressWindow.Close();
+				return;
+			}
 
 			IEnumerable<Task<BuildReport?>> buildTasks = buildRequests.Select(async request =>
 			{
