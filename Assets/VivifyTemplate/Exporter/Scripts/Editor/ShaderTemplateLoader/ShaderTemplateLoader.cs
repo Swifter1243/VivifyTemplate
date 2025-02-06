@@ -35,11 +35,24 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
                 0,
                 ScriptableObject.CreateInstance<DoCreateShader>(),
-                Path.Combine(AssetDatabase.GetAssetPath(Selection.activeObject), $"{shaderName}.shader"),
+                Path.Combine(GetCurrentDir(), $"{shaderName}.shader"),
                 EditorGUIUtility.IconContent("Shader Icon").image as Texture2D,
                 File.ReadAllText(templatePath)
             );
         }
+        
+        private static string GetCurrentDir()
+        {
+            string path = "Assets";
+            if (Selection.activeObject != null)
+            {
+                string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
+                if (!string.IsNullOrEmpty(assetPath) && AssetDatabase.IsValidFolder(assetPath)) 
+                    path = assetPath;
+                else 
+                    path = Path.GetDirectoryName(assetPath);
+            }
+            return path; }
 
         private class DoCreateShader : EndNameEditAction
         {
