@@ -15,24 +15,24 @@ namespace VivifyTemplate.Exporter.Scripts
 		private const string BUNDLE_INFO_FILENAME = "bundleinfo.json";
 
 		public static void Serialize(
+			string bundleName,
 			string outputPath,
 			bool prettify,
 			BundleInfo bundleInfo,
 			Logger logger
 		)
 		{
-			AssetBundle bundle = AssetBundle.LoadFromFile(bundleInfo.bundleFiles[0]);
-			string[] names = bundle.GetAllAssetNames();
+			string[] files = AssetDatabase.GetAssetPathsFromAssetBundle(bundleName);
 
-			IEnumerable<string> materialNames = names.Where(x => x.Contains(".mat"));
-			IEnumerable<string> prefabNames = names.Where(x => x.Contains(".prefab"));
+			IEnumerable<string> materialFiles = files.Where(x => x.Contains(".mat"));
+			IEnumerable<string> prefabFiles = files.Where(x => x.Contains(".prefab"));
 
-			foreach (var name in materialNames)
+			foreach (var name in materialFiles)
 			{
-				SerializeMaterial(bundleInfo, bundle, name);
+				SerializeMaterial(bundleInfo, name);
 			}
 
-			foreach (string name in prefabNames)
+			foreach (string name in prefabFiles)
 			{
 				SerializePrefab(bundleInfo, name);
 			}
@@ -44,25 +44,27 @@ namespace VivifyTemplate.Exporter.Scripts
 			logger.Log($"Successfully wrote {BUNDLE_INFO_FILENAME} for bundle '{ProjectBundle.Value}' to '{assetInfoPath}'");
 		}
 
-		private static void SerializePrefab(BundleInfo bundleInfo, string name)
+		private static void SerializePrefab(BundleInfo bundleInfo, string prefabPath)
 		{
-			string filename = Path.GetFileNameWithoutExtension(name);
+			prefabPath = prefabPath.ToLower();
+			string filename = Path.GetFileNameWithoutExtension(prefabPath);
 			string key = filename;
 			int variation = 0;
 			while (bundleInfo.prefabs.ContainsKey(key))
 			{
 				key = $"{filename} ({++variation})";
 			}
-			bundleInfo.prefabs.Add(key, name);
+			bundleInfo.prefabs.Add(key, prefabPath);
 		}
 
-		private static void SerializeMaterial(BundleInfo bundleInfo, AssetBundle bundle, string name)
+		private static void SerializeMaterial(BundleInfo bundleInfo, string materialPath)
 		{
-			var material = bundle.LoadAsset<Material>(name);
+			materialPath = materialPath.ToLower();
+			var material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
 
 			var materialInfo = new MaterialInfo
 			{
-				path = name
+				path = materialPath
 			};
 
 			int propertyCount = ShaderUtil.GetPropertyCount(material.shader);
@@ -73,7 +75,7 @@ namespace VivifyTemplate.Exporter.Scripts
 				SerializeMaterialProperty(materialInfo, propertyName, propertyType, material);
 			}
 
-			string filename = Path.GetFileNameWithoutExtension(name);
+			string filename = Path.GetFileNameWithoutExtension(materialPath);
 			string key = filename;
 			int variation = 0;
 			while (bundleInfo.materials.ContainsKey(key))

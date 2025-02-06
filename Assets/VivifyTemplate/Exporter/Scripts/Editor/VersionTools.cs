@@ -14,7 +14,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             {
                 case BuildVersion.Windows2019: return "bundleWindows2019.vivify";
                 case BuildVersion.Windows2021: return "bundleWindows2021.vivify";
-                case BuildVersion.Android2019: return "bundleAndroid2019.vivify";
                 case BuildVersion.Android2021: return "bundleAndroid2021.vivify";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(version), version, null);
@@ -27,7 +26,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             {
                 case BuildVersion.Windows2019: return "_windows2019";
                 case BuildVersion.Windows2021: return "_windows2021";
-                case BuildVersion.Android2019: return "_android2019";
                 case BuildVersion.Android2021: return "_android2021";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(version), version, null);
@@ -46,7 +44,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             switch (version)
             {
                 case BuildVersion.Windows2019:
-                case BuildVersion.Android2019:
                     PlayerSettings.stereoRenderingPath = StereoRenderingPath.SinglePass;
                     break;
                 case BuildVersion.Windows2021:

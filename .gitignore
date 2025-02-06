@@ -78,3 +78,7 @@ crashlytics-build.properties
 # Testing
 /[Aa]ssets/Testing
 /[Aa]ssets/Testing.meta
+
+# 2021 Project
+/Project_2021
+/Assets/XR

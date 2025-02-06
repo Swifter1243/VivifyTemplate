@@ -1,35 +1,25 @@
 ﻿using System;
 using System.Threading.Tasks;
+using UnityEngine.Events;
 
 namespace VivifyTemplate.Exporter.Scripts
 {
     public class Logger
     {
-        private string _log = string.Empty;
-        private bool _empty = true;
+        public delegate void LogDelegate(string message);
+
+        public event LogDelegate OnLog;
 
         public void Log(string message)
         {
             string time = DateTime.Now.ToString("HH:mm:ss");
-
-            if (!_empty)
-            {
-                _log += Environment.NewLine;
-            }
-
-            _log += $"[{time}] " + message;
-
-            _empty = false;
+            string result = $"[{time}] " + message;
+            OnLog?.Invoke(result);
         }
 
-        public string GetOutput()
+        public void LogUnformatted(string message)
         {
-            return _log;
-        }
-
-        public bool IsEmpty()
-        {
-            return _empty;
+            OnLog?.Invoke(message);
         }
     }
 }

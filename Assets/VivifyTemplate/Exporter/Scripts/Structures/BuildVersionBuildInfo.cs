@@ -1,5 +1,8 @@
-﻿namespace VivifyTemplate.Exporter.Scripts.Structures
+﻿using System;
+
+namespace VivifyTemplate.Exporter.Scripts.Structures
 {
+    [Serializable]
     public struct BuildVersionBuildInfo
     {
         public bool IsAndroid;

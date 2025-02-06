@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
+using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
 using VivifyTemplate.Exporter.Scripts.Structures;
 using Debug = UnityEngine.Debug;
 
@@ -16,29 +17,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 	{
 		private static readonly SimpleTimer Timer = new SimpleTimer();
 
-		[MenuItem("Vivify/Build/Build Working Version Uncompressed _F5")]
-		private static void BuildWorkingVersionUncompressed()
-		{
-			BuildSingleUncompressed(WorkingVersion.Value);
-		}
-
-		[MenuItem("Vivify/Build/Build All Versions Compressed")]
-		private static void BuildAllVersionsCompressed()
-		{
-			IEnumerable<BuildVersion> versions = Enum.GetValues(typeof(BuildVersion)).OfType<BuildVersion>();
-			BuildAll(new List<BuildVersion>(versions), BuildAssetBundleOptions.None);
-		}
-
-		[MenuItem("Vivify/Build/Build Windows Versions Compressed")]
-		private static void BuildWindowsVersionsCompressed()
-		{
-			BuildAll(new List<BuildVersion>
-			{
-				BuildVersion.Windows2019,
-				BuildVersion.Windows2021
-			}, BuildAssetBundleOptions.None);
-		}
-
 		private static Task<uint> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
 		{
 			return Task.Run(() => ShaderKeywordRewriter.ShaderKeywordRewriter.Rewrite(bundlePath, targetPath, logger, compress));
@@ -46,13 +24,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		private static BuildVersionBuildInfo BuildVersionBuildInfo(BuildVersion version)
 		{
-			bool is2019 = version == BuildVersion.Windows2019 || version == BuildVersion.Android2019;
+			bool is2019 = version == BuildVersion.Windows2019;
 
+			string trimmedVersion = Application.unityVersion.Replace("f1", "");
 			return new BuildVersionBuildInfo
 			{
-				IsAndroid = version == BuildVersion.Android2019 || version == BuildVersion.Android2021,
+				IsAndroid = version == BuildVersion.Android2021,
 				Is2019 = is2019,
-				NeedsShaderKeywordsFixed = !is2019,
+				NeedsShaderKeywordsFixed = !is2019 && !(Version.Parse(trimmedVersion).Major > 2019),
 			};
 		}
 
@@ -62,7 +41,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			AssetDatabase.SaveAssets();
 		}
 
-		private static async Task<BuildReport> Build(
+		public static async Task<BuildReport> Build(
 			BuildSettings buildSettings,
 			BuildAssetBundleOptions buildOptions,
 			BuildVersion buildVersion,
@@ -215,14 +194,15 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 		}
 
-		private static async void BuildSingleUncompressed(BuildVersion version)
+		public static async void BuildSingleRequestUncompressed(BuildRequest request)
 		{
+			EnsureQuestProjectReady();
 			Timer.Reset();
-			Logger mainLogger = new Logger();
-			Logger shaderKeywordsLogger = null;
+			AccumulatingLogger mainLogger = new AccumulatingLogger();
+			AccumulatingLogger shaderKeywordsLogger = null;
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{version}' uncompressed to '{buildSettings.OutputDirectory}'...");
+			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.BuildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
 
 			void OnShaderKeywordsRewritten(BuildTask buildTask)
 			{
@@ -238,16 +218,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 					isCompressed = false
 				};
 
-				BuildReport build = await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, mainLogger, OnShaderKeywordsRewritten);
-				string versionPrefix = VersionTools.GetVersionPrefix(version);
+				BuildReport build = await request.BundleBuilder.Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.BuildVersion, mainLogger, OnShaderKeywordsRewritten);
+				string versionPrefix = VersionTools.GetVersionPrefix(request.BuildVersion);
 				bundleInfo.bundleCRCs[versionPrefix] = build.CRC;
 				bundleInfo.bundleFiles.Add(build.OutputBundlePath);
 
-				BundleInfoProcessor.Serialize(buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, mainLogger);
+				BundleInfoProcessor.Serialize(buildSettings.ProjectBundle, buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, mainLogger);
 			}
 			else
 			{
-				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, version, mainLogger, OnShaderKeywordsRewritten);
+				await Build(buildSettings, BuildAssetBundleOptions.UncompressedAssetBundle, request.BuildVersion, mainLogger, OnShaderKeywordsRewritten);
 			}
 
 			Debug.Log($"Build done in {Timer.Reset()}s!");
@@ -259,19 +239,30 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 		}
 
-		public static async void BuildAll(List<BuildVersion> buildVersions, BuildAssetBundleOptions buildOptions)
+		private static void EnsureQuestProjectReady()
 		{
+			if (!QuestSetup.IsQuestProjectReady())
+			{
+				QuestSetup.CreatePopup();
+				throw new Exception("Your quest project is not setup!");
+			}
+		}
+
+		public static async void BuildAllRequests(List<BuildRequest> buildRequests, BuildAssetBundleOptions buildOptions)
+		{
+			EnsureQuestProjectReady();
 			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
-			IEnumerable<Task<BuildReport?>> buildTasks = buildVersions.Select(async version =>
+			IEnumerable<Task<BuildReport?>> buildTasks = buildRequests.Select(async request =>
 			{
-				BuildTask buildTask = buildProgressWindow.AddIndividualBuild(version);
+				BuildTask buildTask = buildProgressWindow.AddIndividualBuild(request.BuildVersion);
 
 				try
 				{
 					await Task.Delay(100);
-					BuildReport build = await Build(buildSettings, buildOptions, version, buildTask.GetLogger(),
+					buildProgressWindow.OnClose += request.BundleBuilder.Cancel;
+					BuildReport build = await request.BundleBuilder.Build(buildSettings, buildOptions, request.BuildVersion, buildTask.GetLogger(),
 						buildProgressWindow.AddShaderKeywordsRewriterTask);
 					buildTask.Success();
 					return (BuildReport?)build;
@@ -321,7 +312,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 			try
 			{
-				BundleInfoProcessor.Serialize(buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, serializeTask.GetLogger());
+				BundleInfoProcessor.Serialize(buildSettings.ProjectBundle, buildSettings.OutputDirectory, buildSettings.ShouldPrettifyBundleInfo, bundleInfo, serializeTask.GetLogger());
 				serializeTask.Success();
 			}
 			catch (Exception e)
