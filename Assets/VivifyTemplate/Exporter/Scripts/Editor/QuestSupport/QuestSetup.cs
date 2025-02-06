@@ -53,7 +53,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     };
 
                     EditorGUILayout.Space(10);
-                    EditorGUILayout.LabelField("Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.", style);
+                    EditorGUILayout.LabelField("Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.", style, GUILayout.Height(style.fontSize * 2));
                     EditorGUILayout.Space(10);
 
                     GUI.enabled = State != BackgroundTaskState.DownloadingEditor;
@@ -67,7 +67,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     style.fontStyle = FontStyle.Bold;
 
                     EditorGUILayout.Space(10);
-                    EditorGUILayout.LabelField("Make sure you check the box that says \"Android Build Support\" when installing.", style);
+                    EditorGUILayout.LabelField("Make sure you check the box that says \"Android Build Support\" when installing.", style, GUILayout.Height(style.fontSize * 2));
                     EditorGUILayout.Space(10);
 
                     GUI.enabled = true;
@@ -138,8 +138,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             EditorGUILayout.BeginVertical(verticalStyle);
 
-            EditorGUILayout.LabelField("What?", headerStyle);
-            GUILayout.Space(15);
+            EditorGUILayout.LabelField("What Is This?", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
             EditorGUILayout.LabelField(
                 "To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.16f1",
                 paragraphStyle);
@@ -173,11 +172,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             EditorGUILayout.BeginVertical(verticalStyle);
 
-            EditorGUILayout.LabelField("Make Project", headerStyle);
-            GUILayout.Space(15);
+            EditorGUILayout.LabelField("Make Project", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
             EditorGUILayout.LabelField(
-                "You will be prompted to pick a directory where your project will be created in, it's best to keep this the same across projects for organization.",
+                "You will be prompted to pick a directory where your project will be created in. The folder you select will create a new folder inside which is the Unity 2021 project.",
                 paragraphStyle);
+            GUILayout.Space(10);
             GUI.enabled = !hasProject;
             if (GUILayout.Button("Create"))
             {
@@ -247,11 +246,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             EditorGUILayout.BeginVertical(verticalStyle);
 
-            EditorGUILayout.LabelField("Make Symlink", headerStyle);
-            GUILayout.Space(15);
+            EditorGUILayout.LabelField("Make Symlink", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
             EditorGUILayout.LabelField(
                 "You will be asked for admin permissions to create a symlink between your project into the quest project.",
                 paragraphStyle);
+            GUILayout.Space(10);
             GUI.enabled = !hasSymlink;
             if (GUILayout.Button("Create"))
             {
@@ -289,12 +288,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             EditorGUILayout.BeginVertical(verticalStyle);
 
-            EditorGUILayout.LabelField("Install Packages", headerStyle);
-            GUILayout.Space(15);
+            EditorGUILayout.LabelField("Install Packages", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
             EditorGUILayout.LabelField(
                 "This will install XR Plugin Management and Oculus Integration packages into your project.",
                 paragraphStyle);
             GUI.enabled = !hasPackages;
+            GUILayout.Space(10);
             if (GUILayout.Button("Install"))
             {
                 string project = QuestPreferences.ProjectPath;
