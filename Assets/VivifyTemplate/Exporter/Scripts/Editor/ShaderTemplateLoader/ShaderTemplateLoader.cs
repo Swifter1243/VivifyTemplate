@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -34,7 +32,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
                 return;
             }
         
-            ProjectWindowUtil.CreateAssetWithContent(shaderName + ".shader", File.ReadAllText(templatePath));
+            ProjectWindowUtil.CreateAssetWithContent(
+                shaderName + ".shader",
+                File.ReadAllText(templatePath),
+                EditorGUIUtility.IconContent("Shader Icon").image as Texture2D
+                );
         }
     }
 }
