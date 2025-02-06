@@ -44,7 +44,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             EditorGUILayout.LabelField("Versions", EditorStyles.boldLabel);
             VersionToggle("Windows 2019", BuildVersion.Windows2019);
             VersionToggle("Windows 2021", BuildVersion.Windows2021);
-            VersionToggle("Android 2021", BuildVersion.Android2021);
+            VersionToggle("Android (Quest) 2021", BuildVersion.Android2021);
 
             EditorGUILayout.Space(20);
 
