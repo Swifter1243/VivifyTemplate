@@ -127,12 +127,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         {
             EditorGUILayout.LabelField("Settings", _titleStyle, GUILayout.Height(_titleStyle.fontSize * 1.5f));
 
-            _compressed = EditorGUILayout.Toggle("Compressed", _compressed);
-            ProjectBundle.Value = EditorGUILayout.TextField("Bundle Name To Export", ProjectBundle.Value);
-            ShouldExportBundleInfo.Value = EditorGUILayout.Toggle("Should Export Bundle Info", ShouldExportBundleInfo.Value);
+            _compressed = EditorGUILayout.Toggle(new GUIContent("Compressed", "Whether to compress the bundle. This will take longer, but will significantly reduce file size."), _compressed);
+            ProjectBundle.Value = EditorGUILayout.TextField(new GUIContent("Bundle To Export", "Assets attached to this bundle name will be exported."), ProjectBundle.Value);
+            ShouldExportBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Export Bundle Info", "Whether to export the bundleinfo.json file."), ShouldExportBundleInfo.Value);
 
             if (ShouldExportBundleInfo.Value) {
-                ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle("Should Prettify Bundle Info", ShouldPrettifyBundleInfo.Value);
+                ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Prettify Bundle Info", "Whether to format the bundleinfo.json with indents and new lines."), ShouldPrettifyBundleInfo.Value);
             }
 
             GUIOutputDirectory();
@@ -144,11 +144,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             GUILayout.BeginHorizontal();
             if (OutputDirectory.IsSet())
             {
-                OutputDirectory.Value = EditorGUILayout.TextField("Output Directory", OutputDirectory.Value);
+                OutputDirectory.Value = EditorGUILayout.TextField(new GUIContent("Output Directory", "Which folder to output the bundles (and bundleinfo.json)."), OutputDirectory.Value);
             }
             else
             {
-                GUILayout.Label("Output Directory", EditorStyles.label);
+                GUILayout.Label(new GUIContent("Output Directory", "Which folder to output the bundles (and bundleinfo.json)."), EditorStyles.label);
                 GUILayout.FlexibleSpace();
             }
             if (GUILayout.Button("Browse", GUILayout.Width(80)))
