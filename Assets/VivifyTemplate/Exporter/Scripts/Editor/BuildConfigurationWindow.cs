@@ -126,6 +126,28 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             if (ShouldExportBundleInfo.Value) {
                 ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle("Should Prettify Bundle Info", ShouldPrettifyBundleInfo.Value);
             }
+
+            GUIOutputDirectory();
+        }
+
+        private static void GUIOutputDirectory()
+        {
+
+            GUILayout.BeginHorizontal();
+            if (OutputDirectory.IsSet())
+            {
+                OutputDirectory.Value = EditorGUILayout.TextField("Output Directory", OutputDirectory.Value);
+            }
+            else
+            {
+                GUILayout.Label("Output Directory", EditorStyles.label);
+                GUILayout.FlexibleSpace();
+            }
+            if (GUILayout.Button("Browse", GUILayout.Width(80)))
+            {
+                OutputDirectory.SetFromExplorer();
+            }
+            GUILayout.EndHorizontal();
         }
 
         private void GUIQuickBuild()

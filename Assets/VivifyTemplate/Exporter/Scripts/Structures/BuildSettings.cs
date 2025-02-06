@@ -8,7 +8,7 @@ namespace VivifyTemplate.Exporter.Scripts.Structures
         {
             return new BuildSettings
             {
-                OutputDirectory = Editor.PlayerPrefs.OutputDirectory.Get(),
+                OutputDirectory = Editor.PlayerPrefs.OutputDirectory.Value,
                 ProjectBundle = Editor.PlayerPrefs.ProjectBundle.Value,
                 WorkingVersion = Editor.PlayerPrefs.WorkingVersion.Value,
                 ShouldExportBundleInfo = Editor.PlayerPrefs.ShouldExportBundleInfo.Value,

@@ -5,15 +5,23 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
 {
     public static class OutputDirectory
     {
-        private static readonly string PlayerPrefsKey = "outputDirectory";
+        private readonly static string PlayerPrefsKey = "outputDirectory";
 
-        public static string Get()
+        public static string Value
         {
-            if (UnityEngine.PlayerPrefs.HasKey(PlayerPrefsKey))
-            {
-                return UnityEngine.PlayerPrefs.GetString(PlayerPrefsKey);
-            }
+            get {
+                if (IsSet())
+                {
+                    return UnityEngine.PlayerPrefs.GetString(PlayerPrefsKey);
+                }
 
+                return SetFromExplorer();
+            }
+            set => UnityEngine.PlayerPrefs.SetString(PlayerPrefsKey, value);
+        }
+
+        public static string SetFromExplorer()
+        {
             string outputDirectory = EditorUtility.OpenFolderPanel("Select Directory", "", "");
             if (outputDirectory == "")
             {
@@ -23,10 +31,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
             return outputDirectory;
         }
 
-        [MenuItem("Vivify/Settings/Forget Output Directory")]
-        private static void Forget()
+        public static bool IsSet()
         {
-            UnityEngine.PlayerPrefs.DeleteKey(PlayerPrefsKey);
+            return UnityEngine.PlayerPrefs.HasKey(PlayerPrefsKey);
         }
     }
 }
