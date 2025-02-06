@@ -54,12 +54,20 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 }
             };
 
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(10);
+            GUILayout.BeginVertical();
+
             GUIVersions();
             EditorGUILayout.Space(30);
             GUISettings();
             EditorGUILayout.Space(30);
             GUIQuickBuild();
             EditorGUILayout.Space(30);
+
+            GUILayout.EndVertical();
+            GUILayout.Space(10);
+            GUILayout.EndHorizontal();
 
             GUILayout.FlexibleSpace();
             GUIBuild();
