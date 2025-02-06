@@ -43,5 +43,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 return report.Value;
             });
         }
+
+        public override void Cancel()
+        {
+            // TODO: Cancellation
+        }
     }
 }

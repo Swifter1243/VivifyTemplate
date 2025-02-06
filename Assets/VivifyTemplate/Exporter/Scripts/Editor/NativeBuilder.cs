@@ -12,5 +12,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         {
             return BuildAssetBundles.Build(buildSettings, buildOptions, buildVersion, mainLogger, shaderKeywordRewriterAction);
         }
+
+        public override void Cancel()
+        {
+            // TODO: Cancellation
+        }
     }
 }

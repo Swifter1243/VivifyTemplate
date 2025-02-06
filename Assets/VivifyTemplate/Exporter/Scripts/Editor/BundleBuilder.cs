@@ -29,9 +29,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             Action<BuildTask> shaderKeywordRewriterAction
         );
 
-        public void Cancel()
-        {
-            // TODO: Cancellation
-        }
+        public abstract void Cancel();
     }
 }
