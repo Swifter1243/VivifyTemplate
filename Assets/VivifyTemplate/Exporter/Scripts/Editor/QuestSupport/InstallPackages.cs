@@ -15,6 +15,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private static bool Cancel = false;
 
+        private static InstallPackagesPopup _popup;
+
         #if UNITY_2021
         [MenuItem("Vivify/Cancel Packages")]
         public static void CancelInstall()
@@ -25,7 +27,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         #endif
         public static void Setup()
         {
-            Debug.Log("Installing Packages...");
+            _popup = InstallPackagesPopup.Popup();
+            _popup.SetStatus("Installing packages. Please wait...", Color.gray);
             EditorApplication.update += Progress;
         }
 
@@ -33,7 +36,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         {
             if (Cancel)
             {
-                Debug.Log("Cancelling");
+                _popup.SetStatus("Cancelling...", Color.red);
                 EditorApplication.update -= Progress;
                 return;
             }
@@ -126,7 +129,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 return;
             }
 
-            Debug.Log("All packages installed");
+            _popup.SetStatus("All packages installed.", Color.green);
             EditorApplication.Exit(1);
         }
     }
