@@ -15,23 +15,5 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             BuildRequest request = PlatformManager.Instance.CreateRequestFromVersion(WorkingVersion.Value);
             BuildAssetBundles.BuildSingleRequestUncompressed(request);
         }
-
-        [MenuItem("Vivify/Build/Build All Versions Compressed")]
-        private static void BuildAllVersionsCompressed()
-        {
-            IEnumerable<BuildVersion> versions = Enum.GetValues(typeof(BuildVersion)).OfType<BuildVersion>();
-            IEnumerable<BuildRequest> requests = versions.Select(v => PlatformManager.Instance.CreateRequestFromVersion(v));
-            BuildAssetBundles.BuildAllRequests(requests.ToList(), BuildAssetBundleOptions.None);
-        }
-
-        [MenuItem("Vivify/Build/Build Windows Versions Compressed")]
-        private static void BuildWindowsVersionsCompressed()
-        {
-            BuildAssetBundles.BuildAllRequests(new List<BuildRequest>
-            {
-                PlatformManager.Instance.CreateRequestFromVersion(BuildVersion.Windows2019),
-                PlatformManager.Instance.CreateRequestFromVersion(BuildVersion.Windows2021),
-            }, BuildAssetBundleOptions.None);
-        }
     }
 }

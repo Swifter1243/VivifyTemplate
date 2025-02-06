@@ -13,6 +13,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
     {
         private readonly HashSet<BuildVersion> _versions = new HashSet<BuildVersion>();
         private bool _compressed = false;
+        private GUIStyle _titleStyle;
 
         private Texture2D _tbsLogo;
 
@@ -41,10 +42,24 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private void OnGUI()
         {
             GUILogo();
+
+            _titleStyle = new GUIStyle
+            {
+                fontStyle = FontStyle.Bold,
+                fontSize = 15,
+                normal =
+                {
+                    textColor = new Color(0.9f, 0.9f, 0.9f),
+                }
+            };
+
             GUIVersions();
-            EditorGUILayout.Space(20);
+            EditorGUILayout.Space(30);
             GUISettings();
-            EditorGUILayout.Space(20);
+            EditorGUILayout.Space(30);
+            GUIQuickBuild();
+            EditorGUILayout.Space(30);
+
             GUILayout.FlexibleSpace();
             GUIBuild();
         }
@@ -79,8 +94,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         }
         private void GUIVersions()
         {
-
-            EditorGUILayout.LabelField("Versions", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Versions", _titleStyle, GUILayout.Height(_titleStyle.fontSize * 1.5f));
             VersionToggle("Windows 2019", BuildVersion.Windows2019);
             VersionToggle("Windows 2021", BuildVersion.Windows2021);
             VersionToggle("Android (Quest) 2021", BuildVersion.Android2021);
@@ -88,8 +102,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
         private void GUISettings()
         {
+            EditorGUILayout.LabelField("Settings", _titleStyle, GUILayout.Height(_titleStyle.fontSize * 1.5f));
 
-            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
             _compressed = EditorGUILayout.Toggle("Compressed", _compressed);
             ProjectBundle.Value = EditorGUILayout.TextField("Bundle Name To Export", ProjectBundle.Value);
             ShouldExportBundleInfo.Value = EditorGUILayout.Toggle("Should Export Bundle Info", ShouldExportBundleInfo.Value);
@@ -97,6 +111,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             if (ShouldExportBundleInfo.Value) {
                 ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle("Should Prettify Bundle Info", ShouldPrettifyBundleInfo.Value);
             }
+        }
+
+        private void GUIQuickBuild()
+        {
+            EditorGUILayout.LabelField("Quick Build", _titleStyle, GUILayout.Height(_titleStyle.fontSize * 1.5f));
+            GUILayout.Label("If you press F5, you can build a version uncompressed for quick iteration.", EditorStyles.label);
+            EditorGUILayout.Space(5);
+
+            int selectedVersion = EditorGUILayout.Popup("Working Version", (int)WorkingVersion.Value, VersionTools.GetVersionsStrings());
+            WorkingVersion.Value = (BuildVersion)Enum.GetValues(typeof(BuildVersion)).GetValue(selectedVersion);
         }
 
         private void GUILogo()

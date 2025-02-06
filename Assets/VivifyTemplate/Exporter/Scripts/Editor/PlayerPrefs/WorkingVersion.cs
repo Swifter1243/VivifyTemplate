@@ -25,23 +25,5 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
             }
             set => UnityEngine.PlayerPrefs.SetString(PlayerPrefsKey, value.ToString());
         }
-
-        [MenuItem("Vivify/Settings/Set Working Version/Windows 2019")]
-        private static void SetWindows2019() => Value = BuildVersion.Windows2019;
-
-        [MenuItem("Vivify/Settings/Set Working Version/Windows 2019", true)]
-        private static bool ValidateWindows2019() => Value != BuildVersion.Windows2019;
-
-        [MenuItem("Vivify/Settings/Set Working Version/Windows 2021")]
-        private static void SetWindows2021() => Value = BuildVersion.Windows2021;
-
-        [MenuItem("Vivify/Settings/Set Working Version/Windows 2021", true)]
-        private static bool ValidateWindows2021() => Value != BuildVersion.Windows2021;
-
-        [MenuItem("Vivify/Settings/Set Working Version/Android 2021")]
-        private static void SetAndroid2021() => Value = BuildVersion.Android2021;
-
-        [MenuItem("Vivify/Settings/Set Working Version/Android 2021", true)]
-        private static bool ValidateAndroid2021() => Value != BuildVersion.Android2021;
     }
 }

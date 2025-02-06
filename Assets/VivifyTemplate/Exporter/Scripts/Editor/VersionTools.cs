@@ -32,6 +32,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             }
         }
 
+        public static string[] GetVersionsStrings()
+        {
+            return Enum.GetNames(typeof(BuildVersion));
+        }
+
         public static string GetTempDirectory(BuildVersion version)
         {
             string path = Path.Combine(Application.temporaryCachePath, version.ToString());
