@@ -14,10 +14,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			PlayerSettings.virtualRealitySupported = true;
 			AssignLayers();
 			Debug.Log("Project set up!");
-			Debug.Log("If you plan to build for android, install the android module in build settings.");
-			Debug.Log("You can only install it if you have a unity version installed through the hub.");
 		}
-		
+
         private static void AssignLayers()
         {
             SetLayer(0, "Default");
