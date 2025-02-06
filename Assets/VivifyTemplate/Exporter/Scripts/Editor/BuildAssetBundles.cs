@@ -196,7 +196,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		public static async void BuildSingleRequestUncompressed(BuildRequest request)
 		{
-			EnsureQuestProjectReady();
+			EnsureQuestProjectReady(request);
 			Timer.Reset();
 			AccumulatingLogger mainLogger = new AccumulatingLogger();
 			AccumulatingLogger shaderKeywordsLogger = null;
@@ -239,9 +239,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			}
 		}
 
-		private static void EnsureQuestProjectReady()
+		private static void EnsureQuestProjectReady(List<BuildRequest> buildRequests)
 		{
-			if (!QuestSetup.IsQuestProjectReady())
+			buildRequests.ForEach(EnsureQuestProjectReady);
+		}
+		private static void EnsureQuestProjectReady(BuildRequest buildRequest)
+		{
+			if (!QuestSetup.IsQuestProjectReady() && buildRequest.BuildVersion == BuildVersion.Android2021)
 			{
 				QuestSetup.CreatePopup();
 				throw new Exception("Your quest project is not setup!");
@@ -250,7 +254,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
 		public static async void BuildAllRequests(List<BuildRequest> buildRequests, BuildAssetBundleOptions buildOptions)
 		{
-			EnsureQuestProjectReady();
+			EnsureQuestProjectReady(buildRequests);
 			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
 			BuildSettings buildSettings = BuildSettings.Snapshot();
 
