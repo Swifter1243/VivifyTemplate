@@ -34,7 +34,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             if (State == BackgroundTaskState.SearchingEditors)
             {
-                EditorGUILayout.LabelField("Searching for Unity editors...", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Searching for Unity editors... (PLEASE WAIT)", EditorStyles.boldLabel);
                 return false;
             }
 
