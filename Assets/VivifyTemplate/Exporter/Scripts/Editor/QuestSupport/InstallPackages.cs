@@ -14,7 +14,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         static AddRequest OculusRequest;
 
         private static bool Cancel = false;
-        
+
         #if UNITY_2021
         [MenuItem("Vivify/Cancel Packages")]
         public static void CancelInstall()
@@ -25,17 +25,19 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         #endif
         public static void Setup()
         {
+            Debug.Log("Installing Packages...");
             EditorApplication.update += Progress;
         }
-        
+
         private static void Progress()
         {
             if (Cancel)
             {
+                Debug.Log("Cancelling");
                 EditorApplication.update -= Progress;
                 return;
             }
-            
+
             if (InputRequest == null)
             {
                 //Install Input System
@@ -57,7 +59,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 //Waiting
                 return;
             }
-            
+
             if (ManagementRequest == null)
             {
                 //Install OpenXR
@@ -79,7 +81,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 //Waiting
                 return;
             }
-            
+
             if (OpenXRRequest == null)
             {
                 //Install OpenXR
@@ -101,7 +103,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 //Waiting
                 return;
             }
-            
+
             if (OculusRequest == null)
             {
                 //Install Oculus
@@ -123,7 +125,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 //Waiting
                 return;
             }
-            
+
             Debug.Log("All packages installed");
             EditorApplication.Exit(1);
         }
