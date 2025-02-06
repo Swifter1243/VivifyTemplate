@@ -1,19 +1,21 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
 	public static class Initialize
 	{
 		[MenuItem("Vivify/Setup Project")]
-		[Obsolete]
-		private static void SetupProject()
+		[Obsolete("Uses Single Pass")]
+		public static void SetupProject()
 		{
 			PlayerSettings.colorSpace = ColorSpace.Linear;
 			PlayerSettings.virtualRealitySupported = true;
 			AssignLayers();
 			Debug.Log("Project set up!");
+			Initialized.Value = true;
 		}
 
         private static void AssignLayers()

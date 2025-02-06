@@ -39,6 +39,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             }
         }
 
+        [Obsolete("Possibly sets up project, which uses Single Pass")]
         private void OnGUI()
         {
             GUILogo();
@@ -64,17 +65,22 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             GUIBuild();
         }
 
+        [Obsolete("Possibly sets up project, which uses Single Pass")]
         private void GUIBuild()
         {
-
             bool questNotReady = !QuestSetup.IsQuestProjectReady() && _versions.Contains(BuildVersion.Android2021);
-            bool canBuild = _versions.Count > 0 && !questNotReady;
+
+            GUIStyle redTextStyle = new GUIStyle
+            {
+                normal =
+                {
+                    textColor = Color.red
+                },
+                alignment = TextAnchor.MiddleCenter
+            };
 
             if (questNotReady)
             {
-                GUIStyle redTextStyle = new GUIStyle();
-                redTextStyle.normal.textColor = Color.red;
-                redTextStyle.alignment = TextAnchor.MiddleCenter;
                 GUILayout.Label("Your project for quest is not set up.", redTextStyle);
                 EditorGUILayout.Space(10);
 
@@ -83,8 +89,17 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     QuestSetup.CreatePopup();
                 }
             }
+            else if (!Initialized.Value)
+            {
+                GUILayout.Label("Your project has not been set up for Beat Saber.", redTextStyle);
+                EditorGUILayout.Space(10);
 
-            if (canBuild)
+                if (GUILayout.Button("Setup", GUILayout.Height(40)))
+                {
+                    Initialize.SetupProject();
+                }
+            }
+            else if (_versions.Count > 0)
             {
                 if (GUILayout.Button("Build", GUILayout.Height(40)))
                 {
