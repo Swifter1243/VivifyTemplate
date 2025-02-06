@@ -70,8 +70,6 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                 typeTreeTypeWorkingCopy.AppendNode(4, 5, 0x0001, "size", 0, TypeTreeNodeFlags.None, "int", 1);
                 typeTreeTypeWorkingCopy.AppendNode(1, 5, 0x0001, "data", 0, TypeTreeNodeFlags.None, "char", 1);
 
-                bool anyKeywordsUpdated = false;
-
                 logger.Log("Updating materials");
 
                 foreach (AssetFileInfo materialInfo in assetsFile.GetAssetsOfType(AssetClassID.Material))
@@ -96,7 +94,6 @@ namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
                             ValueBuilder.DefaultValueFieldFromArrayTemplate(validKeywordsArray);
                         arrayValue.AsString = shaderKeyword;
                         validKeywordsArray.Children.Add(arrayValue);
-                        anyKeywordsUpdated = true;
                     }
 
                     materialInfo.SetNewData(materialBaseField);

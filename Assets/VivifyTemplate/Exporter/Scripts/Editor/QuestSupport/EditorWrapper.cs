@@ -32,7 +32,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             }
         }
 
-        public static async Task InstallPackages(string editor, string project)
+        public static Task InstallPackages(string editor, string project)
         {
             try
             {
@@ -55,9 +55,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             {
                 Debug.LogException(e);
             }
+            return Task.CompletedTask;
         }
 
-        public static async Task BuildProject(string editor, string project)
+        public static Task BuildProject(string editor, string project)
         {
             try
             {;
@@ -77,6 +78,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             {
                 Debug.LogException(e);
             }
+            return Task.CompletedTask;
         }
     }
 }
