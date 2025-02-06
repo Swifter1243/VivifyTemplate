@@ -1,6 +1,6 @@
 ﻿# What is VivifyTemplate?
 
-VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 modules: **Exporter**, **Examples**, and **CGIncludes**.
+VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 "modules": **Exporter**, **Examples**, and **CGIncludes**.
 
 - [**Exporter**](#exporter-module): Builds asset bundles to your map project.
 - [**Examples**](#examples-module): Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
@@ -36,7 +36,7 @@ It also exports a `bundleinfo.json` file which contains the correct bundle check
       "path": "assets/materials/example.mat",
       "properties": {
         "_Example": {
-          "Float": "1.0" // type, default value
+          "Float": "1.0"
         }
       }
     }
@@ -45,12 +45,14 @@ It also exports a `bundleinfo.json` file which contains the correct bundle check
     "example": "assets/prefabs/example.prefab"
   },
   "bundleFiles": [
-    "C:/Example/bundle_windows2019",
-    "C:/Example/bundle_windows2021"
+    "C:/Example/bundleWindows2019.vivify",
+    "C:/Example/bundleWindows2021.vivify",
+    "C:/Example/bundleAndroid2021.vivify"
   ],
   "bundleCRCs": {
     "_windows2019": 2604998796,
-    "_windows2021": 2051513366
+    "_windows2021": 2051513366,
+    "_android2021": 3982829844
   },
   "isCompressed": true
 }
@@ -64,19 +66,11 @@ Before using the exporter, **make sure the assets you want are in your bundle**.
 
 ![image](https://github.com/user-attachments/assets/6f1b945f-d38f-4f8b-ba42-d546adf12dcb)
 
-To use the exporter, you can run anything in the `Vivify > Build` tab. You can also press `F5` to quickly export to your [working version](#working-version).
+To use the exporter, open the build configuration window `Vivify > Build > Build Configuration Window`.
 - **Uncompressed**: Advised for quick iteration. Do not distribute.
 - **Compressed**: Takes much longer but is necessary for final upload. 
 
-When you first run the exporter, you will be asked for an output directory. This is where your `bundleinfo.json` and asset bundles will end up. The path you set will be remembered for subsequent builds. To change the output directory, run `Vivify > Settings > Forget Output Directory` and build again.
-
-By default, your project will try to export a bundle called `bundle`. You can change this in `Vivify > Settings > Set Project Bundle Name`.
-
-## Working Version
-
-When you press `F5` or use `Vivify > Build > Build Working Version Uncompressed`, you'll build an uncompressed bundle for your "working version".
-
-The working version just allows you to configure a version to quickly export to for fast iteration. You can change your working version in `Vivify > Settings > Set Working Version`.
+When you first run the exporter, you will be asked for an output directory. This is where your `bundleinfo.json` and asset bundles will end up. The path you set will be remembered for subsequent builds.
 
 # Examples Module
 
