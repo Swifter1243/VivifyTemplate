@@ -1,6 +1,6 @@
 ﻿namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
 {
-	public class Initialized
+	public class ProjectIsInitialized
 	{
 		private readonly static string PlayerPrefsKey = "projectIsInitialized";
 

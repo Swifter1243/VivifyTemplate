@@ -89,7 +89,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                     QuestSetup.CreatePopup();
                 }
             }
-            else if (!Initialized.Value)
+            else if (!ProjectIsInitialized.Value)
             {
                 GUILayout.Label("Your project has not been set up for Beat Saber.", redTextStyle);
                 EditorGUILayout.Space(10);

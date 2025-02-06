@@ -15,7 +15,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 			PlayerSettings.virtualRealitySupported = true;
 			AssignLayers();
 			Debug.Log("Project set up!");
-			Initialized.Value = true;
+			ProjectIsInitialized.Value = true;
 		}
 
         private static void AssignLayers()
