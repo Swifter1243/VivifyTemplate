@@ -96,7 +96,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
                 if (GUILayout.Button("Setup", GUILayout.Height(40)))
                 {
-                    Initialize.SetupProject();
+                    SetupProject.Setup();
                 }
             }
             else if (_versions.Count > 0)

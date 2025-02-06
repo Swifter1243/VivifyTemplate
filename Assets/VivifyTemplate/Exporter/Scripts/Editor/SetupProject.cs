@@ -5,11 +5,11 @@ using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor
 {
-	public static class Initialize
+	public static class SetupProject
 	{
 		[MenuItem("Vivify/Setup Project")]
 		[Obsolete("Uses Single Pass")]
-		public static void SetupProject()
+		public static void Setup()
 		{
 			PlayerSettings.colorSpace = ColorSpace.Linear;
 			PlayerSettings.virtualRealitySupported = true;
