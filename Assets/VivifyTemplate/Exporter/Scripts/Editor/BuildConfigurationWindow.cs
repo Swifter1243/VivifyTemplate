@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
 using VivifyTemplate.Exporter.Scripts.Structures;
 
@@ -40,19 +41,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
         private void OnGUI()
         {
             GUILogo();
-
-            EditorGUILayout.LabelField("Versions", EditorStyles.boldLabel);
-            VersionToggle("Windows 2019", BuildVersion.Windows2019);
-            VersionToggle("Windows 2021", BuildVersion.Windows2021);
-            VersionToggle("Android (Quest) 2021", BuildVersion.Android2021);
-
+            GUIVersions();
             EditorGUILayout.Space(20);
-
-            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-            _compressed = EditorGUILayout.ToggleLeft("Compressed", _compressed);
-
+            GUISettings();
             EditorGUILayout.Space(20);
             GUILayout.FlexibleSpace();
+            GUIBuild();
+        }
+
+        private void GUIBuild()
+        {
 
             bool questNotReady = !QuestSetup.IsQuestProjectReady() && _versions.Contains(BuildVersion.Android2021);
             bool canBuild = _versions.Count > 0 && !questNotReady;
@@ -77,6 +75,27 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
                 {
                     Build();
                 }
+            }
+        }
+        private void GUIVersions()
+        {
+
+            EditorGUILayout.LabelField("Versions", EditorStyles.boldLabel);
+            VersionToggle("Windows 2019", BuildVersion.Windows2019);
+            VersionToggle("Windows 2021", BuildVersion.Windows2021);
+            VersionToggle("Android (Quest) 2021", BuildVersion.Android2021);
+        }
+
+        private void GUISettings()
+        {
+
+            EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+            _compressed = EditorGUILayout.Toggle("Compressed", _compressed);
+            ProjectBundle.Value = EditorGUILayout.TextField("Bundle Name To Export", ProjectBundle.Value);
+            ShouldExportBundleInfo.Value = EditorGUILayout.Toggle("Should Export Bundle Info", ShouldExportBundleInfo.Value);
+
+            if (ShouldExportBundleInfo.Value) {
+                ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle("Should Prettify Bundle Info", ShouldPrettifyBundleInfo.Value);
             }
         }
 
