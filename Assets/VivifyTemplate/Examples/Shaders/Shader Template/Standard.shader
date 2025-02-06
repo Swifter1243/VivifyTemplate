@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Vivify/Standard"
+﻿Shader "Hidden/Vivify/Templates/Standard"
 {
     Properties
     {

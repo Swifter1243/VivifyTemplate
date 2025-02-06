@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Vivify/Blit"
+﻿Shader "Hidden/Vivify/Templates/Blit"
 {
     Properties
     {
