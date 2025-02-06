@@ -380,7 +380,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             Footer();
         }
 
-        [MenuItem("Vivify/Quest Setup")]
         public static void CreatePopup()
         {
             var window = CreateInstance<QuestSetup>();
