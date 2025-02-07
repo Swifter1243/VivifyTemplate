@@ -16,6 +16,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
             CreateShader("Standard");
         }
 
+        [MenuItem("Assets/Create/Shader/Vivify/GrabPass", false, 69)]
+        private static void CreateGrabPassShader()
+        {
+            CreateShader("GrabPass");
+        }
+
         [MenuItem("Assets/Create/Shader/Vivify/Blit", false, 69)]
         private static void CreateBlitShader()
         {

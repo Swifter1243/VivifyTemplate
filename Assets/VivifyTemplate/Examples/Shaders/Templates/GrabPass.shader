@@ -1,8 +1,8 @@
-﻿Shader "Hidden/Vivify/Templates/Blit"
+﻿Shader "Hidden/Vivify/Templates/GrabPass"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+
     }
     SubShader
     {
@@ -10,6 +10,7 @@
             "RenderType" = "Opaque"
             "Queue" = "Transparent"
         }
+        GrabPass { "_GrabTexture1" }
 
         Pass
         {
@@ -40,7 +41,7 @@
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            UNITY_DECLARE_SCREENSPACE_TEXTURE(_MainTex);
+            UNITY_DECLARE_SCREENSPACE_TEXTURE(_GrabTexture1);
 
             v2f vert (appdata v)
             {
@@ -54,16 +55,17 @@
                 return o;
             }
 
-            float4 getScreenCol(float2 uv)
+            float4 sampleScreen(float2 screenUV)
             {
-                return UNITY_SAMPLE_SCREENSPACE_TEXTURE(_MainTex, UnityStereoTransformScreenSpaceTex(uv));
+                return UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabTexture1, screenUV);
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+                float2 screenUV = i.screenUV / i.screenUV.w;
 
-                return getScreenCol(i.uv);
+                return UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabTexture1, screenUV);
             }
             ENDCG
         }
