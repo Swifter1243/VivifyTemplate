@@ -21,7 +21,6 @@ Shader "Vivify/Depth/DepthPosition"
 
             #include "UnityCG.cginc"
             #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
-            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {
