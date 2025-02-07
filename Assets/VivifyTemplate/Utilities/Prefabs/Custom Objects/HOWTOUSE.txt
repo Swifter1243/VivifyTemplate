@@ -1,0 +1,4 @@
+﻿Create prefab variants of these, and use them as a base!
+
+The shaders provided with them are just an example.
+You should create your own based off of them and modify them how you please.
