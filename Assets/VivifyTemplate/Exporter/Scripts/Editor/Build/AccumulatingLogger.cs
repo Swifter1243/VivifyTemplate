@@ -13,6 +13,10 @@
                 {
                     _log += "/n";
                 }
+                else
+                {
+                    _empty = false;
+                }
 
                 _log += message;
             };
