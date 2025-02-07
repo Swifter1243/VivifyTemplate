@@ -93,7 +93,11 @@ When looking at example objects, their names in the hierarchy will tell you what
 
 # Utilities Module
 
-TODO
+If you installed the "Utilities" package, a few tools will be provided from the `Assets/VivifyTemplate/Utilities` folder.
+- **Shader Templates**: In the project view, right click. Go to `Create -> Shader -> Vivify` and you'll see a bunch of examples you can use to create Beat Saber ready shaders!
+- **Shader Functions**: In the `Assets/VivifyTemplate/Utilities/Shader Functions` folder, you'll see a bunch of shader functions you can use for your own shaders. Import them with `#include <path here>`.
+- **Custom Object Bases**: In the `Assets/VivifyTemplate/Utilities/Prefabs/Custom Objects` folder, you'll find a bunch of prefabs you can use as a base for custom notes/sabers. Read the provided `HOWTOUSE.txt` file.
+- **Post Processing Preview**: Drag the `Assets/VivifyTemplate/Utilities/Scripts/SimplePostProcessing.cs` file onto any Camera and provide it with a post-processing shader to view it in the Game window.
 
 # Extra
 
