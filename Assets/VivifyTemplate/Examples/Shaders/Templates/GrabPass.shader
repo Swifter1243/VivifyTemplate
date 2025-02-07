@@ -65,7 +65,7 @@
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 float2 screenUV = i.screenUV / i.screenUV.w;
 
-                return UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabTexture1, screenUV);
+                return sampleScreen(screenUV);
             }
             ENDCG
         }
