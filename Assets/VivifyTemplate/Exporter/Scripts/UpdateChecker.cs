@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEditor;
+using UnityEngine;
 namespace VivifyTemplate.Exporter.Scripts
 {
 	[InitializeOnLoad]
@@ -9,12 +10,18 @@ namespace VivifyTemplate.Exporter.Scripts
 
 		static UpdateChecker()
 		{
-
+			CheckForUpdates();
 		}
 
 		private static void CheckForUpdates()
 		{
+			var remoteVersion = GetGitHubVersion();
+			bool updateAvailable = remoteVersion.CompareTo(_templateVersion) > 0;
 
+			if (updateAvailable)
+			{
+				Debug.Log("A new update for VivifyTemplate is available! <a href=\\\"https://github.com/Swifter1243/VivifyTemplate/releases/latest\\\">Click here to get it.</a>");
+			}
 		}
 
 		private static Version GetGitHubVersion()
