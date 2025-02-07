@@ -1,12 +1,9 @@
 using System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-
-namespace VivifyTemplate.Exporter.Scripts
+namespace VivifyTemplate.Exporter.Scripts.Editor.Project
 {
 	[InitializeOnLoad]
 	public static class UpdateChecker

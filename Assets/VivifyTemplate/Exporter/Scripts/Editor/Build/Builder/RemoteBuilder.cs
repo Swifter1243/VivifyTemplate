@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
 using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
 using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
-using VivifyTemplate.Exporter.Scripts.Structures;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Builder
 {
     public class RemoteBuilder : BundleBuilder
     {

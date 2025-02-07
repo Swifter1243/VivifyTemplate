@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
 using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
 using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
-using VivifyTemplate.Exporter.Scripts.Structures;
+using VivifyTemplate.Exporter.Scripts.Editor.UI;
+using VivifyTemplate.Exporter.Scripts.Editor.Utility;
 using Debug = UnityEngine.Debug;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 {
 	public static class BuildAssetBundles
 	{

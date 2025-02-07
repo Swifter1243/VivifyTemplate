@@ -1,6 +1,5 @@
 ﻿using System;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
 {
     public static class XRPluginHelper
     {

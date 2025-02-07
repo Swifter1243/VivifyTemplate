@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VivifyTemplate.Exporter.Scripts
+﻿namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 {
     public class AccumulatingLogger : Logger
     {

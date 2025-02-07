@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
-using UnityEngine.Events;
-
-namespace VivifyTemplate.Exporter.Scripts
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 {
     public class Logger
     {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
+﻿using UnityEditor;
+using VivifyTemplate.Exporter.Scripts.Editor.Build;
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Builder;
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
 using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-using VivifyTemplate.Exporter.Scripts.Structures;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor
+namespace VivifyTemplate.Exporter.Scripts.Editor.UI
 {
     public static class MenuBuildCommands
     {

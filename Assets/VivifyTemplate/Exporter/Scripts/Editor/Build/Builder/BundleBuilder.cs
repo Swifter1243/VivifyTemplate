@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using UnityEditor;
-using VivifyTemplate.Exporter.Scripts.Structures;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Builder
 {
     public abstract class BundleBuilder
     {

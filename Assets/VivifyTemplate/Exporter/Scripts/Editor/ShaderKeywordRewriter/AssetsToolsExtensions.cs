@@ -1,10 +1,9 @@
-﻿using System;
+﻿using AssetsTools.NET;
+using AssetsTools.NET.Extra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using AssetsTools.NET;
-using AssetsTools.NET.Extra;
-
-namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
+namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderKeywordRewriter
 {
     internal static class AssetsToolsExtensions
     {

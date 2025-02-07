@@ -1,4 +1,4 @@
-﻿namespace VivifyTemplate.Exporter.Scripts.Structures
+﻿namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Structures
 {
     public enum BuildVersion
     {

@@ -1,13 +1,12 @@
-﻿using System;
+﻿using AssetsTools.NET;
+using AssetsTools.NET.Extra;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Hashing;
 using System.Threading.Tasks;
-using AssetsTools.NET;
-using AssetsTools.NET.Extra;
-using UnityEngine;
-
-namespace VivifyTemplate.Exporter.Scripts.ShaderKeywordRewriter
+using VivifyTemplate.Exporter.Scripts.Editor.Utility;
+using Logger = VivifyTemplate.Exporter.Scripts.Editor.Build.Logger;
+namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderKeywordRewriter
 {
     public static class ShaderKeywordRewriter
     {

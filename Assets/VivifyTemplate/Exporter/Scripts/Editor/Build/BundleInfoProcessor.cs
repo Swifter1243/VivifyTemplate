@@ -1,14 +1,12 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor;
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
 using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-using VivifyTemplate.Exporter.Scripts.Structures;
-
-namespace VivifyTemplate.Exporter.Scripts
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 {
 	public static class BundleInfoProcessor
 	{

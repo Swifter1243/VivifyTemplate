@@ -1,6 +1,5 @@
-﻿using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-
-namespace VivifyTemplate.Exporter.Scripts.Structures
+﻿using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 {
     public struct BuildSettings
     {

@@ -2,9 +2,8 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Structures;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
+namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
 {
     public static class VersionTools
     {

@@ -1,7 +1,6 @@
 ﻿using System;
-using VivifyTemplate.Exporter.Scripts.Structures;
-
-namespace VivifyTemplate.Exporter.Scripts.Editor
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
+namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Builder
 {
     public class PlatformManager
     {

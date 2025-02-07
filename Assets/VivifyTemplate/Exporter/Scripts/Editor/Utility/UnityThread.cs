@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
-namespace VivifyTemplate.Exporter.Scripts
+namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
 {
     [InitializeOnLoad]
     public class Startup {
@@ -12,7 +11,7 @@ namespace VivifyTemplate.Exporter.Scripts
             UnityThread.InitUnityThread();
         }
     }
-    
+
     //https://stackoverflow.com/a/41333540
     [ExecuteAlways]
     public static class UnityThread
@@ -25,7 +24,7 @@ namespace VivifyTemplate.Exporter.Scripts
         {
             EditorApplication.update += Update;
         }
-        
+
         public static void ExecuteInUpdate(Action action)
         {
             if (action == null)
