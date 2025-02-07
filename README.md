@@ -3,8 +3,8 @@
 VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 "modules": **Exporter**, **Examples**, and **Utilities**.
 
 - [**Exporter**](#exporter-module): Builds asset bundles to your map project.
-- [**Examples**](#examples-module): Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
 - [**Utilities**](#utilities-module): Includes various tools for project development (shader templates, shader functions... etc.)
+- [**Examples**](#examples-module): Imports and demonstrates the [**Utilities module**](#utilities-module). Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
 
 # Setup
 
