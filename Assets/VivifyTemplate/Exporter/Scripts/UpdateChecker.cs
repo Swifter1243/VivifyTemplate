@@ -11,15 +11,20 @@ namespace VivifyTemplate.Exporter.Scripts
 	[InitializeOnLoad]
 	public static class UpdateChecker
 	{
-		private static readonly Version TemplateVersion = new Version("1.0.0");
-		private static readonly HttpClient Client = new HttpClient();
-		private const string InitializeBool = "UpdateCheckerInitialized";
-		private const string Repo = "Swifter1243/Remapper";
+		private readonly static Version TemplateVersion = new Version("1.0.0");
+		private readonly static HttpClient Client = new HttpClient();
+		private const string INITIALIZE_BOOL = "UpdateCheckerInitialized";
+		private const string REPO = "Swifter1243/Remapper";
 
 		static UpdateChecker()
 		{
+			if (!SessionState.GetBool(INITIALIZE_BOOL, false))
+			{
+				return;
+			}
+
 			Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"Swifter1243/VivifyTemplate/{TemplateVersion}");
-			SessionState.SetBool(InitializeBool, true);
+			SessionState.SetBool(INITIALIZE_BOOL, true);
 			CheckForUpdates();
 		}
 
@@ -30,7 +35,7 @@ namespace VivifyTemplate.Exporter.Scripts
 
 			if (updateAvailable)
 			{
-				Debug.Log("A new update for VivifyTemplate is available! <a href=\\\"https://github.com/Swifter1243/VivifyTemplate/releases/latest\\\">Click here to get it.</a>");
+				UpdateAvailablePopup.Popup();
 			}
 		}
 
@@ -38,7 +43,7 @@ namespace VivifyTemplate.Exporter.Scripts
 		{
 			try
 			{
-				Task<HttpResponseMessage> response = Client.GetAsync($"https://api.github.com/repos/{Repo}/tags");
+				Task<HttpResponseMessage> response = Client.GetAsync($"https://api.github.com/repos/{REPO}/tags");
 				response.Wait();
 				response.Result.EnsureSuccessStatusCode();
 				Task<string> responseBody = response.Result.Content.ReadAsStringAsync();
@@ -50,7 +55,7 @@ namespace VivifyTemplate.Exporter.Scripts
 			{
 				Debug.LogException(e);
 			}
-			
+
 			throw new ApplicationException("Failed to get latest version from GitHub");
 		}
 
@@ -58,6 +63,6 @@ namespace VivifyTemplate.Exporter.Scripts
 		private class GithubVersion
 		{
 			public string name;
-		} 
+		}
 	}
 }
