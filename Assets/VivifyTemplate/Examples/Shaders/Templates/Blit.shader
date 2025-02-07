@@ -2,13 +2,13 @@
 {
     Properties
     {
-        
+
     }
     SubShader
     {
         Tags { "RenderType" = "Opaque" "Queue" = "Transparent" }
         GrabPass { "_GrabTexture1" }
-        
+
         Pass
         {
             CGPROGRAM
@@ -16,21 +16,21 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            /* Included libraries
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Colors.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Easings.cginc"
-            */
-            
-            struct appdata // "Mesh" Data
+
+            // VivifyTemplate Libraries
+            // #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            // #include "Assets/VivifyTemplate/CGIncludes/Colors.cginc"
+            // #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
+            // #include "Assets/VivifyTemplate/CGIncludes/Easings.cginc"
+
+            struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            struct v2f // Vertex -> Fragment
+            struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
@@ -45,12 +45,12 @@
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o)
-                
-                o.vertex = UnityObjectToClipPos(v.vertex); // Clip position
-                
-                o.uv = v.uv; // UV
-                
-                o.screenUV = ComputeScreenPos(o.vertex); // ScreenUV
+
+                o.vertex = UnityObjectToClipPos(v.vertex);
+
+                o.uv = v.uv;
+
+                o.screenUV = ComputeScreenPos(o.vertex);
                 return o;
             }
 
@@ -60,8 +60,7 @@
                 float2 screenUV = (i.screenUV) / i.screenUV.w;
 
                 float4 col = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_GrabTexture1, screenUV);
-                // Modify pixel color here
-                
+
                 return col;
             }
             ENDCG

@@ -15,20 +15,20 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            /* Included libraries
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Colors.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Easings.cginc"
-            */
 
-            struct appdata // "Mesh" Data
+            // VivifyTemplate Libraries
+            // #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            // #include "Assets/VivifyTemplate/CGIncludes/Colors.cginc"
+            // #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
+            // #include "Assets/VivifyTemplate/CGIncludes/Easings.cginc"
+
+            struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct v2f // Vertex -> Fragment
+            struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
@@ -48,7 +48,7 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                
+
                 return col;
             }
             ENDCG
