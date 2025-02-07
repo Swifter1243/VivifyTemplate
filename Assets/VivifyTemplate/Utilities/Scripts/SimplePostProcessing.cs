@@ -1,17 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
-
-namespace VivifyTemplate.Examples.Scripts
+namespace VivifyTemplate.Utilities.Scripts
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]
     public class SimplePostProcessing : MonoBehaviour
     {
-        [FormerlySerializedAs("_postProcessingMaterial")] [SerializeField]
         public Material postProcessingMaterial;
-
-        [FormerlySerializedAs("_pass")] [SerializeField]
         public int pass;
+
         private void OnRenderImage(RenderTexture src, RenderTexture dst) {
             if(postProcessingMaterial != null) {
                 Graphics.Blit(src, dst, postProcessingMaterial,
