@@ -69,8 +69,50 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             GUILayout.Space(10);
             GUILayout.EndHorizontal();
 
+            if (UpdateChecker.updateAvailableData != null)
+            {
+                GUILayout.Space(30);
+                GUIUpdate(UpdateChecker.updateAvailableData.Value);
+            }
+
             GUILayout.FlexibleSpace();
             GUIBuild();
+        }
+
+        private void GUIUpdate(UpdateChecker.UpdateAvailableData updateAvailableData)
+        {
+            GUIStyle style = new GUIStyle
+            {
+                normal =
+                {
+                    textColor = Color.white
+                },
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold,
+                fontSize = 15
+            };
+
+            GUILayout.Label("A new update is available.", style, GUILayout.Height(style.fontSize * 1.5f));
+
+            string updateString = $"{updateAvailableData.OldVersion} -> {updateAvailableData.NewVersion}";
+            style.fontStyle = FontStyle.Normal;
+            GUILayout.Label(updateString, style, GUILayout.Height(style.fontSize * 1.5f));
+
+            EditorGUILayout.Space(15);
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Update", GUILayout.Height(40), GUILayout.Width(160)))
+            {
+                Application.OpenURL("https://github.com/Swifter1243/VivifyTemplate/releases/latest");
+            }
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+
+            style.normal.textColor = new Color(1, 1f, 0.5f);
+            style.fontSize = 12;
+            GUILayout.Space(15);
+            GUILayout.Label("Delete old module folders before adding the updated ones.", style, GUILayout.Height(style.fontSize * 1.5f));
         }
 
         [Obsolete("Possibly sets up project, which uses Single Pass")]
