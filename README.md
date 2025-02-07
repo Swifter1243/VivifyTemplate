@@ -1,10 +1,10 @@
 ﻿# What is VivifyTemplate?
 
-VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 "modules": **Exporter**, **Examples**, and **CGIncludes**.
+VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 "modules": **Exporter**, **Examples**, and **Utilities**.
 
 - [**Exporter**](#exporter-module): Builds asset bundles to your map project.
 - [**Examples**](#examples-module): Contains practical examples for things you may need to do in your map (post-processing, custom notes/sabers... etc.)
-- **CGIncludes**: Dependencies/functions for shaders (noise, math... etc.)
+- [**Utilities**](#utilities-module): Includes various tools for project development (shader templates, shader functions... etc.)
 
 # Setup
 
@@ -80,7 +80,7 @@ If you installed the "Examples" package, navigate to `Assets/VivifyTemplate/Exam
 - **Depth**: How to read and use the depth texture.
 - **Grab Pass**: How to use grab passes to create distortion effects.
 - **Light**: How to sample from Unity's lighting system in shaders.
-- **Noise**: How to use various noise functions provided in the CGIncludes module (which the examples depend on).
+- **Noise**: How to use various noise functions provided in the Utilities module (which the examples depend on).
 - **Opacity**: How to use blend modes to create transparency.
 - **Post Processing**: How to make post-processing shaders for VR.
 - **Skybox**: How to create a skybox for your scene.
@@ -89,6 +89,10 @@ If you installed the "Examples" package, navigate to `Assets/VivifyTemplate/Exam
 - **Vertex**: How to manipulate vertices in a vertex shader.
 
 When looking at example objects, their names in the hierarchy will tell you what they are doing. Be sure to explore their shaders (`Assets/VivifyTemplate/Examples/Shaders`), as they include in-code comments providing explanations.
+
+# Utilities Module
+
+TODO
 
 # Extra
 
