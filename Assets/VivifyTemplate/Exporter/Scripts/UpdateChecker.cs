@@ -18,7 +18,7 @@ namespace VivifyTemplate.Exporter.Scripts
 
 		static UpdateChecker()
 		{
-			if (!SessionState.GetBool(INITIALIZE_BOOL, false))
+			if (SessionState.GetBool(INITIALIZE_BOOL, false))
 			{
 				return;
 			}
@@ -30,12 +30,12 @@ namespace VivifyTemplate.Exporter.Scripts
 
 		private static void CheckForUpdates()
 		{
-			var remoteVersion = GetGitHubVersion();
+			Version remoteVersion = GetGitHubVersion();
 			bool updateAvailable = remoteVersion.CompareTo(TemplateVersion) > 0;
 
 			if (updateAvailable)
 			{
-				UpdateAvailablePopup.Popup();
+				UpdateAvailablePopup.Popup(TemplateVersion, remoteVersion);
 			}
 		}
 

@@ -6,7 +6,10 @@ namespace VivifyTemplate.Exporter.Scripts
 {
 	public class UpdateAvailablePopup : EditorWindow
 	{
-		public static void Popup()
+		public Version oldVersion;
+		public Version newVersion;
+
+		public static void Popup(Version oldVersion, Version newVersion)
 		{
 			Rect res = EditorHelper.GetMainEditorWindowSize();
 			Vector2 size = new Vector2(800, 300);
@@ -14,6 +17,8 @@ namespace VivifyTemplate.Exporter.Scripts
 			window.ShowUtility();
 			window.minSize = size;
 			window.maxSize = size;
+			window.oldVersion = oldVersion;
+			window.newVersion = newVersion;
 			window.titleContent = new GUIContent("VivifyTemplate Update Available!");
 			window.position = new Rect(res.width / 2f - size.x * 0.5f, res.height / 2f - size.y * 0.5f, size.x, size.y);
 		}
@@ -32,6 +37,8 @@ namespace VivifyTemplate.Exporter.Scripts
 
 			GUILayout.FlexibleSpace();
 			EditorGUILayout.LabelField("A new update for VivifyTemplate is available!", style, GUILayout.Height(style.fontSize * 2));
+			style.fontSize = 14;
+			EditorGUILayout.LabelField($"{oldVersion} -> {newVersion}", style, GUILayout.Height(style.fontSize * 2));
 			EditorGUILayout.Space(20);
 
 			EditorGUILayout.BeginHorizontal();
