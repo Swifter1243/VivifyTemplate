@@ -6,17 +6,24 @@ namespace VivifyTemplate.Exporter.Scripts
 	[InitializeOnLoad]
 	public static class UpdateChecker
 	{
-		private static Version _templateVersion = new Version("1.0.0");
+		private readonly static Version TemplateVersion = new Version("1.0.0");
+		private readonly static string InitializeBool = "UpdateCheckerInitialized";
 
 		static UpdateChecker()
 		{
+			if (SessionState.GetBool(InitializeBool, false))
+			{
+				return;
+			}
+
+			SessionState.SetBool(InitializeBool, true);
 			CheckForUpdates();
 		}
 
 		private static void CheckForUpdates()
 		{
 			var remoteVersion = GetGitHubVersion();
-			bool updateAvailable = remoteVersion.CompareTo(_templateVersion) > 0;
+			bool updateAvailable = remoteVersion.CompareTo(TemplateVersion) > 0;
 
 			if (updateAvailable)
 			{
