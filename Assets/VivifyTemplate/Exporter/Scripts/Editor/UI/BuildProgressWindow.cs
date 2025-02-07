@@ -138,7 +138,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 
                 if (GUILayout.Button("Open Output Folder"))
                 {
-                    FolderOpener.OpenFolder(_buildSettings.OutputDirectory);
+                    IOHelper.OpenFolder(_buildSettings.OutputDirectory);
                 }
             }
             else

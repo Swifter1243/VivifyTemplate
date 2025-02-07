@@ -3,8 +3,22 @@ using System.IO;
 
 namespace VivifyTemplate.Exporter.Scripts
 {
-    public static class FolderOpener
+    public static class IOHelper
     {
+        public static void AssertDirectoryExists(string directory)
+        {
+            if (!Directory.Exists(directory))
+            {
+                throw new DirectoryNotFoundException($"The directory '{directory}' doesn't exist.");
+            }
+        }
+
+        public static void WipeDirectory(string directory)
+        {
+            Directory.Delete(directory, true);
+            Directory.CreateDirectory(directory);
+        }
+
         public static void OpenFolder(string path)
         {
             if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
