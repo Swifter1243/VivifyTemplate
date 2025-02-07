@@ -6,16 +6,16 @@ using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
 {
-    public class ShaderTemplateLoader
+    public static class ShaderTemplateLoader
     {
-        private static readonly string TemplateDirectory = "Assets/VivifyTemplate/Examples/Shaders/Shader Template";
-    
+        private readonly static string TemplateDirectory = "Assets/VivifyTemplate/Examples/Shaders/Templates";
+
         [MenuItem("Assets/Create/Shader/Vivify/Standard", false, 69)]
         private static void CreateStandardShader()
         {
             CreateShader("Standard");
         }
-    
+
         [MenuItem("Assets/Create/Shader/Vivify/Blit", false, 69)]
         private static void CreateBlitShader()
         {
@@ -31,7 +31,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
                 Debug.LogError($"Unable to locate template shader at '{templatePath}'. Please report this.");
                 return;
             }
-            
+
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
                 0,
                 ScriptableObject.CreateInstance<DoCreateShader>(),
@@ -40,16 +40,16 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
                 File.ReadAllText(templatePath)
             );
         }
-        
+
         private static string GetCurrentDir()
         {
             string path = "Assets";
             if (Selection.activeObject != null)
             {
                 string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
-                if (!string.IsNullOrEmpty(assetPath) && AssetDatabase.IsValidFolder(assetPath)) 
+                if (!string.IsNullOrEmpty(assetPath) && AssetDatabase.IsValidFolder(assetPath))
                     path = assetPath;
-                else 
+                else
                     path = Path.GetDirectoryName(assetPath);
             }
             return path; }
