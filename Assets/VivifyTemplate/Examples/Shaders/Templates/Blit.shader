@@ -6,7 +6,10 @@
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "Queue" = "Transparent" }
+        Tags {
+            "RenderType" = "Opaque"
+            "Queue" = "Transparent"
+        }
         GrabPass { "_GrabTexture1" }
 
         Pass
