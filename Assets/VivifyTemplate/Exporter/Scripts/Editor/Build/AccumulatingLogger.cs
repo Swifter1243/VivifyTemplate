@@ -9,13 +9,13 @@
         {
             OnLog += (message) =>
             {
-                if (!_empty)
+                if (_empty)
                 {
-                    _log += "/n";
+                    _empty = false;
                 }
                 else
                 {
-                    _empty = false;
+                    _log += "/n";
                 }
 
                 _log += message;
