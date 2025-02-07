@@ -31,14 +31,26 @@ namespace VivifyTemplate.Exporter.Scripts
 				return;
 			}
 
-			Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"Swifter1243/VivifyTemplate/{TemplateVersion}");
 			SessionState.SetBool(INITIALIZE_BOOL, true);
 			CheckForUpdates();
 		}
 
 		private static void CheckForUpdates()
 		{
-			Version remoteVersion = GetGitHubVersion();
+			Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"Swifter1243/VivifyTemplate/{TemplateVersion}");
+
+			Version remoteVersion;
+
+			try
+			{
+				remoteVersion = GetGitHubVersion();
+			}
+			catch
+			{
+				Debug.Log($"Could not connect to {REPO}.");
+				return;
+			}
+
 			bool updateAvailable = remoteVersion.CompareTo(TemplateVersion) > 0;
 
 			if (updateAvailable)
