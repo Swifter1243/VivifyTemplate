@@ -28,6 +28,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderTemplateLoader
             CreateShader("Blit");
         }
 
+        [MenuItem("Assets/Create/Shader/Vivify/BareBones", false, 69)]
+        private static void CreateBareBonesShader()
+        {
+            CreateShader("BareBones");
+        }
+
         private static void CreateShader(string shaderName)
         {
             string templatePath = Path.Combine(TemplateDirectory, shaderName + ".shader");
