@@ -20,8 +20,8 @@ Shader "Vivify/Depth/DepthPosition"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {
@@ -51,7 +51,7 @@ Shader "Vivify/Depth/DepthPosition"
 
                 // World Position
                 o.viewVector = viewVectorFromLocal(v.vertex); // from Math.cginc
-                
+
                 return o;
             }
 

@@ -15,7 +15,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
 
             struct appdata
             {
@@ -39,7 +39,7 @@
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.worldPosition = localToWorld(v.vertex); // from Math.cginc
                 return o;

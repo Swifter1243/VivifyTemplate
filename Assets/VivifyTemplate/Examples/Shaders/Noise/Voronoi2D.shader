@@ -15,8 +15,8 @@ Shader "Vivify/Noise/Voronoi2D"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {
@@ -36,7 +36,7 @@ Shader "Vivify/Noise/Voronoi2D"
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.worldPosition = localToWorld(v.vertex);
                 return o;

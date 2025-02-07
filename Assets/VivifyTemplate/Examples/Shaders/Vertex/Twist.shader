@@ -15,7 +15,7 @@ Shader "Vivify/Vertex/Twist"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
 
             struct appdata
             {

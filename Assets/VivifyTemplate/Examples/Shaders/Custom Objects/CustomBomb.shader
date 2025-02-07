@@ -24,7 +24,7 @@ Shader "Vivify/CustomObjects/CustomBomb"
             // Ensure to check "Enable GPU Instancing" on the material
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {

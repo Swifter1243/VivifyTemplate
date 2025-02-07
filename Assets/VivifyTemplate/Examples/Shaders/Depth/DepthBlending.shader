@@ -30,7 +30,7 @@ Shader "Vivify/Depth/DepthBlending"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
 
             struct appdata
             {
@@ -62,7 +62,7 @@ Shader "Vivify/Depth/DepthBlending"
 
                 // World Position
                 o.worldPos = localToWorld(v.vertex); // from Math.cginc
-                
+
                 return o;
             }
 

@@ -16,7 +16,7 @@ Shader "Vivify/Post Processing/ViewVector"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
 
             struct appdata
             {
@@ -40,7 +40,7 @@ Shader "Vivify/Post Processing/ViewVector"
 
                 // Calculate View Direction
                 o.viewVector = viewVectorFromUV(v.uv); // from Math.cginc
-                
+
                 // Save Vertex
                 o.vertex = UnityObjectToClipPos(v.vertex);
 

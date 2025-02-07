@@ -17,8 +17,8 @@ Shader "Vivify/CustomObjects/CustomNote"
     {
         Tags { "RenderType"="Opaque" }
 
-        /* 
-        The model you're using should have 2-sided normals in order to get a hollow note inside. 
+        /*
+        The model you're using should have 2-sided normals in order to get a hollow note inside.
         Blender typically exports like this.
         */
         Cull Off
@@ -34,7 +34,7 @@ Shader "Vivify/CustomObjects/CustomNote"
             #pragma shader_feature DEBRIS
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {

@@ -17,10 +17,10 @@
             #include "UnityCG.cginc"
 
             // VivifyTemplate Libraries
-            // #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
-            // #include "Assets/VivifyTemplate/CGIncludes/Colors.cginc"
-            // #include "Assets/VivifyTemplate/CGIncludes/Math.cginc"
-            // #include "Assets/VivifyTemplate/CGIncludes/Easings.cginc"
+            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
+            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Colors.cginc"
+            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
+            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Easings.cginc"
 
             struct appdata
             {

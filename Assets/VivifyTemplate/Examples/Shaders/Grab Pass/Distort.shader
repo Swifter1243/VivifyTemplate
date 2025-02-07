@@ -20,7 +20,7 @@ Shader "Vivify/Grab Pass/Distort"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {

@@ -4,7 +4,7 @@ Shader "Vivify/CustomObjects/CustomNoteArrow"
     {
         _CutoutEdgeWidth("Cutout Edge Width", Range(0,0.1)) = 0.02
 
-        /* 
+        /*
         _Cutout is fed in by Vivify per note.
         The other note properties (_Color, _CutPlane) are also fed in, but we're not using them here.
         */
@@ -23,7 +23,7 @@ Shader "Vivify/CustomObjects/CustomNoteArrow"
             // Ensure to check "Enable GPU Instancing" on the material
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/CGIncludes/Noise.cginc"
+            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
 
             struct appdata
             {
