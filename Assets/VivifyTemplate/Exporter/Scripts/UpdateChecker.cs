@@ -14,7 +14,7 @@ namespace VivifyTemplate.Exporter.Scripts
 		private readonly static Version TemplateVersion = new Version("1.0.0");
 		private readonly static HttpClient Client = new HttpClient();
 		private const string INITIALIZE_BOOL = "UpdateCheckerInitialized";
-		private const string REPO = "Swifter1243/Remapper";
+		private const string REPO = "Swifter1243/VivifyTemplate";
 
 		public struct UpdateAvailableData
 		{
@@ -22,13 +22,13 @@ namespace VivifyTemplate.Exporter.Scripts
 			public Version NewVersion;
 		}
 
-		public static UpdateAvailableData? updateAvailableData = null;
+		public static UpdateAvailableData? PossibleUpdate;
 
 		static UpdateChecker()
 		{
 			if (SessionState.GetBool(INITIALIZE_BOOL, false))
 			{
-				//return;
+				return;
 			}
 
 			Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"Swifter1243/VivifyTemplate/{TemplateVersion}");
@@ -43,7 +43,7 @@ namespace VivifyTemplate.Exporter.Scripts
 
 			if (updateAvailable)
 			{
-				updateAvailableData = new UpdateAvailableData
+				PossibleUpdate = new UpdateAvailableData
 				{
 					OldVersion = TemplateVersion,
 					NewVersion = remoteVersion

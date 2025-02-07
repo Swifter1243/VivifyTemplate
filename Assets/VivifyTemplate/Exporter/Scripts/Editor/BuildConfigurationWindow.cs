@@ -69,10 +69,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
             GUILayout.Space(10);
             GUILayout.EndHorizontal();
 
-            if (UpdateChecker.updateAvailableData != null)
+            if (UpdateChecker.PossibleUpdate != null)
             {
                 GUILayout.Space(30);
-                GUIUpdate(UpdateChecker.updateAvailableData.Value);
+                GUIUpdate(UpdateChecker.PossibleUpdate.Value);
             }
 
             GUILayout.FlexibleSpace();
