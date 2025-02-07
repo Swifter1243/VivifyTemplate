@@ -28,7 +28,7 @@ namespace PackageExport.Scripts.Editor
             ExportAll();
             ExportExporter();
             ExportExamples();
-            ExportCgIncludes();
+            ExportUtilities();
             OpenFolderInProject(OUTPUT_PATH);
         }
 
@@ -52,17 +52,17 @@ namespace PackageExport.Scripts.Editor
         {
             string[] assetPaths = {
                 "Assets/VivifyTemplate/Examples",
-                "Assets/VivifyTemplate/CGIncludes",
+                "Assets/VivifyTemplate/Utilities",
             };
             ExportPackage(assetPaths, "VivifyTemplate-Examples");
         }
 
-        private static void ExportCgIncludes()
+        private static void ExportUtilities()
         {
             string[] assetPaths = {
-                "Assets/VivifyTemplate/CGIncludes",
+                "Assets/VivifyTemplate/Utilities",
             };
-            ExportPackage(assetPaths, "VivifyTemplate-CGIncludes");
+            ExportPackage(assetPaths, "VivifyTemplate-Utilities");
         }
     }
 }
