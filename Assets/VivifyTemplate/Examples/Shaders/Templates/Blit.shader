@@ -6,10 +6,7 @@
     }
     SubShader
     {
-        Tags {
-            "RenderType" = "Opaque"
-            "Queue" = "Transparent"
-        }
+        Cull Off ZWrite Off ZTest Always
 
         Pass
         {
