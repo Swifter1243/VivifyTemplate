@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
+using VivifyTemplate.Exporter.Scripts.Editor.Build;
+using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
 using VivifyTemplate.Exporter.Scripts.Editor.Sockets;
-using VivifyTemplate.Exporter.Scripts.Structures;
+using VivifyTemplate.Exporter.Scripts.Editor.Utility;
+using Logger = VivifyTemplate.Exporter.Scripts.Editor.Build.Logger;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
