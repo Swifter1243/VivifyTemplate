@@ -84,7 +84,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 if (!Directory.Exists(androidPlaybackEngine))
                 {
                     EditorGUILayout.LabelField(
-                        "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This modile is required to build quest bundles.");
+                        "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This module is required to build quest bundles.");
                     GUI.enabled = State != BackgroundTaskState.DownloadingAndroidBuildSupport;
                     if (GUILayout.Button("Download Android Build Module. Under \"Component Installers\""))
                     {
