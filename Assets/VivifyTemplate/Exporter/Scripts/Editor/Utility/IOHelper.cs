@@ -37,5 +37,17 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
                 throw new FileNotFoundException($"Output directory '{path}' does not exist or is not set.");
             }
         }
+
+        public static bool IsUnityProject(string path)
+        {
+            if (!Directory.Exists(path)) return false;
+
+            bool hasProjectSettings = Directory.Exists(Path.Combine(path, "ProjectSettings"));
+            bool hasAssets = Directory.Exists(Path.Combine(path, "Assets"));
+            bool hasLibrary = Directory.Exists(Path.Combine(path, "Library"));
+            bool hasProjectVersion = File.Exists(Path.Combine(path, "ProjectSettings", "ProjectVersion.txt"));
+
+            return hasProjectSettings && hasAssets && hasLibrary && hasProjectVersion;
+        }
     }
 }

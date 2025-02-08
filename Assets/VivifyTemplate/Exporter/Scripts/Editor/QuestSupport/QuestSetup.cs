@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEditor;
 using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
+using VivifyTemplate.Exporter.Scripts.Editor.Utility;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
@@ -149,7 +151,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             EditorGUILayout.EndVertical();
         }
 
-        private bool MakeProject()
+        private bool InitializeProject()
         {
             var hasProject = QuestPreferences.ProjectPath != "" && Directory.Exists(QuestPreferences.ProjectPath);
 
@@ -169,15 +171,21 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 fontSize = 14,
                 wordWrap = true
             };
+            var centeredLabelStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold,
+            };
 
             EditorGUILayout.BeginVertical(verticalStyle);
 
-            EditorGUILayout.LabelField("Make Project", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
+            EditorGUILayout.LabelField("Initialize Project", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
             EditorGUILayout.LabelField(
                 "You will be prompted to pick a directory where your project will be created in. The folder you select will create a new folder inside which is the Unity 2021 project.",
                 paragraphStyle);
             GUILayout.Space(10);
             GUI.enabled = !hasProject;
+
             if (GUILayout.Button("Create"))
             {
                 var path = EditorUtility.OpenFolderPanel("Select Directory to Create a Project", "", "");
@@ -202,6 +210,25 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     });
 
                     QuestPreferences.ProjectPath = destinationPath;
+                }
+            }
+
+            GUILayout.Space(5);
+            EditorGUILayout.LabelField("OR", centeredLabelStyle);
+            GUILayout.Space(5);
+
+            if (GUILayout.Button("Locate"))
+            {
+                var path = EditorUtility.OpenFolderPanel("Select Directory for Existing Project", "", "");
+                if (path != "")
+                {
+                    bool isUnityProject = IOHelper.IsUnityProject(path);
+                    if (!isUnityProject)
+                    {
+                        throw new Exception($"The path ${path} doesn't seem to be a Unity project.");
+                    }
+
+                    QuestPreferences.ProjectPath = path;
                 }
             }
 
@@ -349,7 +376,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             GUILayout.Space(15);
 
             EditorGUILayout.BeginHorizontal();
-            if (!MakeProject())
+            if (!InitializeProject())
             {
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.EndHorizontal();
