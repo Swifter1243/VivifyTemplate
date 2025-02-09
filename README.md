@@ -75,7 +75,7 @@ To use the exporter, open the build configuration window `Vivify > Build > Build
 
 When you first run the exporter, you will be asked for an output directory. This is where your `bundleinfo.json` and asset bundles will end up. The path you set will be remembered for subsequent builds.
 
-To understand how to implement asset bundles into a map, please read the [Vivify documentation(https://github.com/Aeroluna/Vivify?tab=readme-ov-file#creating-an-asset-bundle).
+To understand how to implement asset bundles into a map, please read the [Vivify documentation](https://github.com/Aeroluna/Vivify?tab=readme-ov-file#creating-an-asset-bundle).
 
 # Examples Module
 
