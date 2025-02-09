@@ -60,10 +60,22 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
                     GUI.enabled = State != BackgroundTaskState.DownloadingEditor;
 
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Space(80);
                     if (GUILayout.Button("Download", GUILayout.Height(30)))
                     {
                         Application.OpenURL("unityhub://2021.3.16f1/4016570cf34f");
                     }
+                    if (GUILayout.Button("Rescan", GUILayout.Height(30)))
+                    {
+                        Task.Run(async () =>
+                        {
+                            Thread.CurrentThread.IsBackground = true;
+                            await HubWrapper.GetUnityVersions();
+                        });
+                    }
+                    GUILayout.Space(80);
+                    EditorGUILayout.EndHorizontal();
 
                     style.normal.textColor = Color.red;
                     style.fontStyle = FontStyle.Bold;
