@@ -1,6 +1,6 @@
 ﻿# What is VivifyTemplate?
 
-VivifyTemplate is a tool designed for the Unity side development of Vivify maps for Beat Saber. It composes of 3 "modules": **Exporter**, **Examples**, and **Utilities**.
+VivifyTemplate is a tool designed for the Unity side development of [Vivify](https://github.com/Aeroluna/Vivify) maps for Beat Saber. It composes of 3 "modules": **Exporter**, **Examples**, and **Utilities**.
 
 - [**Exporter**](#exporter-module): Builds asset bundles to your map project.
 - [**Utilities**](#utilities-module): Includes various tools for project development (shader templates, shader functions... etc.)
@@ -63,7 +63,9 @@ It also exports a `bundleinfo.json` file which contains the correct bundle check
 
 ---
 
-Before using the exporter, **make sure the assets you want are in your bundle**. When an asset is selected, there's a dropdown field in the bottom of the inspector which will allow you to attach the asset to an asset bundle.
+## Before using the exporter, **make sure the assets you want are in your bundle**!
+
+When an asset is selected in the Project View (not the scene's hierarchy!), there's a dropdown field in the bottom of the Inspector which will allow you to attach the asset to an asset bundle.
 
 ![image](https://github.com/user-attachments/assets/6f1b945f-d38f-4f8b-ba42-d546adf12dcb)
 
@@ -72,6 +74,8 @@ To use the exporter, open the build configuration window `Vivify > Build > Build
 - **Compressed**: Takes much longer but is necessary for final upload. 
 
 When you first run the exporter, you will be asked for an output directory. This is where your `bundleinfo.json` and asset bundles will end up. The path you set will be remembered for subsequent builds.
+
+To understand how to implement asset bundles into a map, please read the [Vivify documentation](https://github.com/Aeroluna/Vivify?tab=readme-ov-file#creating-an-asset-bundle).
 
 # Examples Module
 
