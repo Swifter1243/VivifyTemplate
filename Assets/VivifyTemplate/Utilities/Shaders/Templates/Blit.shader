@@ -31,9 +31,8 @@
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float4 screenUV : TEXCOORD1;
+                float2 uv : TEXCOORD0;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -47,7 +46,6 @@
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
-                o.screenUV = ComputeScreenPos(o.vertex);
                 return o;
             }
 
