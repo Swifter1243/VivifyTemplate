@@ -4,11 +4,11 @@ using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
-namespace VivifyTemplate.Utilities.Scripts
+namespace VivifyTemplate.Utilities.Scripts.Editor
 {
     public static class ShaderTemplateLoader
     {
-        private readonly static string TemplateDirectory = "Assets/VivifyTemplate/Examples/Shaders/Templates";
+        private readonly static string TemplateDirectory = "Assets/VivifyTemplate/Utilities/Shaders/Templates";
 
         [MenuItem("Assets/Create/Shader/Vivify/Standard", false, 69)]
         private static void CreateStandardShader()
