@@ -217,9 +217,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _postProcessingMaterial: {fileID: 2100000, guid: 4bc111d6ce3fd2e43b73d2c63139ac21,
+  postProcessingMaterial: {fileID: 2100000, guid: 4bc111d6ce3fd2e43b73d2c63139ac21,
     type: 2}
-  _pass: 0
+  pass: 0
 --- !u!1 &778843382
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,9 +345,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _postProcessingMaterial: {fileID: 2100000, guid: 2081a0e8e4bb0f14ca1f735c34773df5,
+  postProcessingMaterial: {fileID: 2100000, guid: 2081a0e8e4bb0f14ca1f735c34773df5,
     type: 2}
-  _pass: 0
+  pass: 0
 --- !u!81 &868244822
 AudioListener:
   m_ObjectHideFlags: 0
@@ -444,9 +444,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _postProcessingMaterial: {fileID: 2100000, guid: 2f9e8c35e0091f24e927dbed839a689b,
+  postProcessingMaterial: {fileID: 2100000, guid: 2f9e8c35e0091f24e927dbed839a689b,
     type: 2}
-  _pass: 0
+  pass: 0
 --- !u!81 &886096368
 AudioListener:
   m_ObjectHideFlags: 0
@@ -702,9 +702,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _postProcessingMaterial: {fileID: 2100000, guid: 1b34c9fd2c72ff24a838ac783bf23e5a,
+  postProcessingMaterial: {fileID: 2100000, guid: 1b34c9fd2c72ff24a838ac783bf23e5a,
     type: 2}
-  _pass: 0
+  pass: 0
 --- !u!1 &1539145966
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,9 +736,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _postProcessingMaterial: {fileID: 2100000, guid: 5ca6d09c75d594c46b5275ba4f276c15,
+  postProcessingMaterial: {fileID: 2100000, guid: 5ca6d09c75d594c46b5275ba4f276c15,
     type: 2}
-  _pass: 0
+  pass: 0
 --- !u!81 &1539145968
 AudioListener:
   m_ObjectHideFlags: 0
