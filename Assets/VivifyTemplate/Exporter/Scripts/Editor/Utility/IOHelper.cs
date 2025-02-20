@@ -25,9 +25,9 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
                 Process.Start("explorer.exe", path.Replace("/", "\\"));
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-            Process.Start("open", outputDirectory);
+            Process.Start("open", path);
 #elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            Process.Start("xdg-open", outputDirectory);
+            Process.Start("xdg-open", path);
 #else
             Debug.LogWarning("This platform is not supported for opening directories.");
 #endif
