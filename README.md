@@ -37,7 +37,8 @@ It also exports a `bundleinfo.json` file which contains the correct bundle check
       "path": "assets/materials/example.mat",
       "properties": {
         "_Example": {
-          "Float": "1.0"
+          "type": { "Float": null },
+          "value": 1.0
         }
       }
     }

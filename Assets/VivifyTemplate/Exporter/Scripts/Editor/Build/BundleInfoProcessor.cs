@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -86,17 +87,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 		private static void SerializeMaterialProperty(MaterialInfo materialInfo, string propertyName,
 			ShaderUtil.ShaderPropertyType propertyType, Material material)
 		{
-			void AddProperty(string type, object value)
-			{
-				materialInfo.properties.Add(
-					propertyName,
-					new Dictionary<string, object>
-					{
-						{ type, value }
-					}
-				);
-			}
-
 			switch (propertyType)
 			{
 			case ShaderUtil.ShaderPropertyType.Color:
@@ -121,6 +111,17 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Build
 			case ShaderUtil.ShaderPropertyType.TexEnv:
 				AddProperty("Texture", "");
 				break;
+			default:
+				throw new ArgumentOutOfRangeException(nameof(propertyType), propertyType, null);
+			}
+			return;
+
+			void AddProperty(string type, object value)
+			{
+				materialInfo.properties.Add(
+					propertyName,
+					new PropertyValue(type, value)
+				);
 			}
 		}
 	}
