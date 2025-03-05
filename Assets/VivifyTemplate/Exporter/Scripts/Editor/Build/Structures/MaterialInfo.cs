@@ -6,6 +6,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Structures
     public class MaterialInfo
     {
         public string path;
-        public Dictionary<string, Dictionary<string, string>> properties = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, Dictionary<string, object>> properties = new Dictionary<string, Dictionary<string, object>>();
     }
 }
