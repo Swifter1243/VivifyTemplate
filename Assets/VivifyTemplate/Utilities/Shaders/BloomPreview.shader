@@ -52,8 +52,8 @@ Shader "Custom/BloomPreview"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
 
-                float aspect = _ScreenParams.x / _ScreenParams.y;
-                return gaussianPass(_MainTex, i.uv, float2(_Strength, 0));
+                float aspect = _ScreenParams.y / _ScreenParams.x;
+                return gaussianPass(_MainTex, i.uv, float2(_Strength * aspect, 0));
             }
             ENDCG
         }
