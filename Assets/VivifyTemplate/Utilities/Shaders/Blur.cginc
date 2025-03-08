@@ -17,6 +17,11 @@ float4 getScreenCol(sampler2D s, float2 uv)
 	return UNITY_SAMPLE_SCREENSPACE_TEXTURE(s, UnityStereoTransformScreenSpaceTex(uv));
 }
 
+float alphaInfluence(float a)
+{
+	return pow(a, 0.1);
+}
+
 float4 blurPass(sampler2D s, float2 uv, float2 offset)
 {
 	float4 result = getScreenCol(s, uv);
@@ -29,8 +34,8 @@ float4 blurPass(sampler2D s, float2 uv, float2 offset)
 		float4 colLeft = getScreenCol(s, uv - newOffset);
 		float4 colRight = getScreenCol(s, uv + newOffset);
 
-		result += colLeft * colLeft.a;
-		result += colRight * colRight.a;
+		result += colLeft * alphaInfluence(colLeft.a);
+		result += colRight * alphaInfluence(colRight.a);
 		total += 2;
 	}
 
