@@ -1,8 +1,9 @@
-Shader "Custom/BloomPreview"
+Shader "VivifyTemplate/Utility/BloomPreview"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Horizontal ("Horizontal", 2D) = "white" {}
         _Strength ("Strength", Range(0, 0.01)) = 0.01
     }
     SubShader
@@ -17,7 +18,7 @@ Shader "Custom/BloomPreview"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Gaussian.cginc"
+            #include "Blur.cginc"
 
             struct appdata
             {
@@ -53,7 +54,7 @@ Shader "Custom/BloomPreview"
 
 
                 float aspect = _ScreenParams.y / _ScreenParams.x;
-                return gaussianPass(_MainTex, i.uv, float2(_Strength * aspect, 0));
+                return blurPass(_MainTex, i.uv, float2(_Strength * aspect, 0));
             }
             ENDCG
         }
@@ -64,7 +65,7 @@ Shader "Custom/BloomPreview"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Gaussian.cginc"
+            #include "Blur.cginc"
 
             struct appdata
             {
@@ -81,6 +82,7 @@ Shader "Custom/BloomPreview"
             };
 
             UNITY_DECLARE_SCREENSPACE_TEXTURE(_MainTex);
+            UNITY_DECLARE_SCREENSPACE_TEXTURE(_Horizontal);
             float _Strength;
 
             v2f vert (appdata v)
@@ -98,7 +100,12 @@ Shader "Custom/BloomPreview"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-                return gaussianPass(_MainTex, i.uv, float2(0, _Strength));
+                float4 blur = blurPass(_Horizontal, i.uv, float2(0, _Strength));
+                float4 main = getScreenCol(_MainTex, i.uv);
+
+                float4 final = lerp(main + blur, 1, main.a);
+
+                return final;
             }
             ENDCG
         }
