@@ -19,7 +19,7 @@ float4 getScreenCol(sampler2D s, float2 uv)
 
 float alphaInfluence(float a)
 {
-	return pow(a, 0.1);
+	return pow(a, 0.7);
 }
 
 float4 blurPass(sampler2D s, float2 uv, float2 offset)
@@ -29,14 +29,15 @@ float4 blurPass(sampler2D s, float2 uv, float2 offset)
 
 	for (int i = 1; i < 10; i++)
 	{
+		float weight = weights[i];
 		float2 newOffset = offset * i;
 
 		float4 colLeft = getScreenCol(s, uv - newOffset);
 		float4 colRight = getScreenCol(s, uv + newOffset);
 
-		result += colLeft * alphaInfluence(colLeft.a);
-		result += colRight * alphaInfluence(colRight.a);
-		total += 2;
+		result += colLeft * alphaInfluence(colLeft.a) * weight;
+		result += colRight * alphaInfluence(colRight.a) * weight;
+		total += weight * 2;
 	}
 
 	result /= total;
