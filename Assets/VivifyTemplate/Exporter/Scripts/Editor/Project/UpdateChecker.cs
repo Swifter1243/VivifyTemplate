@@ -8,7 +8,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.Project
 	[InitializeOnLoad]
 	public static class UpdateChecker
 	{
-		private readonly static Version TemplateVersion = new Version("1.1.0");
+		private readonly static Version TemplateVersion = new Version("1.1.1");
 		private readonly static HttpClient Client = new HttpClient();
 		private const string INITIALIZE_BOOL = "UpdateCheckerInitialized";
 		private const string REPO = "Swifter1243/VivifyTemplate";
