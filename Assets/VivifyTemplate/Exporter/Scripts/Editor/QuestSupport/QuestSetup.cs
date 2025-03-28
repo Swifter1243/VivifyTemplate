@@ -4,6 +4,7 @@ using UnityEditor;
 using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
+using JetBrains.Annotations;
 using VivifyTemplate.Exporter.Scripts.Editor.Utility;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
@@ -303,10 +304,26 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             return hasSymlink;
         }
 
+        [CanBeNull]
+        private static string GetOpenXRPackageDirectory()
+        {
+            var packageCache = Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache");
+            var directories = Directory.GetDirectories(packageCache);
+            foreach (var directory in directories)
+            {
+                if (directory.Contains("com.unity.xr.openxr"))
+                {
+                    return directory;
+                }
+            }
+
+            return null;
+        }
+
         private bool InstallPackages()
         {
-            var questPackages = Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.1");
-            var hasPackages = Directory.Exists(questPackages);
+            var openXRPackageDirectory = GetOpenXRPackageDirectory();
+            var hasPackages = openXRPackageDirectory != null && Directory.Exists(openXRPackageDirectory);
 
             var verticalStyle = new GUIStyle(GUI.skin.button)
             {
@@ -367,9 +384,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         public static bool IsQuestProjectReady()
         {
+            var openXRPackageDirectory = GetOpenXRPackageDirectory();
             return Directory.Exists(QuestPreferences.ProjectPath) &&
                    !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")) &&
-                   Directory.Exists(Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache/com.unity.xr.openxr@1.14.1")) &&
+                   openXRPackageDirectory != null &&
+                   Directory.Exists(openXRPackageDirectory) &&
                    File.Exists(QuestPreferences.UnityEditor);
         }
 
