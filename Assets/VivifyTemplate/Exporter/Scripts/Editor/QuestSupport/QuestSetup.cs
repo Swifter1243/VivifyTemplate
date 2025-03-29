@@ -308,6 +308,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
         private static string GetOpenXRPackageDirectory()
         {
             var packageCache = Path.Combine(QuestPreferences.ProjectPath, "Library/PackageCache");
+            if (!Directory.Exists(packageCache)) return null;
             var directories = Directory.GetDirectories(packageCache);
             foreach (var directory in directories)
             {
