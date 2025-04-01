@@ -151,6 +151,14 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
                 {
                     SetupProject.Setup();
                 }
+            } else if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64)
+            {
+                GUILayout.Label("Your project is not setup to build for Windows!",redTextStyle);
+                EditorGUILayout.Space(10);
+                if (GUILayout.Button("Open Build Settings", GUILayout.Height(40)))
+                {
+                    EditorApplication.ExecuteMenuItem("File/Build Settings...");
+                }
             }
             else if (_versions.Count > 0)
             {
