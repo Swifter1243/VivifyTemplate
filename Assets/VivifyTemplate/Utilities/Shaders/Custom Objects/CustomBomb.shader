@@ -52,7 +52,8 @@ Shader "Vivify/CustomObjects/CustomBomb"
 
             v2f vert (appdata v)
             {
-                UNITY_INITIALIZE_OUTPUT(v2f, v2f o);
+                v2f o;
+                UNITY_INITIALIZE_OUTPUT(v2f, o);
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_TRANSFER_INSTANCE_ID(v, o); // Insert for GPU instancing
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
