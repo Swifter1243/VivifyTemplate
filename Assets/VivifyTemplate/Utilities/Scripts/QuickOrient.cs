@@ -30,7 +30,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			Event e = Event.current;
 
-			if (e.type == EventType.KeyDown && e.keyCode == KeyCode.F && s_current && Selection.activeGameObject == null)
+			if (e.type == EventType.KeyDown && e.keyCode == KeyCode.G && s_current)
 			{
 				SceneView scene = SceneView.lastActiveSceneView;
 				scene.LookAtDirect(s_current.position + Vector3.forward * scene.cameraDistance, s_current.rotation);
