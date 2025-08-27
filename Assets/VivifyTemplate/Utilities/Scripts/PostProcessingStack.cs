@@ -142,16 +142,16 @@ namespace VivifyTemplate.Utilities.Scripts
 
 			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-			float width = position.width - 32;
+			float width = position.width;
 			float flexWidth = width - 32;
 			float xEnd = position.x + width;
 			float xFlexEnd = position.x + flexWidth;
 
-			float xMatStart = position.x + flexWidth * 0.10f;
-			float xPassLabelStart = position.x + flexWidth * 0.70f;
-			float xPassStart = position.x + flexWidth * 0.75f;
-			float xDisableLabelStart = position.x + flexWidth * 0.95f;
+			float xMatStart = position.x + 52;
 			float xDisableStart = xFlexEnd;
+			float xDisableLabelStart = xDisableStart - 32;
+			float xPassStart = xDisableStart - 70;
+			float xPassLabelStart = xPassStart - 32;
 
 			// Calculate rects
 			Rect materialLabelRect = new Rect(position.x, position.y, xMatStart - position.x, position.height);
