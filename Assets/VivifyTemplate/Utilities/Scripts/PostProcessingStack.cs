@@ -5,10 +5,7 @@ using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine.Rendering;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
 #endif
-
 
 namespace VivifyTemplate.Utilities.Scripts
 {
@@ -63,6 +60,7 @@ namespace VivifyTemplate.Utilities.Scripts
 		private void OnValidate() => UpdatePostProcessing();
 #endif
 
+
 		private void UpdatePostProcessing()
 		{
 			//Remove previous command
@@ -114,6 +112,8 @@ namespace VivifyTemplate.Utilities.Scripts
 			}
 
 		}
+
+
 
 	}
 

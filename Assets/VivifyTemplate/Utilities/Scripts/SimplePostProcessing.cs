@@ -3,7 +3,7 @@ namespace VivifyTemplate.Utilities.Scripts
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]
-    public class PostProcessingStack : MonoBehaviour
+    public class SimplePostProcessing : MonoBehaviour
     {
         public Material postProcessingMaterial;
         public int pass;
