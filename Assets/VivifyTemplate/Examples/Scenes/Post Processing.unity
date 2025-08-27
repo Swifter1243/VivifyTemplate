@@ -708,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSceneViewEnabled: 1
+  isSceneViewEnabled: 0
   postProcessingStack:
   - m_material: {fileID: 2100000, guid: 1b34c9fd2c72ff24a838ac783bf23e5a, type: 2}
     m_pass: 0
