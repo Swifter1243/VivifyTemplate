@@ -89,8 +89,21 @@ namespace VivifyTemplate.Utilities.Scripts
 				RenderTargetIdentifier src = new RenderTargetIdentifier(BuiltinRenderTextureType.CurrentActive);
 				RenderTargetIdentifier dst = new RenderTargetIdentifier(BuiltinRenderTextureType.CameraTarget);
 
+				int mainTexID = Shader.PropertyToID("_MainTex");
+				RenderTargetIdentifier rt = new RenderTargetIdentifier(mainTexID);
+
 				foreach (PostProcessReference reference in stack)
-					postProcessingCommand.Blit(src, dst, reference.m_material, (reference.m_pass >= 0) ? reference.m_pass : -1);
+				{
+					if (reference.m_material.HasProperty(mainTexID))
+					{
+						postProcessingCommand.GetTemporaryRT(mainTexID, -1, -1, 0, FilterMode.Bilinear);
+						postProcessingCommand.Blit(src, rt);
+						postProcessingCommand.Blit(rt, dst, reference.m_material, (reference.m_pass >= 0) ? reference.m_pass : -1);
+						postProcessingCommand.ReleaseTemporaryRT(mainTexID);
+					}
+					else
+						postProcessingCommand.Blit(src, dst, reference.m_material, (reference.m_pass >= 0) ? reference.m_pass : -1);
+				}
 
 				postProcessingCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, postProcessingCommand);
 
