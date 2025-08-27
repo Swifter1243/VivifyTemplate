@@ -129,7 +129,7 @@ namespace VivifyTemplate.Utilities.Scripts
 
 			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-			float width = position.width - 128;
+			float width = position.width - 32;
 			float flexWidth = width - 32;
 			float xEnd = position.x + width;
 			float xFlexEnd = position.x + flexWidth;
