@@ -38,6 +38,8 @@ namespace VivifyTemplate.Utilities.Scripts
 		private void Awake()
 		{
 			postProcessingCamera = GetComponent<Camera>();
+			isCameraEnabled = isActiveAndEnabled;
+			UpdatePostProcessing();
 		}
 
 		private void OnEnable()
