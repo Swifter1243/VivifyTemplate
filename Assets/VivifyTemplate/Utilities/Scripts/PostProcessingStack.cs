@@ -91,19 +91,32 @@ namespace VivifyTemplate.Utilities.Scripts
 
 				int mainTexID = Shader.PropertyToID("_MainTex");
 				RenderTargetIdentifier rt = new RenderTargetIdentifier(mainTexID);
+				bool isRTMade = false;
 
 				foreach (PostProcessReference reference in stack)
 				{
 					if (reference.m_material.HasProperty(mainTexID))
 					{
-						postProcessingCommand.GetTemporaryRT(mainTexID, -1, -1, 0, FilterMode.Bilinear);
+						//Make temp RT
+						if (!isRTMade)
+						{
+							//TODO: probably use same format as in beatsaber/vivify (if known?)
+							postProcessingCommand.GetTemporaryRT(mainTexID, -1, -1, 24, FilterMode.Bilinear, RenderTextureFormat.ARGBHalf);
+							isRTMade = true;
+						}
+						//Copy to RT and blit with material
 						postProcessingCommand.Blit(src, rt);
 						postProcessingCommand.Blit(rt, dst, reference.m_material, (reference.m_pass >= 0) ? reference.m_pass : -1);
-						postProcessingCommand.ReleaseTemporaryRT(mainTexID);
 					}
 					else
+					{
+						//Copy to RT and blit with material
 						postProcessingCommand.Blit(src, dst, reference.m_material, (reference.m_pass >= 0) ? reference.m_pass : -1);
+					}
 				}
+
+				//Cleanup temp RT
+				if (isRTMade) postProcessingCommand.ReleaseTemporaryRT(mainTexID);
 
 				postProcessingCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, postProcessingCommand);
 
