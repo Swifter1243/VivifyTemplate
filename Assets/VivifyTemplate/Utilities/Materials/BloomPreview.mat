@@ -29,5 +29,5 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Brightness: 2
-    - _Strength: 0.0176
+    - _Strength: 0.0199
     m_Colors: []
