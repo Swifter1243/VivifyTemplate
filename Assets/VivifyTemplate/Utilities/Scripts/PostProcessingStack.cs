@@ -3,9 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Rendering;
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine.Rendering;
 #endif
 
 namespace VivifyTemplate.Utilities.Scripts
@@ -34,6 +34,7 @@ namespace VivifyTemplate.Utilities.Scripts
 		private List<PostProcessReference> postProcessingStack = new List<PostProcessReference>();
 		private PostProcessReference[] Stack => postProcessingStack.Where((PostProcessReference reference) => reference.m_material != null && !reference.m_skip).ToArray();
 
+		private static readonly int mainTexID = Shader.PropertyToID("_MainTex");
 
 		private void Awake()
 		{
@@ -83,9 +84,9 @@ namespace VivifyTemplate.Utilities.Scripts
 
 				RenderTargetIdentifier src = new RenderTargetIdentifier(BuiltinRenderTextureType.CurrentActive);
 				RenderTargetIdentifier dst = new RenderTargetIdentifier(BuiltinRenderTextureType.CameraTarget);
-
-				int mainTexID = Shader.PropertyToID("_MainTex");
 				RenderTargetIdentifier rt = new RenderTargetIdentifier(mainTexID);
+
+
 				bool isRTMade = false;
 
 				foreach (PostProcessReference reference in stack)
