@@ -2,8 +2,8 @@ Shader "VivifyTemplate/Utility/BloomPreview"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Horizontal ("Horizontal", 2D) = "white" {}
+        _MainTex ("Texture", 2D) = "" {}
+        //_Horizontal ("Horizontal", 2D) = "white" {}
         _Strength ("Strength", Range(0, 0.01)) = 0.01
     }
     SubShader
