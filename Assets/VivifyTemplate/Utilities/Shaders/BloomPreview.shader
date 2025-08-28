@@ -100,7 +100,8 @@ Shader "VivifyTemplate/Utility/BloomPreview"
                 float4 blur = blurPass(_Horizontal, i.uv, float2(0, 1));
                 float4 main = getScreenCol(_MainTex, i.uv);
 
-                float4 final = lerp(main + blur * _Brightness, 1, saturate(main.a));
+                float whiteness = pow(saturate(main.a), 1.4);
+                float4 final = lerp(main + blur * _Brightness, 1, whiteness);
 
                 return final;
             }

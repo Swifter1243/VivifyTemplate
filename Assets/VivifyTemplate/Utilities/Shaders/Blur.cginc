@@ -14,9 +14,9 @@ float4 blurPass(in sampler2D s, in float2 U, in float2 D)
 	for (int k = 0; k < N; k++)
 	{
 		x = float(k)/r-1.;
-		t += g = exp(-2.*x*x );
+		t += g = exp(-3*x*x );
 		float4 c = getScreenCol(s, (U+_Strength*x*D));
-		O += g * c * c.a;
+		O += g * c * pow(c.a, 0.5);
 	}
 
 	return O/t;
