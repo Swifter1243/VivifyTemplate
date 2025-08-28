@@ -1,34 +1,112 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Rendering;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+
+
 namespace VivifyTemplate.Utilities.Scripts
 {
 	[ExecuteInEditMode]
+	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Camera))]
 	public class BloomPreview : MonoBehaviour
 	{
-		private readonly static int s_horizontal = Shader.PropertyToID("_Horizontal");
-		public Material material;
+		[SerializeField]
+		private Material material = null;
 
-		private void OnRenderImage(RenderTexture src, RenderTexture dst)
+		private Camera blurCamera = null;
+		private CommandBuffer blurCommand = null;
+
+		private static readonly int mainID =		Shader.PropertyToID("_MainTex");
+		private static readonly int horizontalID =	Shader.PropertyToID("_Horizontal");
+
+#if UNITY_EDITOR
+		[SerializeField]
+		private bool isSceneViewEnabled = false;
+#endif
+
+		private void Awake()
 		{
-			if (material == null)
-			{
-				Graphics.Blit(src, dst);
-				return;
-			}
-
-			RenderTexture horizontal = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.Default);
-
-			if (horizontal == null)
-			{
-				Graphics.Blit(src, dst);
-				return;
-			}
-
-			Graphics.Blit(src, horizontal, material, 0);
-			material.SetTexture(s_horizontal, horizontal);
-			Graphics.Blit(src, dst, material, 1);
-
-			RenderTexture.ReleaseTemporary(horizontal);
+			blurCamera = GetComponent<Camera>();
+#if UNITY_EDITOR
+			StartCoroutine(UpdateBlurLate());
+#endif
 		}
+		private void OnEnable() => UpdateBlur(true);
+		private void OnDisable() => UpdateBlur(false);
+		private void OnDestroy() => UpdateBlur(false);
+
+#if UNITY_EDITOR
+		private IEnumerator UpdateBlurLate()
+		{
+			yield return null;
+			UpdateBlur(isActiveAndEnabled);
+		}
+		private void OnValidate() => UpdateBlur(isActiveAndEnabled);
+#endif
+
+		private void UpdateBlur(bool isCameraEnabled)
+		{
+			//Remove previous command
+			if (blurCommand != null)
+			{
+				if (blurCamera.GetCommandBuffers(CameraEvent.AfterImageEffects).Any((CommandBuffer buf) => blurCommand.name == buf.name))
+					blurCamera.RemoveCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+#if UNITY_EDITOR
+				foreach (SceneView view in SceneView.sceneViews)
+				{
+					Camera viewCamera = view.camera;
+					if (viewCamera.GetCommandBuffers(CameraEvent.AfterImageEffects).Any((CommandBuffer buf) => blurCommand.name == buf.name))
+						viewCamera.RemoveCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+				}
+#endif
+			}
+
+			if (isCameraEnabled && material != null)
+			{
+				blurCommand = new CommandBuffer();
+				blurCommand.name = blurCommand.GetHashCode().ToString();
+
+				RenderTargetIdentifier src = new RenderTargetIdentifier(BuiltinRenderTextureType.CurrentActive);
+				RenderTargetIdentifier dst = new RenderTargetIdentifier(BuiltinRenderTextureType.CameraTarget);
+				RenderTargetIdentifier mainRT = new RenderTargetIdentifier(mainID);
+				RenderTargetIdentifier horizontalRT = new RenderTargetIdentifier(horizontalID);
+
+				blurCommand.GetTemporaryRT(mainID,			-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGBHalf);
+				blurCommand.GetTemporaryRT(horizontalID,	-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGBHalf);
+
+				blurCommand.Blit(src, mainRT);
+				blurCommand.Blit(src, horizontalRT, material, 0);
+				blurCommand.SetGlobalTexture(horizontalID, horizontalRT, RenderTextureSubElement.Color); //TODO: redundant?
+				blurCommand.Blit(mainRT, dst, material, 1);
+
+				blurCommand.ReleaseTemporaryRT(mainID);
+				blurCommand.ReleaseTemporaryRT(horizontalID);
+
+				blurCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+#if UNITY_EDITOR
+				if (isSceneViewEnabled)
+				{
+					foreach (SceneView view in SceneView.sceneViews)
+					{
+						Camera viewCamera = view.camera;
+						viewCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+					}
+				}
+#endif
+			}
+			else if (blurCommand != null)
+			{
+				blurCommand.Release();
+				blurCommand = null;
+			}
+
+		}
+
+
 	}
 }
