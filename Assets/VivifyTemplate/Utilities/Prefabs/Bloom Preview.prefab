@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5608390712748267366}
   - component: {fileID: 5608390712748267367}
   - component: {fileID: 5608390712748267365}
-  - component: {fileID: 9030425039115594276}
   m_Layer: 0
   m_Name: Bloom Preview
   m_TagString: MainCamera
@@ -89,23 +88,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 47e7f4fcaf9ad004684404963e805770, type: 2}
---- !u!114 &9030425039115594276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5608390712748267369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isSceneViewEnabled: 1
-  postProcessingStack:
-  - m_material: {fileID: 2100000, guid: 47e7f4fcaf9ad004684404963e805770, type: 2}
-    m_pass: 0
-    m_skip: 0
-  - m_material: {fileID: 2100000, guid: 47e7f4fcaf9ad004684404963e805770, type: 2}
-    m_pass: 1
-    m_skip: 0
+  isSceneViewEnabled: 0
