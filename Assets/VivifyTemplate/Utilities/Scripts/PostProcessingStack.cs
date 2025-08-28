@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 #if UNITY_EDITOR
@@ -25,7 +26,6 @@ namespace VivifyTemplate.Utilities.Scripts
 #if UNITY_EDITOR
 		[SerializeField] private bool isSceneViewEnabled = false;
 #endif
-		private bool isCameraEnabled = false;
 
 		private Camera postProcessingCamera = null;
 		private CommandBuffer postProcessingCommand = null;
@@ -38,32 +38,25 @@ namespace VivifyTemplate.Utilities.Scripts
 		private void Awake()
 		{
 			postProcessingCamera = GetComponent<Camera>();
-			isCameraEnabled = isActiveAndEnabled;
-			UpdatePostProcessing();
+#if UNITY_EDITOR
+			StartCoroutine(UpdatePostProcessingLate());
+#endif
 		}
-
-		private void OnEnable()
-		{
-			isCameraEnabled = true;
-			UpdatePostProcessing();
-		}
-		private void OnDisable()
-		{
-			isCameraEnabled = false;
-			UpdatePostProcessing();
-		}
-		private void OnDestroy()
-		{
-			isCameraEnabled = false;
-			UpdatePostProcessing();
-		}
+		private void OnEnable() => UpdatePostProcessing(true);
+		private void OnDisable() => UpdatePostProcessing(false);
+		private void OnDestroy() => UpdatePostProcessing(false);
 
 #if UNITY_EDITOR
-		private void OnValidate() => UpdatePostProcessing();
+		private IEnumerator UpdatePostProcessingLate()
+		{
+			yield return null;
+			UpdatePostProcessing(isActiveAndEnabled);
+		}
+		private void OnValidate() => UpdatePostProcessing(isActiveAndEnabled);
 #endif
 
 
-		private void UpdatePostProcessing()
+		private void UpdatePostProcessing(bool isCameraEnabled)
 		{
 			//Remove previous command
 			if (postProcessingCommand != null)
