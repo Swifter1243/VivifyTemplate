@@ -76,8 +76,8 @@ namespace VivifyTemplate.Utilities.Scripts
 				RenderTargetIdentifier mainRT = new RenderTargetIdentifier(mainID);
 				RenderTargetIdentifier horizontalRT = new RenderTargetIdentifier(horizontalID);
 
-				blurCommand.GetTemporaryRT(mainID,			-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGBHalf);
-				blurCommand.GetTemporaryRT(horizontalID,	-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGBHalf);
+				blurCommand.GetTemporaryRT(mainID,			-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGB64);
+				blurCommand.GetTemporaryRT(horizontalID,	-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGB64);
 
 				blurCommand.Blit(src, mainRT);
 				blurCommand.Blit(src, horizontalRT, material, 0);

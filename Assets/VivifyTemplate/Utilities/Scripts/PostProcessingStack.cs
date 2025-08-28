@@ -97,7 +97,7 @@ namespace VivifyTemplate.Utilities.Scripts
 						if (!isRTMade)
 						{
 							//TODO: probably use same format as in beatsaber/vivify (if known?)
-							postProcessingCommand.GetTemporaryRT(mainTexID, -1, -1, 24, FilterMode.Bilinear, RenderTextureFormat.ARGBHalf);
+							postProcessingCommand.GetTemporaryRT(mainTexID, -1, -1, 24, FilterMode.Bilinear, RenderTextureFormat.ARGB64);
 							isRTMade = true;
 						}
 						//Copy to RT and blit with material
