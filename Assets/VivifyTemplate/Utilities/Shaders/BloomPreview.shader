@@ -3,8 +3,8 @@ Shader "VivifyTemplate/Utility/BloomPreview"
     Properties
     {
         _MainTex ("Texture", 2D) = "" {}
-        //_Horizontal ("Horizontal", 2D) = "white" {}
-        _Strength ("Strength", Range(0, 0.01)) = 0.01
+        _Strength ("Strength", Range(0, 0.1)) = 0.01
+        _Brightness ("Brightness", Float) = 2
     }
     SubShader
     {
@@ -35,7 +35,6 @@ Shader "VivifyTemplate/Utility/BloomPreview"
             };
 
             UNITY_DECLARE_SCREENSPACE_TEXTURE(_MainTex);
-            float _Strength;
 
             v2f vert (appdata v)
             {
@@ -52,9 +51,7 @@ Shader "VivifyTemplate/Utility/BloomPreview"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-
-                float aspect = _ScreenParams.y / _ScreenParams.x;
-                return blurPass(_MainTex, i.uv, float2(_Strength * aspect, 0));
+                return blurPass(_MainTex, i.uv, float2(1, 0));
             }
             ENDCG
         }
@@ -83,7 +80,7 @@ Shader "VivifyTemplate/Utility/BloomPreview"
 
             UNITY_DECLARE_SCREENSPACE_TEXTURE(_MainTex);
             UNITY_DECLARE_SCREENSPACE_TEXTURE(_Horizontal);
-            float _Strength;
+            float _Brightness;
 
             v2f vert (appdata v)
             {
@@ -100,10 +97,10 @@ Shader "VivifyTemplate/Utility/BloomPreview"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-                float4 blur = blurPass(_Horizontal, i.uv, float2(0, _Strength));
+                float4 blur = blurPass(_Horizontal, i.uv, float2(0, 1));
                 float4 main = getScreenCol(_MainTex, i.uv);
 
-                float4 final = lerp(main + blur, 1, saturate(main.a));
+                float4 final = lerp(main + blur * _Brightness, 1, saturate(main.a));
 
                 return final;
             }
