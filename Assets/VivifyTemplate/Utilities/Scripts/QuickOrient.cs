@@ -11,11 +11,13 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 	[ExecuteInEditMode]
 	public class QuickOrient : MonoBehaviour
 	{
-		private static Transform s_current;
+		private static QuickOrient s_current;
+		[SerializeField]
+		private KeyCode m_hotkey = KeyCode.G;
 
 		private void Update()
 		{
-			s_current = transform;
+			s_current = this;
 		}
 
 		#if UNITY_EDITOR
@@ -30,10 +32,10 @@ namespace VivifyTemplate.Exporter.Scripts.Editor
 		{
 			Event e = Event.current;
 
-			if (e.type == EventType.KeyDown && e.keyCode == KeyCode.G && s_current)
+			if (e.type == EventType.KeyDown && e.keyCode == s_current.m_hotkey && s_current)
 			{
 				SceneView scene = SceneView.lastActiveSceneView;
-				scene.LookAtDirect(s_current.position + Vector3.forward * scene.cameraDistance, s_current.rotation);
+				scene.LookAtDirect(s_current.transform.position + Vector3.forward * scene.cameraDistance, s_current.transform.rotation);
 				scene.Repaint();
 			}
 		}
