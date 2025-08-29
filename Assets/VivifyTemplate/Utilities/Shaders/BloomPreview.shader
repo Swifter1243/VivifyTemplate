@@ -51,7 +51,8 @@ Shader "VivifyTemplate/Utility/BloomPreview"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
 
-                return blurPass(_MainTex, i.uv, float2(1, 0));
+                float aspect = _ScreenParams.y / _ScreenParams.x;
+                return blurPass(_MainTex, i.uv, float2(aspect, 0));
             }
             ENDCG
         }
