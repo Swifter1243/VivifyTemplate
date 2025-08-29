@@ -16,6 +16,7 @@ float4 blurPass(in sampler2D s, in float2 U, in float2 D)
 		x = float(k)/r-1.;
 		t += g = exp(-3*x*x );
 		float4 c = getScreenCol(s, (U+_Strength*x*D));
+		c = saturate(c); // TODO: Figure out how to set scene view to a normalized texture format?
 		O += g * c * pow(c.a, 0.5);
 	}
 
