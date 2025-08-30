@@ -15,21 +15,23 @@ namespace VivifyTemplate.Utilities.Scripts
 	public class PrefabSaver : MonoBehaviour
 	{
 		public string m_destinationFolder;
-		public bool m_logSaves = true;
+		public bool m_onSceneSave = true;
+		public bool m_logResult = true;
 
 		#if UNITY_EDITOR
 		private void OnEnable()
 		{
-			EditorSceneManager.sceneSaved += SaveToPrefab;
+			EditorSceneManager.sceneSaved += SaveOnSceneSave;
 		}
 		private void OnDisable()
 		{
-			EditorSceneManager.sceneSaved -= SaveToPrefab;
+			EditorSceneManager.sceneSaved -= SaveOnSceneSave;
 		}
 
-		private void SaveToPrefab(Scene _)
+		private void SaveOnSceneSave(Scene _)
 		{
-			SaveToPrefab();
+			if (m_onSceneSave)
+				SaveToPrefab();
 		}
 		public void SaveToPrefab()
 		{
@@ -65,7 +67,7 @@ namespace VivifyTemplate.Utilities.Scripts
 
 			DestroyImmediate(temp);
 
-			if (m_logSaves)
+			if (m_logResult)
 				Debug.Log($"Prefab '{prefabName}' overwritten successfully.");
 		}
 		#endif
