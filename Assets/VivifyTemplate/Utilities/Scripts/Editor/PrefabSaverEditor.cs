@@ -77,7 +77,8 @@ namespace VivifyTemplate.Utilities.Scripts.Editor
 
 			DestroyImmediate(temp);
 
-			Debug.Log($"Prefab '{prefab.name}' overwritten successfully.");
+			if (saver.m_logSaves)
+				Debug.Log($"Prefab '{prefab.name}' overwritten successfully.");
 		}
 	}
 }

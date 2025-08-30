@@ -4,5 +4,6 @@ namespace VivifyTemplate.Utilities.Scripts
 	public class PrefabSaver : MonoBehaviour
 	{
 		public GameObject m_destination;
+		public bool m_logSaves = true;
 	}
 }
