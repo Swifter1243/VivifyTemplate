@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,6 +35,11 @@ namespace VivifyTemplate.Utilities.Scripts
 		{
 			string prefabName = name;
 			string prefabPath = Path.Combine(m_destinationFolder, $"{prefabName}.prefab");
+
+			if (!AssetDatabase.IsValidFolder(m_destinationFolder))
+			{
+				throw new Exception("Destination folder does not exist.");
+			}
 
 			// Remove C# scripts
 			GameObject temp = Instantiate(gameObject);
