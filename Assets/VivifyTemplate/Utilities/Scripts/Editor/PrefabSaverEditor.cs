@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 namespace VivifyTemplate.Utilities.Scripts.Editor
 {
 	[CustomEditor(typeof(PrefabSaver))]
@@ -21,12 +24,26 @@ namespace VivifyTemplate.Utilities.Scripts.Editor
 
 			if (GUILayout.Button("Save To Destination", GUILayout.Height(30)))
 			{
-				SaveToPrefab(saver);
+				SaveToPrefab();
 			}
 		}
 
-		private void SaveToPrefab(PrefabSaver saver)
+		private void OnEnable()
 		{
+			EditorSceneManager.sceneSaved += SaveToPrefab;
+		}
+		private void OnDisable()
+		{
+			EditorSceneManager.sceneSaved -= SaveToPrefab;
+		}
+
+		private void SaveToPrefab(Scene _)
+		{
+			SaveToPrefab();
+		}
+		private void SaveToPrefab()
+		{
+			PrefabSaver saver = (PrefabSaver)target;
 			var prefab = saver.m_destination;
 			string prefabPath = AssetDatabase.GetAssetPath(prefab);
 
