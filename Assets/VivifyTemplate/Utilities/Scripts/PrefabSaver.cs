@@ -1,9 +1,67 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
+
 namespace VivifyTemplate.Utilities.Scripts
 {
+	[ExecuteInEditMode]
 	public class PrefabSaver : MonoBehaviour
 	{
-		public GameObject m_destination;
+		public string m_destinationFolder;
 		public bool m_logSaves = true;
+
+		#if UNITY_EDITOR
+		private void OnEnable()
+		{
+			EditorSceneManager.sceneSaved += SaveToPrefab;
+		}
+		private void OnDisable()
+		{
+			EditorSceneManager.sceneSaved -= SaveToPrefab;
+		}
+
+		private void SaveToPrefab(Scene _)
+		{
+			SaveToPrefab();
+		}
+		public void SaveToPrefab()
+		{
+			string prefabName = name;
+			string prefabPath = Path.Combine(m_destinationFolder, $"{prefabName}.prefab");
+
+			// Remove C# scripts
+			GameObject temp = Instantiate(gameObject);
+			var components = temp.GetComponents<Component>().ToList();
+			foreach (var comp in components)
+			{
+				if (comp == null) continue; // Missing script
+				var type = comp.GetType();
+				if (comp is MonoBehaviour && !type.Namespace?.StartsWith("UnityEngine") == true)
+				{
+					DestroyImmediate(comp);
+				}
+			}
+
+			// Enable animator (bc the animation window likes to turn it off in preview)
+			if (temp.TryGetComponent(out Animator animator))
+			{
+				animator.enabled = true;
+			}
+
+			PrefabUtility.SaveAsPrefabAsset(temp, prefabPath);
+			AssetDatabase.Refresh();
+
+			DestroyImmediate(temp);
+
+			if (m_logSaves)
+				Debug.Log($"Prefab '{prefabName}' overwritten successfully.");
+		}
+		#endif
 	}
 }
