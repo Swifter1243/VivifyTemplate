@@ -62,14 +62,14 @@ namespace VivifyTemplate.Utilities.Scripts
 			//Remove previous command
 			if (postProcessingCommand != null)
 			{
-				if (postProcessingCamera.GetCommandBuffers(CameraEvent.AfterImageEffects).Any((CommandBuffer buf) => postProcessingCommand.name == buf.name))
-					postProcessingCamera.RemoveCommandBuffer(CameraEvent.AfterImageEffects, postProcessingCommand);
+				if (postProcessingCamera.GetCommandBuffers(CameraEvent.BeforeImageEffects).Any((CommandBuffer buf) => postProcessingCommand.name == buf.name))
+					postProcessingCamera.RemoveCommandBuffer(CameraEvent.BeforeImageEffects, postProcessingCommand);
 #if UNITY_EDITOR
 				foreach (SceneView view in SceneView.sceneViews)
 				{
 					Camera viewCamera = view.camera;
-					if (viewCamera.GetCommandBuffers(CameraEvent.AfterImageEffects).Any((CommandBuffer buf) => postProcessingCommand.name == buf.name))
-						viewCamera.RemoveCommandBuffer(CameraEvent.AfterImageEffects, postProcessingCommand);
+					if (viewCamera.GetCommandBuffers(CameraEvent.BeforeImageEffects).Any((CommandBuffer buf) => postProcessingCommand.name == buf.name))
+						viewCamera.RemoveCommandBuffer(CameraEvent.BeforeImageEffects, postProcessingCommand);
 				}
 #endif
 			}
@@ -114,7 +114,7 @@ namespace VivifyTemplate.Utilities.Scripts
 				//Cleanup temp RT
 				if (isRTMade) postProcessingCommand.ReleaseTemporaryRT(mainTexID);
 
-				postProcessingCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, postProcessingCommand);
+				postProcessingCamera.AddCommandBuffer(CameraEvent.BeforeImageEffects, postProcessingCommand);
 
 #if UNITY_EDITOR
 				if (isSceneViewEnabled)
@@ -122,7 +122,7 @@ namespace VivifyTemplate.Utilities.Scripts
 					foreach (SceneView view in SceneView.sceneViews)
 					{
 						Camera viewCamera = view.camera;
-						viewCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, postProcessingCommand);
+						viewCamera.AddCommandBuffer(CameraEvent.BeforeImageEffects, postProcessingCommand);
 					}
 				}
 #endif

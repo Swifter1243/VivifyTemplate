@@ -21,6 +21,8 @@ namespace VivifyTemplate.Utilities.Scripts
 		private Camera blurCamera = null;
 		private CommandBuffer blurCommand = null;
 
+		private Material blit = null;
+
 		private static readonly int mainID =		Shader.PropertyToID("_MainTex");
 		private static readonly int horizontalID =	Shader.PropertyToID("_Horizontal");
 
@@ -54,14 +56,14 @@ namespace VivifyTemplate.Utilities.Scripts
 			//Remove previous command
 			if (blurCommand != null)
 			{
-				if (blurCamera.GetCommandBuffers(CameraEvent.AfterImageEffects).Any((CommandBuffer buf) => blurCommand.name == buf.name))
-					blurCamera.RemoveCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+				if (blurCamera.GetCommandBuffers(CameraEvent.BeforeImageEffects).Any((CommandBuffer buf) => blurCommand.name == buf.name))
+					blurCamera.RemoveCommandBuffer(CameraEvent.BeforeImageEffects, blurCommand);
 #if UNITY_EDITOR
 				foreach (SceneView view in SceneView.sceneViews)
 				{
 					Camera viewCamera = view.camera;
-					if (viewCamera.GetCommandBuffers(CameraEvent.AfterImageEffects).Any((CommandBuffer buf) => blurCommand.name == buf.name))
-						viewCamera.RemoveCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+					if (viewCamera.GetCommandBuffers(CameraEvent.BeforeImageEffects).Any((CommandBuffer buf) => blurCommand.name == buf.name))
+						viewCamera.RemoveCommandBuffer(CameraEvent.BeforeImageEffects, blurCommand);
 				}
 #endif
 			}
@@ -80,21 +82,22 @@ namespace VivifyTemplate.Utilities.Scripts
 				blurCommand.GetTemporaryRT(horizontalID,	-1, -1, 0, FilterMode.Bilinear, RenderTextureFormat.ARGB64);
 
 				blurCommand.Blit(src, mainRT);
-				blurCommand.Blit(src, horizontalRT, material, 0);
+				blurCommand.Blit(src, horizontalRT, material, 0);				
 				blurCommand.SetGlobalTexture(horizontalID, horizontalRT, RenderTextureSubElement.Color); //TODO: redundant?
 				blurCommand.Blit(mainRT, dst, material, 1);
 
 				blurCommand.ReleaseTemporaryRT(mainID);
 				blurCommand.ReleaseTemporaryRT(horizontalID);
 
-				blurCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+				//NOTE: Do not use CameraEvent.AfterImageEffects, this will create issues with display (e.g. view will occasionally be flipped in certain contexts)
+				blurCamera.AddCommandBuffer(CameraEvent.BeforeImageEffects, blurCommand);
 #if UNITY_EDITOR
 				if (isSceneViewEnabled)
 				{
 					foreach (SceneView view in SceneView.sceneViews)
 					{
 						Camera viewCamera = view.camera;
-						viewCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, blurCommand);
+						viewCamera.AddCommandBuffer(CameraEvent.BeforeImageEffects, blurCommand);
 					}
 				}
 #endif
