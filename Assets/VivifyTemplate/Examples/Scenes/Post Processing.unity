@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 468060056}
   - component: {fileID: 468060055}
   - component: {fileID: 468060054}
-  - component: {fileID: 468060057}
+  - component: {fileID: 468060053}
   m_Layer: 0
   m_Name: Camera Depth (Display 3)
   m_TagString: MainCamera
@@ -140,6 +140,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &468060053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468060052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSceneViewEnabled: 0
+  postProcessingStack:
+  - m_material: {fileID: 2100000, guid: 4bc111d6ce3fd2e43b73d2c63139ac21, type: 2}
+    m_pass: 0
+    m_skip: 0
 --- !u!81 &468060054
 AudioListener:
   m_ObjectHideFlags: 0
@@ -205,21 +222,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &468060057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 468060052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  postProcessingMaterial: {fileID: 2100000, guid: 4bc111d6ce3fd2e43b73d2c63139ac21,
-    type: 2}
-  pass: 0
 --- !u!1 &778843382
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,12 +344,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 868244820}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
+  m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessingMaterial: {fileID: 2100000, guid: 2081a0e8e4bb0f14ca1f735c34773df5,
-    type: 2}
-  pass: 0
+  isSceneViewEnabled: 0
+  postProcessingStack:
+  - m_material: {fileID: 2100000, guid: 2081a0e8e4bb0f14ca1f735c34773df5, type: 2}
+    m_pass: 0
+    m_skip: 0
 --- !u!81 &868244822
 AudioListener:
   m_ObjectHideFlags: 0
@@ -441,12 +445,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 886096366}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
+  m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessingMaterial: {fileID: 2100000, guid: 2f9e8c35e0091f24e927dbed839a689b,
-    type: 2}
-  pass: 0
+  isSceneViewEnabled: 0
+  postProcessingStack:
+  - m_material: {fileID: 2100000, guid: 2f9e8c35e0091f24e927dbed839a689b, type: 2}
+    m_pass: 0
+    m_skip: 0
 --- !u!81 &886096368
 AudioListener:
   m_ObjectHideFlags: 0
@@ -699,12 +705,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1216606822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
+  m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessingMaterial: {fileID: 2100000, guid: 1b34c9fd2c72ff24a838ac783bf23e5a,
-    type: 2}
-  pass: 0
+  isSceneViewEnabled: 0
+  postProcessingStack:
+  - m_material: {fileID: 2100000, guid: 1b34c9fd2c72ff24a838ac783bf23e5a, type: 2}
+    m_pass: 0
+    m_skip: 0
 --- !u!1 &1539145966
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,12 +741,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1539145966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b8ac420c119e69489f20a7ee3f6ebee, type: 3}
+  m_Script: {fileID: 11500000, guid: 86ac5ab78281e5f4a8c792a4753d61dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  postProcessingMaterial: {fileID: 2100000, guid: 5ca6d09c75d594c46b5275ba4f276c15,
-    type: 2}
-  pass: 0
+  isSceneViewEnabled: 0
+  postProcessingStack:
+  - m_material: {fileID: 2100000, guid: 5ca6d09c75d594c46b5275ba4f276c15, type: 2}
+    m_pass: 0
+    m_skip: 0
 --- !u!81 &1539145968
 AudioListener:
   m_ObjectHideFlags: 0
