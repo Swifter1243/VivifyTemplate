@@ -93,7 +93,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             var editorDirectory = Path.GetDirectoryName(QuestPreferences.UnityEditor);
             if (State == BackgroundTaskState.Idle && editorDirectory != null)
             {
+#if UNITY_EDITOR_WIN
                 var androidPlaybackEngine = Path.Combine(editorDirectory, "Data", "PlaybackEngines", "AndroidPlayer");
+#elif UNITY_EDITOR_OSX
+                var androidPlaybackEngine = Path.Combine(editorDirectory, "PlaybackEngines", "AndroidPlayer");
+#endif
                 if (!Directory.Exists(androidPlaybackEngine))
                 {
                     EditorGUILayout.LabelField(
@@ -166,7 +170,8 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         private bool InitializeProject()
         {
-            var hasProject = QuestPreferences.ProjectPath != "" && Directory.Exists(QuestPreferences.ProjectPath);
+            var questAssets = Path.Combine(QuestPreferences.ProjectPath, "Assets");
+            var hasProject = QuestPreferences.ProjectPath != "" && Directory.Exists(questAssets);
 
             var verticalStyle = new GUIStyle(GUI.skin.button)
             {
@@ -385,12 +390,18 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
         public static bool IsQuestProjectReady()
         {
+#if UNITY_EDITOR_WIN
+            bool isUnityEditorInstalled = File.Exists(QuestPreferences.UnityEditor);
+#elif UNITY_EDITOR_OSX
+            bool isUnityEditorInstalled = File.Exists(Path.Combine(QuestPreferences.UnityEditor, "Contents", "MacOS", "Unity"));
+#endif
+
             var openXRPackageDirectory = GetOpenXRPackageDirectory();
             return Directory.Exists(QuestPreferences.ProjectPath) &&
                    !IsDirectoryNotEmpty(Path.Combine(QuestPreferences.ProjectPath, "Assets")) &&
                    openXRPackageDirectory != null &&
                    Directory.Exists(openXRPackageDirectory) &&
-                   File.Exists(QuestPreferences.UnityEditor);
+                   isUnityEditorInstalled;
         }
 
         Vector2 _scrollPos = Vector2.zero;
@@ -415,7 +426,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 EditorGUILayout.EndScrollView();
                 return;
             }
-
             if (!MakeSymlink())
             {
                 EditorGUILayout.EndHorizontal();

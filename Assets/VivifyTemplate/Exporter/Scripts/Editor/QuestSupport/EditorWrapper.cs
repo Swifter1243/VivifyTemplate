@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -15,7 +16,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
+
+#if UNITY_EDITOR_WIN
                     process.StartInfo.FileName = editor;
+#elif UNITY_EDITOR_OSX
+                    process.StartInfo.FileName = Path.Combine(editor, "Contents", "MacOS", "Unity");
+#endif
                     process.StartInfo.Arguments = $"-createProject \"{path}\" -quit";
 
                     process.Start();
@@ -41,7 +47,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
+
+#if UNITY_EDITOR_WIN
                     process.StartInfo.FileName = editor;
+#elif UNITY_EDITOR_OSX
+                    process.StartInfo.FileName = Path.Combine(editor, "Contents", "MacOS", "Unity");
+#endif
                     process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.InstallPackages.Setup";
 
                     process.Start();
@@ -66,7 +77,12 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
+
+#if UNITY_EDITOR_WIN
                     process.StartInfo.FileName = editor;
+#elif UNITY_EDITOR_OSX
+                    process.StartInfo.FileName = Path.Combine(editor, "Contents", "MacOS", "Unity");
+#endif
                     process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.BuildProject.Build";
 
                     process.Start();
