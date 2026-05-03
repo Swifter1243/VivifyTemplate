@@ -43,7 +43,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             if (State == BackgroundTaskState.Idle && (QuestPreferences.UnityEditor == "" || !Directory.Exists(Path.GetDirectoryName(QuestPreferences.UnityEditor))))
             {
-                if (HubWrapper.TryGetUnityEditor("2021.3.16f1", out var foundVersion) && Directory.Exists(Path.GetDirectoryName(foundVersion)))
+                if (HubWrapper.TryGetUnityEditor("2021.3.45f2", out var foundVersion) && Directory.Exists(Path.GetDirectoryName(foundVersion)))
                 {
                     QuestPreferences.UnityEditor = foundVersion;
                 }
@@ -56,7 +56,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     };
 
                     EditorGUILayout.Space(10);
-                    EditorGUILayout.LabelField("Could not find Unity Editor version 2021.3.16f1. This version is required to build quest bundles.", style, GUILayout.Height(style.fontSize * 2));
+                    EditorGUILayout.LabelField("Could not find Unity Editor version 2021.3.45f2. This version is required to build quest bundles.", style, GUILayout.Height(style.fontSize * 2));
                     EditorGUILayout.Space(10);
 
                     GUI.enabled = State != BackgroundTaskState.DownloadingEditor;
@@ -65,7 +65,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                     GUILayout.Space(80);
                     if (GUILayout.Button("Download", GUILayout.Height(30)))
                     {
-                        Application.OpenURL("unityhub://2021.3.16f1/4016570cf34f");
+                        Application.OpenURL("unityhub://2021.3.45f2/88f88f591b2e");
                     }
                     if (GUILayout.Button("Rescan", GUILayout.Height(30)))
                     {
@@ -101,11 +101,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 if (!Directory.Exists(androidPlaybackEngine))
                 {
                     EditorGUILayout.LabelField(
-                        "Could not find the Android Build Module for Unity Editor version 2021.3.16f1. This module is required to build quest bundles.");
+                        "Could not find the Android Build Module for Unity Editor version 2021.3.45f2. This module is required to build quest bundles.");
                     GUI.enabled = State != BackgroundTaskState.DownloadingAndroidBuildSupport;
                     if (GUILayout.Button("Download Android Build Module. Under \"Component Installers\""))
                     {
-                        Application.OpenURL("https://unity.com/releases/editor/whats-new/2021.3.16#installers");
+                        Application.OpenURL("https://unity.com/releases/editor/whats-new/2021.3.45f2#installs");
                     }
 
                     GUI.enabled = true;
@@ -159,7 +159,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 
             EditorGUILayout.LabelField("What Is This?", headerStyle, GUILayout.Height(headerStyle.fontSize * 2));
             EditorGUILayout.LabelField(
-                "To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.16f1",
+                "To build vivify bundles for quest predictably, accurately, and easily, you need to build with Unity 2021.3.45f2",
                 paragraphStyle);
             EditorGUILayout.LabelField(
                 "<b><i>Luckily, this template will handle all of that for you!</i></b> It will setup the project for you, link your assets, and build your bundle all on its own!",

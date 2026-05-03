@@ -8,7 +8,7 @@ VivifyTemplate is a tool designed for the Unity side development of [Vivify](htt
 
 # Setup
 
-1. Create and open a Unity project for version **2019.4.28f1**. The download will be somewhere on [this page](https://unity.com/releases/editor/archive).
+1. Create and open a Unity project for version **2019.4.41f1**. The download will be somewhere on [this page](https://unity.com/releases/editor/archive).
 2. Download whatever VivifyTemplate modules you want from the [latest release](https://github.com/Swifter1243/VivifyTemplate/releases).
 3. Install them by double-clicking them. Follow the import instructions in your editor.
 
@@ -23,7 +23,7 @@ If you are trying to update any modules in your project, please delete the old o
 The exporter handles exporting bundles for various versions of Unity and Beat Saber.
 - **Windows 2019**: PC Beat Saber 1.29.1, uses `Single Pass`.
 - **Windows 2021**: PC Beat Saber 1.34.2+, uses `Single Pass Instanced`.
-- **Android 2021**: Quest Beat Saber. Uses `Single Pass Instanced`
+- **Android 2021**: Quest Beat Saber. Uses `Multiview`
 
 It also exports a `bundleinfo.json` file which contains the correct bundle checksums, among other information.
 
@@ -108,7 +108,7 @@ If you installed the "Utilities" package, a few tools will be provided from the 
 
 ## TextMeshPro
 
-The version of TextMeshPro that is installed with Unity version **2019.4.28f1** is newer than what Beat Saber uses in 1.29.1, and therefore causes some alignment issues. In order to downgrade:
+The version of TextMeshPro that is installed with Unity version **2019.4.41f1** is newer than what Beat Saber uses in 1.29.1, and therefore causes some alignment issues. In order to downgrade:
 - Go to `Window > Package Manager`
 - Find TextMeshPro and remove it.
 - Click the `+` and click "Add package from git URL".
