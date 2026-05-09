@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.IO;
+using UnityEngine;
 
 namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 {
@@ -17,6 +18,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
             if (QuestSetup.State == BackgroundTaskState.SearchingEditors) return;
             QuestSetup.State = BackgroundTaskState.SearchingEditors;
             _unityVersions.Clear();
+
             using (Process myProcess = new Process())
             {
                 myProcess.StartInfo.UseShellExecute = false;
@@ -33,17 +35,17 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
                 foreach (string line in lines)
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
-
-#if UNITY_EDITOR_WIN
-                    var split = line.Split(',');
-                    if (split.Length != 2) continue;
-                    _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
-#elif UNITY_EDITOR_OSX
-                    string pattern = @"\(.+?\)(\s*)installed at";
-                    var result = Regex.Split(line, pattern).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-                    if (result.Count != 2) continue;
-                    _unityVersions.TryAdd(result[0].Trim(), result[1].Trim());
-#endif
+                    if (line.Contains("installed")) 
+                    {
+                        string pattern = @"\s+installed at\s+";
+                        var result = Regex.Split(line, pattern).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+                        if (result.Count != 2) continue;
+                        _unityVersions.TryAdd(result[0].Trim(), result[1].Trim());
+                    } else {
+                        var split = line.Split(',');
+                        if (split.Length != 2) continue;
+                        _unityVersions.TryAdd(split[0].Trim(), split[1].Trim().Substring(13));
+                    }
                 }
 
                 QuestSetup.State = BackgroundTaskState.Idle;
