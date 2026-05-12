@@ -173,7 +173,7 @@
                 half3 stack = BS_SAMPLE_SCREENSPACE_TEX(_BloomTex, uv).rgb;
 
             #ifdef BLOOM_ONLY
-                C.rgb  = stack * _BloomWeight + noise;
+                C.rgb  = stack * _BloomWeight;
             #else
                 C.rgb += stack * _BloomWeight + noise;
             #endif //BLOOM_ONLY
