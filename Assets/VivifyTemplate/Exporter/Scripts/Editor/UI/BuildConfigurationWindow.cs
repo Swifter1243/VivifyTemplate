@@ -21,6 +21,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
         private Texture2D _tbsLogo;
 
         // Asset bundle properties
+        private static bool _showLegacyBundleString = false;
         private static readonly string _defaultBundleID = " (default)";
         private static readonly string _missingBundleID = " (missing)";
         private static int _assetBundleIndex;
@@ -42,6 +43,11 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
 
         private void UpdateAssetBundleList()
         {
+            if(_showLegacyBundleString)
+            {
+                return;
+            }
+
             // Gather the asset bundles in this project
             string[] bundleNames = AssetDatabase.GetAllAssetBundleNames();
 
@@ -237,16 +243,37 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
             EditorGUILayout.LabelField("Settings", _titleStyle, GUILayout.Height(_titleStyle.fontSize * 1.5f));
 
             _compressed = EditorGUILayout.Toggle(new GUIContent("Compressed", "Whether to compress the bundle. This will take longer, but will significantly reduce file size."), _compressed);
-            
+
             /* == Bundle dropdown == */
+
+            _showLegacyBundleString = EditorGUILayout.Toggle(new GUIContent("Use Bundle Name String", "Use the older string method for \"Bundle To Export\"."), _showLegacyBundleString);
+            GUIContent bundleToExportGUI = new GUIContent("Bundle To Export", "Assets attached to this bundle name will be exported.");
+            if(_showLegacyBundleString)
+            {
+                ProjectBundle.Value = EditorGUILayout.TextField(bundleToExportGUI, ProjectBundle.Value);
+            }
+            else
+            {
+                DrawAssetBundleDropdown(bundleToExportGUI);
+            }
+
+            ShouldExportBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Export Bundle Info", "Whether to export the bundleinfo.json file."), ShouldExportBundleInfo.Value);
+
+            if (ShouldExportBundleInfo.Value) {
+                ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Prettify Bundle Info", "Whether to format the bundleinfo.json with indents and new lines."), ShouldPrettifyBundleInfo.Value);
+            }
+
+            GUIOutputDirectory();
+        }
+
+        private void DrawAssetBundleDropdown(GUIContent bundleToExportGUI)
+        {
             if(_assetBundleNames == null)
             {
                 UpdateAssetBundleList();
             }
 
-            GUIContent bundleToExportGUI = new GUIContent("Bundle To Export", "Assets attached to this bundle name will be exported.");
-
-            if (_assetBundleNames == null)
+            if(_assetBundleNames == null)
             {
                 // Fallback to the normal string method if for some reason the asset bundle stuff doesnt work
                 ProjectBundle.Value = EditorGUILayout.TextField(bundleToExportGUI, ProjectBundle.Value);
@@ -271,15 +298,6 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
                     UpdateAssetBundleList();
                 }
             }
-            /* == Bundle dropdown == */
-
-            ShouldExportBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Export Bundle Info", "Whether to export the bundleinfo.json file."), ShouldExportBundleInfo.Value);
-
-            if (ShouldExportBundleInfo.Value) {
-                ShouldPrettifyBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Prettify Bundle Info", "Whether to format the bundleinfo.json with indents and new lines."), ShouldPrettifyBundleInfo.Value);
-            }
-
-            GUIOutputDirectory();
         }
 
         private static void GUIOutputDirectory()
