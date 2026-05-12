@@ -20,10 +20,66 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
 
         private Texture2D _tbsLogo;
 
+        // Asset bundle properties
+        private static readonly string _defaultBundleID = " (default)";
+        private static readonly string _missingBundleID = " (missing)";
+        private static int _assetBundleIndex;
+        private static string[] _assetBundleNames;
+
         private void OnEnable()
         {
             // there has to be better way to do this lol
             _tbsLogo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/VivifyTemplate/Exporter/Textures/TBS_trans.png");
+
+            UpdateAssetBundleList();
+        }
+
+        private void OnFocus()
+        {
+            // Update the asset bundle list when the window has focus
+            UpdateAssetBundleList();
+        }
+
+        private void UpdateAssetBundleList()
+        {
+            // Gather the asset bundles in this project
+            string[] bundleNames = AssetDatabase.GetAllAssetBundleNames();
+
+            // Search for the PlayerPrefs bundle name and default name in the project bundles
+            bool targetInProject = Array.Exists(bundleNames, x => x.Equals(ProjectBundle.Value));
+            bool defaultInProject = Array.Exists(bundleNames, x => x.Equals(ProjectBundle.DefaultValue));
+
+            // Get the projects selected bundle
+            string selectedBundleName = ProjectBundle.Value;
+
+            // Create a list with default, selected, and the rest of the project bundles
+            List<string> bundles = new List<string>(capacity: bundleNames.Length + 2)
+            {
+                ProjectBundle.DefaultValue,
+                selectedBundleName
+            };
+            bundles.AddRange(bundleNames);
+
+            // Remove duplicate entries and convert to an array
+            _assetBundleNames = bundles.Distinct().ToArray();
+
+            // Find PlayerPrefs index
+            _assetBundleIndex = Array.FindIndex(_assetBundleNames, x => x.Equals(selectedBundleName));
+
+            // True when the first asset bundle is the project target
+            bool firstIsTarget = targetInProject && _assetBundleIndex == 0;
+
+            // add the default identifier text unless the index is the first and its found in this project
+            if(!defaultInProject && !firstIsTarget)
+            {
+                _assetBundleNames[0] += _defaultBundleID;
+            }
+
+            // Add the missing identifier if the target is not found in the project
+            if(!targetInProject && _assetBundleIndex != 0)
+            {
+                _assetBundleNames[_assetBundleIndex] += _missingBundleID;
+            }
         }
 
         private void VersionToggle(string label, BuildVersion version)
@@ -181,7 +237,42 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.UI
             EditorGUILayout.LabelField("Settings", _titleStyle, GUILayout.Height(_titleStyle.fontSize * 1.5f));
 
             _compressed = EditorGUILayout.Toggle(new GUIContent("Compressed", "Whether to compress the bundle. This will take longer, but will significantly reduce file size."), _compressed);
-            ProjectBundle.Value = EditorGUILayout.TextField(new GUIContent("Bundle To Export", "Assets attached to this bundle name will be exported."), ProjectBundle.Value);
+            
+            /* == Bundle dropdown == */
+            if(_assetBundleNames == null)
+            {
+                UpdateAssetBundleList();
+            }
+
+            GUIContent bundleToExportGUI = new GUIContent("Bundle To Export", "Assets attached to this bundle name will be exported.");
+
+            if (_assetBundleNames == null)
+            {
+                // Fallback to the normal string method if for some reason the asset bundle stuff doesnt work
+                ProjectBundle.Value = EditorGUILayout.TextField(bundleToExportGUI, ProjectBundle.Value);
+            }
+            else
+            {
+                EditorGUI.BeginChangeCheck();
+                {
+                    _assetBundleIndex = EditorGUILayout.Popup(bundleToExportGUI, _assetBundleIndex, _assetBundleNames);
+                }
+                if(EditorGUI.EndChangeCheck())
+                {
+                    string selected = _assetBundleNames[_assetBundleIndex];
+
+                    // Remove display identifiers when setting ProjectBundle values
+                    selected = selected.TrimEnd(_missingBundleID);
+                    selected = selected.TrimEnd(_defaultBundleID);
+
+                    ProjectBundle.Value = selected;
+
+                    // Update to remove any unknown bundles
+                    UpdateAssetBundleList();
+                }
+            }
+            /* == Bundle dropdown == */
+
             ShouldExportBundleInfo.Value = EditorGUILayout.Toggle(new GUIContent("Export Bundle Info", "Whether to export the bundleinfo.json file."), ShouldExportBundleInfo.Value);
 
             if (ShouldExportBundleInfo.Value) {
