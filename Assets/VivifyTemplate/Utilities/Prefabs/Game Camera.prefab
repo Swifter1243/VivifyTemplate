@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f581b48b700243909e633b4a069a2d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_hotkey: 103
 --- !u!114 &-2625511633952711336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,5 +110,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2007e2b19a784ead9bf9325069ce9363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 47e7f4fcaf9ad004684404963e805770, type: 2}
+  bloomMaterial: {fileID: 2100000, guid: 47e7f4fcaf9ad004684404963e805770, type: 2}
   isSceneViewEnabled: 1
