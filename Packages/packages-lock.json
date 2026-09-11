@@ -1,5 +1,27 @@
 {
   "dependencies": {
+    "com.swifter.vivify-template.examples": {
+      "version": "file:VivifyTemplate Utilities",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.swifter.vivify-template.utilities": "1.0.0"
+      }
+    },
+    "com.swifter.vivify-template.exporter": {
+      "version": "file:VivifyTemplate Exporter",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.2"
+      }
+    },
+    "com.swifter.vivify-template.utilities": {
+      "version": "file:VivifyTemplate Examples",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "1.2.16",
       "depth": 0,
@@ -39,6 +61,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.subsystemregistration": {
       "version": "1.1.2",
       "depth": 0,
@@ -73,9 +102,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
