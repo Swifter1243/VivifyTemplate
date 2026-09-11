@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.swifter.vivify-template.examples": {
-      "version": "file:VivifyTemplate Utilities",
+      "version": "file:VivifyTemplate Examples",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
@@ -17,7 +17,7 @@
       }
     },
     "com.swifter.vivify-template.utilities": {
-      "version": "file:VivifyTemplate Examples",
+      "version": "file:VivifyTemplate Utilities",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

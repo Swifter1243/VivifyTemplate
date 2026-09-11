@@ -1,9 +1,12 @@
 {
-	"name": "com.swifter.vivify-template.utilities",
+	"name": "com.swifter.vivify-template.examples",
 	"version": "1.0.0",
-	"displayName": "VivifyTemplate Utilities",
-	"description": "Shader utilities and development tools for Vivify maps.",
+	"displayName": "VivifyTemplate Examples",
+	"description": "Example scenes and shaders for Vivify.",
 	"unity": "2019.4",
+	"dependencies": {
+		"com.swifter.vivify-template.utilities": "1.0.0"
+	},
 	"author": {
 		"name": "Swifter"
 	}
