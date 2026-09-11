@@ -3,7 +3,7 @@ using AssetsTools.NET.Extra;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderKeywordRewriter
+namespace VivifyTemplate.Exporter.Editor.ShaderKeywordRewriter
 {
     internal static class AssetsToolsExtensions
     {

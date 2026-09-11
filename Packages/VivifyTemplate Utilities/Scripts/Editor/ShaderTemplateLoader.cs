@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
-namespace VivifyTemplate.Utilities.Scripts.Editor
+namespace VivifyTemplate.Utilities.Editor
 {
     public static class ShaderTemplateLoader
     {

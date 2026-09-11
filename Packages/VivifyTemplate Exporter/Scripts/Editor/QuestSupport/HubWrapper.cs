@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
+namespace VivifyTemplate.Exporter.Editor.QuestSupport
 {
     public static class HubWrapper
     {

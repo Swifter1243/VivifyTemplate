@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
-using Logger = VivifyTemplate.Exporter.Scripts.Editor.Build.Logger;
-namespace VivifyTemplate.Exporter.Scripts.Editor.ShaderKeywordRewriter
+using VivifyTemplate.Exporter.Editor.Utility;
+using Logger = VivifyTemplate.Exporter.Editor.Build.Logger;
+namespace VivifyTemplate.Exporter.Editor.ShaderKeywordRewriter
 {
     public static class ShaderKeywordRewriter
     {

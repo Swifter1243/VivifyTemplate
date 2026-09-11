@@ -1,9 +1,9 @@
 ﻿using UnityEditor;
-using VivifyTemplate.Exporter.Scripts.Editor.Build;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Builder;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
-using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-namespace VivifyTemplate.Exporter.Scripts.Editor.UI
+using VivifyTemplate.Exporter.Editor.Build;
+using VivifyTemplate.Exporter.Editor.Build.Builder;
+using VivifyTemplate.Exporter.Editor.Build.Structures;
+using VivifyTemplate.Exporter.Editor.PlayerPrefs;
+namespace VivifyTemplate.Exporter.Editor.UI
 {
     public static class MenuBuildCommands
     {

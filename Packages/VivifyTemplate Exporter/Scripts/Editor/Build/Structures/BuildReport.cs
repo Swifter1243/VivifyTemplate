@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System;
 using UnityEditor;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Structures
+namespace VivifyTemplate.Exporter.Editor.Build.Structures
 {
     [Serializable]
     public struct BuildReport

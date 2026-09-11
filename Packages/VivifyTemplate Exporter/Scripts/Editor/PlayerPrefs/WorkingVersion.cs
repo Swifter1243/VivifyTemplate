@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEditor;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
+using VivifyTemplate.Exporter.Editor.Build.Structures;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
+namespace VivifyTemplate.Exporter.Editor.PlayerPrefs
 {
     public static class WorkingVersion
     {

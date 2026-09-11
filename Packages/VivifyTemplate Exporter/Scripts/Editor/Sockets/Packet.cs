@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
+namespace VivifyTemplate.Exporter.Editor.Sockets
 {
     public class Packet
     {

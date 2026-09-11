@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
-using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build
+using VivifyTemplate.Exporter.Editor.Build.Structures;
+using VivifyTemplate.Exporter.Editor.PlayerPrefs;
+namespace VivifyTemplate.Exporter.Editor.Build
 {
 	public static class BundleInfoProcessor
 	{

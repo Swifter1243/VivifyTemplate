@@ -3,9 +3,9 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
+using VivifyTemplate.Exporter.Editor.Utility;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport {
+namespace VivifyTemplate.Exporter.Editor.QuestSupport {
 	public class InstallPackagesPopup : EditorWindow {
 		private string _status = "";
 		private Color _statusColor = Color.white;

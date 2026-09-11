@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
+namespace VivifyTemplate.Exporter.Editor.Sockets
 {
     public static class HostSocket
     {

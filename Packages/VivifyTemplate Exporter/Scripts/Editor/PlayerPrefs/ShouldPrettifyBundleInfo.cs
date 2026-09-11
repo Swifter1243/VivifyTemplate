@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
+namespace VivifyTemplate.Exporter.Editor.PlayerPrefs
 {
     public static class ShouldPrettifyBundleInfo
     {

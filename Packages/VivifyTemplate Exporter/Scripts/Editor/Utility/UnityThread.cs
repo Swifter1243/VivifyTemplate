@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
+namespace VivifyTemplate.Exporter.Editor.Utility
 {
     [InitializeOnLoad]
     public class Startup {

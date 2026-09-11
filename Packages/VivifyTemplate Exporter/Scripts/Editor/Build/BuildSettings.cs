@@ -1,5 +1,5 @@
-﻿using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build
+﻿using VivifyTemplate.Exporter.Editor.Build.Structures;
+namespace VivifyTemplate.Exporter.Editor.Build
 {
     public struct BuildSettings
     {

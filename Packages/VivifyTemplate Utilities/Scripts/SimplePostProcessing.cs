@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace VivifyTemplate.Utilities.Scripts
+namespace VivifyTemplate.Utilities
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(Camera))]

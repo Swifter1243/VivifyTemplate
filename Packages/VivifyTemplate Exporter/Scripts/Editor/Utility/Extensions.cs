@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
+namespace VivifyTemplate.Exporter.Editor.Utility
 {
     public static class Extensions
     {

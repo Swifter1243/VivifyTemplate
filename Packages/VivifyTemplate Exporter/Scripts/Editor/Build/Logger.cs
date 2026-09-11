@@ -1,5 +1,5 @@
 ﻿using System;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build
+namespace VivifyTemplate.Exporter.Editor.Build
 {
     public class Logger
     {

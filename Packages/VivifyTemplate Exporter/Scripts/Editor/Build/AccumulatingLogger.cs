@@ -1,4 +1,4 @@
-﻿namespace VivifyTemplate.Exporter.Scripts.Editor.Build
+﻿namespace VivifyTemplate.Exporter.Editor.Build
 {
     public class AccumulatingLogger : Logger
     {

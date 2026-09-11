@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
+using VivifyTemplate.Exporter.Editor.Utility;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.Sockets
+namespace VivifyTemplate.Exporter.Editor.Sockets
 {
     public static class RemoteSocket
     {

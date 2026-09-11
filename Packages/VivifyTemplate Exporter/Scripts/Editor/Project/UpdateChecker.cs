@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Project
+namespace VivifyTemplate.Exporter.Editor.Project
 {
 	[InitializeOnLoad]
 	public static class UpdateChecker

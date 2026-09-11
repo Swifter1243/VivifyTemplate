@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
+namespace VivifyTemplate.Exporter.Editor.QuestSupport
 {
     public static class EditorWrapper
     {
@@ -53,7 +53,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 #elif UNITY_EDITOR_OSX
                     process.StartInfo.FileName = Path.Combine(editor, "Contents", "MacOS", "Unity");
 #endif
-                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.InstallPackages.Setup";
+                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Editor.QuestSupport.InstallPackages.Setup";
 
                     process.Start();
 
@@ -83,7 +83,7 @@ namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
 #elif UNITY_EDITOR_OSX
                     process.StartInfo.FileName = Path.Combine(editor, "Contents", "MacOS", "Unity");
 #endif
-                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Scripts.Editor.QuestSupport.BuildProject.Build";
+                    process.StartInfo.Arguments = $"-projectPath \"{project}\" -executeMethod VivifyTemplate.Exporter.Editor.QuestSupport.BuildProject.Build";
 
                     process.Start();
 

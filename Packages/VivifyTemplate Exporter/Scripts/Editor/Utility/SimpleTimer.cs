@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
+namespace VivifyTemplate.Exporter.Editor.Utility
 {
     public class SimpleTimer
     {

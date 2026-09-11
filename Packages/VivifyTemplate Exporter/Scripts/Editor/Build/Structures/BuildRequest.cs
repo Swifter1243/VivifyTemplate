@@ -1,5 +1,5 @@
-﻿using VivifyTemplate.Exporter.Scripts.Editor.Build.Builder;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Structures
+﻿using VivifyTemplate.Exporter.Editor.Build.Builder;
+namespace VivifyTemplate.Exporter.Editor.Build.Structures
 {
     public struct BuildRequest
     {

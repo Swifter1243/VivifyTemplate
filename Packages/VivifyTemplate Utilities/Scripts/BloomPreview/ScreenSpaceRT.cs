@@ -2,7 +2,7 @@
 using UnityEngine.Rendering;
 using UnityEngine.XR;
 
-namespace VivifyTemplate.Utilities.Scripts
+namespace VivifyTemplate.Utilities
 {
     public class ScreenSpaceRT
     {
@@ -181,4 +181,3 @@ namespace VivifyTemplate.Utilities.Scripts
         public static implicit operator RenderTargetIdentifier(ScreenSpaceRT ssrt) => ssrt._rtid;
     }
 }
-

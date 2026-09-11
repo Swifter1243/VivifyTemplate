@@ -1,7 +1,7 @@
 ﻿using AssetsTools.NET.Extra;
 using System.IO.Hashing;
 using System.Threading.Tasks;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
+namespace VivifyTemplate.Exporter.Editor.Utility
 {
     public static class CRCGrabber
     {

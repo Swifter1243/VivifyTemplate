@@ -1,5 +1,5 @@
-﻿using VivifyTemplate.Exporter.Scripts.Editor.UI;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build
+﻿using VivifyTemplate.Exporter.Editor.UI;
+namespace VivifyTemplate.Exporter.Editor.Build
 {
     public class BuildTask
     {

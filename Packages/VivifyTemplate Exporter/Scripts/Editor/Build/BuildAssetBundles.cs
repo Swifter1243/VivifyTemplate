@@ -5,14 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
-using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
-using VivifyTemplate.Exporter.Scripts.Editor.UI;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
+using VivifyTemplate.Exporter.Editor.Build.Structures;
+using VivifyTemplate.Exporter.Editor.PlayerPrefs;
+using VivifyTemplate.Exporter.Editor.QuestSupport;
+using VivifyTemplate.Exporter.Editor.UI;
+using VivifyTemplate.Exporter.Editor.Utility;
 using Debug = UnityEngine.Debug;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build
+namespace VivifyTemplate.Exporter.Editor.Build
 {
 	public static class BuildAssetBundles
 	{

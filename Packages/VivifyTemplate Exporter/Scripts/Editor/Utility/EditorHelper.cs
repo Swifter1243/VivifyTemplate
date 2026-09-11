@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using UnityEngine;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
+namespace VivifyTemplate.Exporter.Editor.Utility
 {
 	public static class EditorHelper
 	{

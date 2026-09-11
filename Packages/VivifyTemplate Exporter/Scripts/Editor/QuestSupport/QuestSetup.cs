@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using JetBrains.Annotations;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
+using VivifyTemplate.Exporter.Editor.Utility;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
+namespace VivifyTemplate.Exporter.Editor.QuestSupport
 {
     public class QuestSetup : EditorWindow
     {

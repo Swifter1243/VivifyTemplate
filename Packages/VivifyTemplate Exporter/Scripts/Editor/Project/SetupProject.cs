@@ -1,8 +1,8 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Project
+using VivifyTemplate.Exporter.Editor.PlayerPrefs;
+namespace VivifyTemplate.Exporter.Editor.Project
 {
 	public static class SetupProject
 	{

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor.Build;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Builder;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
-using VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs;
-using VivifyTemplate.Exporter.Scripts.Editor.Project;
-using VivifyTemplate.Exporter.Scripts.Editor.QuestSupport;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
-namespace VivifyTemplate.Exporter.Scripts.Editor.UI
+using VivifyTemplate.Exporter.Editor.Build;
+using VivifyTemplate.Exporter.Editor.Build.Builder;
+using VivifyTemplate.Exporter.Editor.Build.Structures;
+using VivifyTemplate.Exporter.Editor.PlayerPrefs;
+using VivifyTemplate.Exporter.Editor.Project;
+using VivifyTemplate.Exporter.Editor.QuestSupport;
+using VivifyTemplate.Exporter.Editor.Utility;
+namespace VivifyTemplate.Exporter.Editor.UI
 {
     public class BuildConfigurationWindow : EditorWindow
     {

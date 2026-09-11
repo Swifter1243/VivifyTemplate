@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace VivifyTemplate.Utilities.Scripts.Editor
+namespace VivifyTemplate.Utilities.Editor
 {
 	[CustomEditor(typeof(PrefabSaver))]
 	public class PrefabSaverEditor : UnityEditor.Editor

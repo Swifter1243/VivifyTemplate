@@ -1,4 +1,4 @@
-﻿namespace VivifyTemplate.Exporter.Scripts.Editor.PlayerPrefs
+﻿namespace VivifyTemplate.Exporter.Editor.PlayerPrefs
 {
 	public class ProjectIsInitialized
 	{

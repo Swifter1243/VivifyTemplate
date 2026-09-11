@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Utility
+namespace VivifyTemplate.Exporter.Editor.Utility
 {
     public static class IOHelper
     {

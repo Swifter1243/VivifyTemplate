@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace VivifyTemplate.Exporter.Scripts.Editor.Build.Structures
+namespace VivifyTemplate.Exporter.Editor.Build.Structures
 {
     [Serializable]
     public class BundleInfo

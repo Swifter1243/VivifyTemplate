@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-namespace VivifyTemplate.Exporter.Scripts.Editor.QuestSupport
+namespace VivifyTemplate.Exporter.Editor.QuestSupport
 {
     public static class Symlink
     {

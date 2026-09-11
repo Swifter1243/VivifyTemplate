@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using VivifyTemplate.Exporter.Scripts.Editor.Build;
-using VivifyTemplate.Exporter.Scripts.Editor.Build.Structures;
-using VivifyTemplate.Exporter.Scripts.Editor.Utility;
-namespace VivifyTemplate.Exporter.Scripts.Editor.UI
+using VivifyTemplate.Exporter.Editor.Build;
+using VivifyTemplate.Exporter.Editor.Build.Structures;
+using VivifyTemplate.Exporter.Editor.Utility;
+namespace VivifyTemplate.Exporter.Editor.UI
 {
     public class BuildProgressWindow : EditorWindow
     {
