@@ -3,7 +3,8 @@
 
 float3 palette( in float t, in float3 a, in float3 b, in float3 c, in float3 d )
 {
-    return a + b*cos( 6.28318*(c*t+d) );
+    const float tau = 6.28318530718;
+    return a + b*cos( tau*(c*t+d) );
 }
 
 float3 rainbow( in float t)
@@ -58,42 +59,14 @@ float3 HSVLerp(float3 col1, float3 col2, float t)
     return HSVtoRGB(lerp(col1, col2, t));
 }
 
-// Hue shift by transforming rgb to a chroma rotatable domain (YIQ), rotate chroma, then convert back to rgb
+// Hue shift by rotating the white-point inline with the Z-axis, rotating around Z, then reverting the orientation.
 // percent: 0 would be 0% hue shift, 1 would be 360 degree rotation
-float3 hueShift( float3 color, float percent) {
-    // https://en.wikipedia.org/wiki/YIQ#From_RGB_to_YIQ
-    const float3x3 rgb_to_yiq = float3x3(
-        0.2990,  0.5870,  0.1140,
-        0.5959, -0.2746, -0.3213,
-        0.2115, -0.5227,  0.3112
-    );
-    // https://en.wikipedia.org/wiki/YIQ#From_YIQ_to_RGB
-    const float3x3 yiq_to_rgb = float3x3(
-        1.0,  0.956,  0.619,
-        1.0, -0.272, -0.647,
-        1.0, -1.106,  1.703
-    );
-
-    // Scale the angle from 0-1 to 0-2pi
-    // which is the cycle length of sin and cos
-    const float tau = 6.28318530718;
-    float theta = percent * tau;
-
-    // Convert the colour to the yiq colour system
-    float3 yiq = mul(rgb_to_yiq, color);
-
-    // Rotate around the x axis (IQ plane)
-    // This rotates the chrominance plane / hue shifts
-    float s = sin(theta), c = cos(theta);
-    float3x3 rotor = float3x3(
-        1, 0,  0,
-        0, c, -s,
-        0, s,  c
-    );
-    float3 yiq_new = mul(rotor, yiq);
-
-    // Convert back to RGB
-    return mul(yiq_to_rgb, yiq_new);
+float3 hueShift(float3 color, float percent)
+{
+    const float PI = 3.14159265359;
+    const float3 OFFSETS = PI * float3(0.0/3.0, 2.0/3.0, 4.0/3.0);
+    float3 ct = (1.0/3.0) + (2.0/3.0) * cos(percent * (2*PI) + OFFSETS);
+    return (color.rgb * ct.x) + (color.gbr * ct.y) + (color.brg * ct.z);
 }
 
 #endif //VIVIFY_COLOR_FUNCTIONS_INCLUDED
