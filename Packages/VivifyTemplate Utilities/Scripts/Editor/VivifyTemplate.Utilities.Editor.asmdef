@@ -1,0 +1,17 @@
+{
+    "name": "VivifyTemplate.Utilities.Editor",
+    "references": [
+        "GUID:d6e6458ab03b6af43b920d0a774db1c3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

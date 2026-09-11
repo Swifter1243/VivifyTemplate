@@ -9,7 +9,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace VivifyTemplate.Utilities
+namespace VivifyTemplate.Utilities.Runtime
 {
 	[ExecuteInEditMode]
 	public class PrefabSaver : MonoBehaviour

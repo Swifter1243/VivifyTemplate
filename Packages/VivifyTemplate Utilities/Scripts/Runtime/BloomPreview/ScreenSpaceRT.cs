@@ -2,7 +2,7 @@
 using UnityEngine.Rendering;
 using UnityEngine.XR;
 
-namespace VivifyTemplate.Utilities
+namespace VivifyTemplate.Utilities.Runtime
 {
     public class ScreenSpaceRT
     {
@@ -10,7 +10,7 @@ namespace VivifyTemplate.Utilities
         {
             // Your normal framebuffer
             DesktopScreen,
-            
+
             // Framebuffer twice as wide, left half is left eye, right half is right eye
             VRDoubleWide,
 

@@ -6,7 +6,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-namespace .Editor
+namespace VivifyTemplate.Utilities.Runtime
 {
 	[ExecuteInEditMode]
 	public class QuickOrient : MonoBehaviour

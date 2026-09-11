@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace VivifyTemplate.Utilities
+namespace VivifyTemplate.Utilities.Runtime
 {
     using FrameBufferType = ScreenSpaceRT.ScreenType;
 

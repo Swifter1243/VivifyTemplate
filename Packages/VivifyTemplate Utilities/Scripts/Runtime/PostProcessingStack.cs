@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 using UnityEditor;
 #endif
 
-namespace VivifyTemplate.Utilities
+namespace VivifyTemplate.Utilities.Runtime
 {
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
