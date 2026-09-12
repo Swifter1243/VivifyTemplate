@@ -30,7 +30,7 @@ namespace VivifyTemplate.Exporter.Editor.UI
         private void OnEnable()
         {
             // there has to be better way to do this lol
-            _tbsLogo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/VivifyTemplate/Exporter/Textures/TBS_trans.png");
+            _tbsLogo = AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.swifter.vivify-template.exporter/Textures/TBS_trans.png");
 
             UpdateAssetBundleList();
         }

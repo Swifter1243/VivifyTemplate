@@ -15,7 +15,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
+            #include "Packages/com.swifter.vivify-template.utilities/Shader Functions/Functions.cginc"
 
             struct appdata
             {

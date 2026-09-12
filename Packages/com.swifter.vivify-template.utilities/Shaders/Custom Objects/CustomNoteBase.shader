@@ -34,7 +34,7 @@ Shader "Vivify/CustomObjects/CustomNote"
             #pragma shader_feature DEBRIS
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
+            #include "Packages/com.swifter.vivify-template.utilities/Shader Functions/Functions.cginc"
 
             struct appdata
             {

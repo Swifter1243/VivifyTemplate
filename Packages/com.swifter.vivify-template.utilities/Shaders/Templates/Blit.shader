@@ -17,10 +17,7 @@
             #include "UnityCG.cginc"
 
             // VivifyTemplate Libraries
-            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
-            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Colors.cginc"
-            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
-            // #include "Assets/VivifyTemplate/Utilities/Shader Functions/Easings.cginc"
+            // #include "Packages/com.swifter.vivify-template.utilities/Shader Functions/Functions.cginc"
 
             struct appdata
             {

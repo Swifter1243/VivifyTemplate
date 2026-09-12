@@ -8,7 +8,7 @@ namespace VivifyTemplate.Utilities.Editor
 {
     public static class ShaderTemplateLoader
     {
-        private readonly static string TemplateDirectory = "Assets/VivifyTemplate/Utilities/Shaders/Templates";
+        private const string TemplateDirectory = "Packages/com.swifter.vivify-template.utilities/Shaders/Templates";
 
         [MenuItem("Assets/Create/Shader/Vivify/Standard", false, 69)]
         private static void CreateStandardShader()

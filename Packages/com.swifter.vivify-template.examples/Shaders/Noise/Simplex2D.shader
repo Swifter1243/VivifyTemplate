@@ -15,8 +15,7 @@ Shader "Vivify/Noise/Simplex2D"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
-            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Noise.cginc"
+            #include "Packages/com.swifter.vivify-template.utilities/Shader Functions/Functions.cginc"
 
             struct appdata
             {

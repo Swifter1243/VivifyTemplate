@@ -20,7 +20,7 @@ Shader "Vivify/Depth/DepthPosition"
             #pragma multi_compile_instancing
 
             #include "UnityCG.cginc"
-            #include "Assets/VivifyTemplate/Utilities/Shader Functions/Math.cginc"
+            #include "Packages/com.swifter.vivify-template.utilities/Shader Functions/Functions.cginc"
 
             struct appdata
             {

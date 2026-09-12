@@ -1,3 +1,6 @@
+#ifndef VIVIFY_NOISE_FUNCTIONS_INCLUDED
+#define VIVIFY_NOISE_FUNCTIONS_INCLUDED
+
 // https://www.shadertoy.com/view/4djSRW
 float hashwithoutsine11(float p)
 {
@@ -187,3 +190,5 @@ float noise1d( float x )
     // quartic polynomial
     return s*f*(f-1.0)*((16.0*k-4.0)*f*(f-1.0)-1.0);
 }
+
+#endif // VIVIFY_NOISE_FUNCTIONS_INCLUDED

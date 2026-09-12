@@ -80,7 +80,7 @@ To understand how to implement asset bundles into a map, please read the [Vivify
 
 # Examples Module
 
-If you installed the "Examples" package, navigate to `Assets/VivifyTemplate/Examples/Scenes`. Here you'll find a bunch of scenes that explore various concepts.
+If you installed the "Examples" package, navigate to `Packages > VivifyTemplate Examples > Scenes`. Here you'll find a bunch of scenes that explore various concepts.
 
 - **Custom Objects**: How to make custom notes, bombs, chains, and sabers.
 - **Depth**: How to read and use the depth texture.
@@ -94,15 +94,15 @@ If you installed the "Examples" package, navigate to `Assets/VivifyTemplate/Exam
 - **Vectors**: How to obtain useful vector information. (world normals, view vector, camera forward)
 - **Vertex**: How to manipulate vertices in a vertex shader.
 
-When looking at example objects, their names in the hierarchy will tell you what they are doing. Be sure to explore their shaders (`Assets/VivifyTemplate/Examples/Shaders`), as they include in-code comments providing explanations.
+When looking at example objects, their names in the hierarchy will tell you what they are doing. Be sure to explore their shaders under `Packages > VivifyTemplate Examples > Shaders`, as they include in-code comments providing explanations.
 
 # Utilities Module
 
-If you installed the "Utilities" package, a few tools will be provided from the `Assets/VivifyTemplate/Utilities` folder.
+If you installed the "Utilities" package, its tools are available under `Packages > VivifyTemplate Utilities` in the Unity Project window.
 - **Shader Templates**: In the project view, right click. Go to `Create -> Shader -> Vivify` and you'll see a bunch of examples you can use to create Beat Saber ready shaders!
-- **Shader Functions**: In the `Assets/VivifyTemplate/Utilities/Shader Functions` folder, you'll see a bunch of shader functions you can use for your own shaders. Import them with `#include <path here>`.
-- **Custom Object Bases**: In the `Assets/VivifyTemplate/Utilities/Prefabs/Custom Objects` folder, you'll find a bunch of prefabs you can use as a base for custom notes/sabers. Read the provided `HOWTOUSE.txt` file.
-- **Post Processing Preview**: Drag the `Assets/VivifyTemplate/Utilities/Scripts/SimplePostProcessing.cs` file onto any Camera and provide it with a post-processing shader to view it in the Game window.
+- **Shader Functions**: Browse them under `Packages > VivifyTemplate Utilities > Shader Functions`. Include them with `#include "Packages/com.swifter.vivify-template.utilities/Shader Functions/Functions.cginc"`.
+- **Custom Object Bases**: Under `Packages > VivifyTemplate Utilities > Prefabs > Custom Objects`, you'll find prefabs you can use as a base for custom notes and sabers. Read the provided `HOWTOUSE.txt` file.
+- **Post Processing Preview**: Drag `Packages > VivifyTemplate Utilities > Scripts > Runtime > SimplePostProcessing` onto any Camera and provide it with a post-processing shader to view it in the Game window.
 
 # Extra
 
