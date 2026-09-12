@@ -42,11 +42,15 @@ namespace VivifyTemplate.Utilities.Runtime
 			try
 			{
 				// Remove C# scripts
-				var components = temp.GetComponents<Component>().ToList();
+				var components = temp.GetComponentsInChildren<Component>().ToList();
 				foreach (var comp in components)
 				{
 					if (comp == null) continue; // Missing script
 					var type = comp.GetType();
+
+					if (comp is IPrefabSaveProcessor prefabSaveProcessor)
+						prefabSaveProcessor.OnPrefabSaved(temp, prefabPath);
+
 					if (comp is MonoBehaviour && !type.Namespace?.StartsWith("UnityEngine") == true)
 						DestroyImmediate(comp);
 				}

@@ -1,3 +1,11 @@
 ﻿{
-	"name": "VivifyTemplate.Utilities.Runtime"
+	"name": "VivifyTemplate.Utilities.Runtime",
+	"excludePlatforms": [],
+	"allowUnsafeCode": false,
+	"overrideReferences": false,
+	"precompiledReferences": [],
+	"autoReferenced": true,
+	"defineConstraints": [],
+	"versionDefines": [],
+	"noEngineReferences": false
 }
