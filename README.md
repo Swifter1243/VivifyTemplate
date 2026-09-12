@@ -14,7 +14,8 @@ VivifyTemplate is a tool designed for the Unity side development of [Vivify](htt
 
 ### Updating Modules
 
-If you are trying to update any modules in your project, please delete the old ones before installation to prevent namespace conflicts with potentially remaining files.
+> [!WARNING]
+> If you are trying to update any modules in your project, please delete the old ones from `Window > Package Manager` to make sure conflicts don't arise. Then, it's safe to re-install the newer package you downloaded.
 
 # Exporter Module
 
