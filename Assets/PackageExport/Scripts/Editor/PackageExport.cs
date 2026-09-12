@@ -7,6 +7,9 @@ namespace PackageExport.Scripts.Editor
     public static class PackageExport
     {
         private const string OUTPUT_PATH = "Assets/PackageExport/Output";
+        private const string EXPORTER_PATH = "Packages/com.swifter.vivify-template.exporter";
+        private const string EXAMPLES_PATH = "Packages/com.swifter.vivify-template.examples";
+        private const string UTILITIES_PATH = "Packages/com.swifter.vivify-template.utilities";
 
         private static void ExportPackage(string[] assetPaths, string packageName)
         {
@@ -25,6 +28,7 @@ namespace PackageExport.Scripts.Editor
         [MenuItem("Package Export/Run")]
         public static void Run()
         {
+            Directory.CreateDirectory(OUTPUT_PATH);
             ExportAll();
             ExportExporter();
             ExportExamples();
@@ -35,7 +39,9 @@ namespace PackageExport.Scripts.Editor
         private static void ExportAll()
         {
             string[] assetPaths = {
-                "Assets/VivifyTemplate"
+                EXPORTER_PATH,
+                EXAMPLES_PATH,
+                UTILITIES_PATH,
             };
             ExportPackage(assetPaths, "VivifyTemplate-All");
         }
@@ -43,7 +49,7 @@ namespace PackageExport.Scripts.Editor
         private static void ExportExporter()
         {
             string[] assetPaths = {
-                "Assets/VivifyTemplate/Exporter",
+                EXPORTER_PATH,
             };
             ExportPackage(assetPaths, "VivifyTemplate-Exporter");
         }
@@ -51,8 +57,8 @@ namespace PackageExport.Scripts.Editor
         private static void ExportExamples()
         {
             string[] assetPaths = {
-                "Assets/VivifyTemplate/Examples",
-                "Assets/VivifyTemplate/Utilities",
+                EXAMPLES_PATH,
+                UTILITIES_PATH,
             };
             ExportPackage(assetPaths, "VivifyTemplate-Examples");
         }
@@ -60,7 +66,7 @@ namespace PackageExport.Scripts.Editor
         private static void ExportUtilities()
         {
             string[] assetPaths = {
-                "Assets/VivifyTemplate/Utilities",
+                UTILITIES_PATH,
             };
             ExportPackage(assetPaths, "VivifyTemplate-Utilities");
         }
