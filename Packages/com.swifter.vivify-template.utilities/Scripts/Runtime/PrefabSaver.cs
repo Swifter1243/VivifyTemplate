@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +13,7 @@ namespace VivifyTemplate.Utilities.Runtime
 	[ExecuteInEditMode]
 	public class PrefabSaver : MonoBehaviour
 	{
-		public string m_destinationFolder;
+		public GameObject m_destinationPrefab;
 		public bool m_onSceneSave = true;
 		public bool m_logResult = true;
 
@@ -23,6 +22,7 @@ namespace VivifyTemplate.Utilities.Runtime
 		{
 			EditorSceneManager.sceneSaved += SaveOnSceneSave;
 		}
+
 		private void OnDisable()
 		{
 			EditorSceneManager.sceneSaved -= SaveOnSceneSave;
@@ -30,45 +30,57 @@ namespace VivifyTemplate.Utilities.Runtime
 
 		private void SaveOnSceneSave(Scene _)
 		{
-			if (m_onSceneSave)
+			if (m_onSceneSave && m_destinationPrefab != null)
 				SaveToPrefab();
 		}
+
 		public void SaveToPrefab()
 		{
-			string prefabName = name;
-			string prefabPath = Path.Combine(m_destinationFolder, $"{prefabName}.prefab");
-
-			if (!AssetDatabase.IsValidFolder(m_destinationFolder))
-			{
-				throw new Exception("Destination folder does not exist.");
-			}
-
-			// Remove C# scripts
+			string prefabPath = GetDestinationPrefabPath();
 			GameObject temp = Instantiate(gameObject);
-			var components = temp.GetComponents<Component>().ToList();
-			foreach (var comp in components)
+
+			try
 			{
-				if (comp == null) continue; // Missing script
-				var type = comp.GetType();
-				if (comp is MonoBehaviour && !type.Namespace?.StartsWith("UnityEngine") == true)
+				// Remove C# scripts
+				var components = temp.GetComponents<Component>().ToList();
+				foreach (var comp in components)
 				{
-					DestroyImmediate(comp);
+					if (comp == null) continue; // Missing script
+					var type = comp.GetType();
+					if (comp is MonoBehaviour && !type.Namespace?.StartsWith("UnityEngine") == true)
+						DestroyImmediate(comp);
 				}
-			}
 
-			// Enable animator (bc the animation window likes to turn it off in preview)
-			if (temp.TryGetComponent(out Animator animator))
+				// Enable animator (bc the animation window likes to turn it off in preview)
+				if (temp.TryGetComponent(out Animator animator))
+					animator.enabled = true;
+
+				if (PrefabUtility.SaveAsPrefabAsset(temp, prefabPath) == null)
+					throw new InvalidOperationException($"Failed to save prefab at '{prefabPath}'.");
+			}
+			finally
 			{
-				animator.enabled = true;
+				DestroyImmediate(temp);
 			}
-
-			PrefabUtility.SaveAsPrefabAsset(temp, prefabPath);
-			AssetDatabase.Refresh();
-
-			DestroyImmediate(temp);
 
 			if (m_logResult)
-				Debug.Log($"Prefab '{prefabName}' overwritten successfully.");
+				Debug.Log($"Prefab '{prefabPath}' overwritten successfully.");
+		}
+
+		private string GetDestinationPrefabPath()
+		{
+			if (m_destinationPrefab == null)
+				throw new InvalidOperationException("Destination prefab is not assigned.");
+
+			string prefabPath = AssetDatabase.GetAssetPath(m_destinationPrefab);
+			if (!prefabPath.StartsWith("Assets/", StringComparison.Ordinal) ||
+			    !prefabPath.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase) ||
+			    PrefabUtility.GetPrefabAssetType(m_destinationPrefab) == PrefabAssetType.NotAPrefab)
+			{
+				throw new InvalidOperationException("Destination must be a prefab asset under Assets.");
+			}
+
+			return prefabPath;
 		}
 		#endif
 	}
