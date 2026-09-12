@@ -19,7 +19,8 @@ VivifyTemplate is a tool designed for the Unity side development of [Vivify](htt
 
 # Exporter Module
 
-### IMPORTANT: In your project, you should see a "Vivify" tab. Setup your project with `Vivify > Setup Project`.
+> [!IMPORTANT]
+> In your project, you should see a "Vivify" tab. Setup your project with `Vivify > Setup Project`.
 
 The exporter handles exporting bundles for various versions of Unity and Beat Saber.
 - **Windows 2019**: PC Beat Saber 1.29.1, uses `Single Pass`.
@@ -65,11 +66,13 @@ It also exports a `bundleinfo.json` file which contains the correct bundle check
 
 ---
 
-## Before using the exporter, **make sure the assets you want are in your bundle**!
-
-When an asset is selected in the Project View (not the scene's hierarchy!), there's a dropdown field in the bottom of the Inspector which will allow you to attach the asset to an asset bundle.
+> [!IMPORTANT]
+> Before using the exporter, **make sure the assets you want are in your bundle**!
+> 
+> When an asset is selected in the Project View (not the scene's hierarchy!), there's a dropdown field in the bottom of the Inspector which will allow you to attach the asset to an asset bundle. 
 
 ![image](https://github.com/user-attachments/assets/6f1b945f-d38f-4f8b-ba42-d546adf12dcb)
+
 
 To use the exporter, open the build configuration window `Vivify > Build > Build Configuration Window`.
 - **Uncompressed**: Advised for quick iteration. Do not distribute.
