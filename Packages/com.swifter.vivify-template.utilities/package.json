@@ -1,6 +1,6 @@
 {
 	"name": "com.swifter.vivify-template.utilities",
-	"version": "1.0.0",
+	"version": "1.2.2",
 	"displayName": "VivifyTemplate Utilities",
 	"description": "Shader utilities and development tools for Vivify maps.",
 	"unity": "2019.4",
