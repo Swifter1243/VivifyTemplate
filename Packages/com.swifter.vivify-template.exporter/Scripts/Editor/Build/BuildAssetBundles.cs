@@ -17,6 +17,7 @@ namespace VivifyTemplate.Exporter.Editor.Build
 	public static class BuildAssetBundles
 	{
 		private static readonly SimpleTimer Timer = new SimpleTimer();
+		public static event Action<CompoundBuildTask> onCompoundBuildStarted;
 
 		private static Task<uint> FixShaderKeywords(string bundlePath, string targetPath, Logger logger, bool compress)
 		{
@@ -198,11 +199,7 @@ namespace VivifyTemplate.Exporter.Editor.Build
 		public static async void BuildSingleRequestUncompressed(BuildRequest request)
 		{
 			EnsureQuestProjectReady(request);
-			Timer.Reset();
-			AccumulatingLogger mainLogger = new AccumulatingLogger();
-			AccumulatingLogger shaderKeywordsLogger = null;
 			BuildSettings buildSettings;
-
 			try
 			{
 				buildSettings = BuildSettings.Snapshot();
@@ -211,6 +208,13 @@ namespace VivifyTemplate.Exporter.Editor.Build
 			{
 				return;
 			}
+
+			Timer.Reset();
+			AccumulatingLogger mainLogger = new AccumulatingLogger();
+			AccumulatingLogger shaderKeywordsLogger = null;
+
+			CompoundBuildTask compoundBuildTask = new CompoundBuildTask(buildSettings);
+			onCompoundBuildStarted?.Invoke(compoundBuildTask);
 
 			Debug.Log($"Building '{buildSettings.ProjectBundle}' for '{request.BuildVersion}' uncompressed to '{buildSettings.OutputDirectory}'...");
 
@@ -247,6 +251,8 @@ namespace VivifyTemplate.Exporter.Editor.Build
 			{
 				Debug.Log($"--- ShaderKeywordsRewriter Output --- \n{shaderKeywordsLogger.GetOutput()}");
 			}
+
+			compoundBuildTask.MarkComplete();
 		}
 
 		private static void EnsureQuestProjectReady(List<BuildRequest> buildRequests)
@@ -265,18 +271,19 @@ namespace VivifyTemplate.Exporter.Editor.Build
 		public static async void BuildAllRequests(List<BuildRequest> buildRequests, BuildAssetBundleOptions buildOptions)
 		{
 			EnsureQuestProjectReady(buildRequests);
-			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
 			BuildSettings buildSettings;
-
 			try
 			{
 				buildSettings = BuildSettings.Snapshot();
 			}
 			catch
 			{
-				buildProgressWindow.Close();
 				return;
 			}
+
+			BuildProgressWindow buildProgressWindow = BuildProgressWindow.CreatePopup();
+			CompoundBuildTask compoundBuildTask = new CompoundBuildTask(buildSettings);
+			onCompoundBuildStarted?.Invoke(compoundBuildTask);
 
 			IEnumerable<Task<BuildReport?>> buildTasks = buildRequests.Select(async request =>
 			{
@@ -305,6 +312,7 @@ namespace VivifyTemplate.Exporter.Editor.Build
 				ExportBundleInfo(buildOptions, builds.OfType<BuildReport>(), buildProgressWindow, buildSettings);
 			}
 
+			compoundBuildTask.MarkComplete();
 			buildProgressWindow.FinishBuild(buildSettings);
 		}
 
