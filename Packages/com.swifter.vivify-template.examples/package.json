@@ -1,11 +1,11 @@
 {
 	"name": "com.swifter.vivify-template.examples",
-	"version": "1.2.2",
+	"version": "1.0.0-preview.1",
 	"displayName": "VivifyTemplate Examples",
 	"description": "Example scenes and shaders for Vivify.",
 	"unity": "2019.4",
 	"dependencies": {
-		"com.swifter.vivify-template.utilities": "1.2.2"
+		"com.swifter.vivify-template.utilities": "1.0.0-preview.1"
 	},
 	"author": {
 		"name": "Swifter"

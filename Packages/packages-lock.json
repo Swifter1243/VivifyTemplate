@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.swifter.vivify-template.utilities": "1.2.2"
+        "com.swifter.vivify-template.utilities": "1.0.0-preview.1"
       }
     },
     "com.swifter.vivify-template.exporter": {
