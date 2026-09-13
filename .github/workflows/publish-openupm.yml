@@ -1,16 +1,15 @@
-name: Publish changed packages to OpenUPM
+name: Publish or retry packages to OpenUPM
 
 on:
   push:
     branches:
-      - upm-packages
       - master
     paths:
       - Packages/*/package.json
   workflow_dispatch:
     inputs:
       package:
-        description: Package to retry
+        description: Existing package to rescan
         required: true
         default: all
         type: choice
@@ -20,7 +19,7 @@ on:
           - com.swifter.vivify-template.exporter
           - com.swifter.vivify-template.utilities
       version:
-        description: Existing version to retry (blank uses package.json)
+        description: Existing version to rescan (blank uses package.json)
         required: false
         type: string
 
@@ -83,6 +82,7 @@ jobs:
             )
           fi
 
+          git fetch --force --tags origin
           packages='[]'
 
           for manifest in "${manifests[@]}"; do
@@ -111,6 +111,19 @@ jobs:
             fi
 
             package_tag="$package_name/$package_version"
+
+            if [[ "$EVENT_NAME" != workflow_dispatch ]] && \
+               git show-ref --tags --verify --quiet "refs/tags/$package_tag"; then
+              if git diff --quiet "refs/tags/$package_tag" "$GITHUB_SHA" -- "Packages/$package_name"; then
+                echo "$package_tag already contains the current package contents; skipping it."
+                continue
+              fi
+
+              echo "Package '$package_name' changed, but tag '$package_tag' already exists with different contents." >&2
+              echo "Bump the package version before publishing these changes." >&2
+              exit 1
+            fi
+
             packages="$(
               jq -c \
                 --arg package "$package_name" \
@@ -194,6 +207,25 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.release.outputs.packages) }}
     steps:
+      - name: Check out repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify the tag contains the OpenUPM worker
+        shell: bash
+        env:
+          PACKAGE_TAG: ${{ matrix.tag }}
+        run: |
+          set -euo pipefail
+
+          git fetch --tags origin
+          if ! git cat-file -e "$PACKAGE_TAG:.github/workflows/publish-openupm-tag.yml" 2>/dev/null; then
+            echo "Tag '$PACKAGE_TAG' predates the OpenUPM worker workflow." >&2
+            echo "GitHub cannot start a tag-scoped workflow from this tag. Use a package version whose tag was created after the worker workflow was added." >&2
+            exit 1
+          fi
+
       - name: Start the tag-scoped publication workflow
         id: dispatch
         shell: bash
@@ -209,7 +241,7 @@ jobs:
               --arg ref "$PACKAGE_TAG" \
               --arg package "$PACKAGE_NAME" \
               --arg tag "$PACKAGE_TAG" \
-              '{ref: $ref, inputs: {package: $package, tag: $tag}}'
+              '{ref: $ref, inputs: {package: $package, tag: $tag}, return_run_details: true}'
           )"
 
           response="$(

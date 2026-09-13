@@ -1,4 +1,4 @@
-name: Publish tagged package to OpenUPM
+name: OpenUPM package worker (automatic)
 
 on:
   push:
@@ -10,11 +10,11 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: Unity package name
+        description: Internal package name (use the publish/retry workflow instead)
         required: true
         type: string
       tag:
-        description: Existing package tag
+        description: Internal package tag (use the publish/retry workflow instead)
         required: true
         type: string
 
@@ -54,7 +54,8 @@ jobs:
           package_version="${package_tag#*/}"
 
           if [[ "$GITHUB_REF_TYPE" != tag ]]; then
-            echo "This workflow must run with a package tag as its ref." >&2
+            echo "This worker must run with a package tag as its ref." >&2
+            echo "Do not run it from this page with the master branch selected. Run 'Publish or retry packages to OpenUPM' instead." >&2
             exit 1
           fi
 
