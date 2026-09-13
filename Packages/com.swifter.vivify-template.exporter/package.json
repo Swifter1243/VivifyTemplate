@@ -1,6 +1,6 @@
 {
 	"name": "com.swifter.vivify-template.exporter",
-	"version": "1.0.0-preview.1",
+	"version": "1.0.0-preview.2",
 	"displayName": "VivifyTemplate Exporter",
 	"description": "AssetBundle exporter for Vivify maps.",
 	"license": "MIT",
