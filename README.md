@@ -9,13 +9,20 @@ VivifyTemplate is a tool designed for the Unity side development of [Vivify](htt
 # Setup
 
 1. Create and open a Unity project for version **2019.4.28f1**. The download will be somewhere on [this page](https://unity.com/releases/editor/archive).
-2. Download whatever VivifyTemplate modules you want from the [latest release](https://github.com/Swifter1243/VivifyTemplate/releases).
-3. Install them by double-clicking them. Follow the import instructions in your editor.
+2. Setup OpenUPM by going to `Edit > Project Settings > Package Manager` and adding the following scoped registry:
+```
+name: OpenUPM
+url: https://package.openupm.com
+scope: com.swifter
+```
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/642c2f87-6059-4795-be70-e5398c17fd87" />
+
+3. Go to `Windows > Package Manager` and select `My Registries` from the top left dropdown.
+4. Install the packages you want!
 
 ### Updating Modules
 
-> [!WARNING]
-> If you are trying to update any modules in your project, please delete the old ones from `Window > Package Manager` to make sure conflicts don't arise. Then, it's safe to re-install the newer package you downloaded.
+Refresh your packages (bottom left of Packages window) and download any new versions.
 
 # Exporter Module
 
