@@ -12,12 +12,12 @@ VivifyTemplate is a tool designed for the Unity side development of [Vivify](htt
 2. Setup OpenUPM by going to `Edit > Project Settings > Package Manager` and adding the following scoped registry:
 ```
 name: OpenUPM
-url: https://package.openupm.com
+URL: https://package.openupm.com
 scope: com.swifter
 ```
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/642c2f87-6059-4795-be70-e5398c17fd87" />
 
-3. Go to `Windows > Package Manager` and select `My Registries` from the top left dropdown.
+3. Go to `Window > Package Manager` and select `My Registries` from the top left dropdown.
 4. Install the packages you want!
 
 ### Updating Modules
