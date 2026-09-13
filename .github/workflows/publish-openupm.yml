@@ -7,6 +7,22 @@ on:
       - master
     paths:
       - Packages/*/package.json
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package to retry
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - com.swifter.vivify-template.examples
+          - com.swifter.vivify-template.exporter
+          - com.swifter.vivify-template.utilities
+      version:
+        description: Existing version to retry (blank uses package.json)
+        required: false
+        type: string
 
 concurrency:
   group: openupm-release
@@ -32,10 +48,30 @@ jobs:
         shell: bash
         env:
           BEFORE_SHA: ${{ github.event.before }}
+          EVENT_NAME: ${{ github.event_name }}
+          RETRY_PACKAGE: ${{ inputs.package }}
+          RETRY_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
 
-          if [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
+          if [[ "$EVENT_NAME" == workflow_dispatch ]]; then
+            case "$RETRY_PACKAGE" in
+              all)
+                manifests=(
+                  Packages/com.swifter.vivify-template.examples/package.json
+                  Packages/com.swifter.vivify-template.exporter/package.json
+                  Packages/com.swifter.vivify-template.utilities/package.json
+                )
+                ;;
+              com.swifter.vivify-template.examples|com.swifter.vivify-template.exporter|com.swifter.vivify-template.utilities)
+                manifests=("Packages/$RETRY_PACKAGE/package.json")
+                ;;
+              *)
+                echo "Unknown package selection '$RETRY_PACKAGE'." >&2
+                exit 1
+                ;;
+            esac
+          elif [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
             mapfile -t manifests < <(
               git diff-tree --root --no-commit-id --name-only -r "$GITHUB_SHA" -- \
                 'Packages/*/package.json' | sort -u
@@ -54,6 +90,9 @@ jobs:
 
             package_name="$(jq -er '.name | select(type == "string" and length > 0)' "$manifest")"
             package_version="$(jq -er '.version | select(type == "string" and length > 0)' "$manifest")"
+            if [[ "$EVENT_NAME" == workflow_dispatch && -n "$RETRY_VERSION" ]]; then
+              package_version="$RETRY_VERSION"
+            fi
 
             if [[ ! "$package_name" =~ ^[a-z0-9]+([._-][a-z0-9]+)*(\.[a-z0-9]+([._-][a-z0-9]+)*){2,}$ ]]; then
               echo "Invalid Unity package name '$package_name' in $manifest" >&2
@@ -97,6 +136,7 @@ jobs:
         shell: bash
         env:
           PACKAGES: ${{ steps.packages.outputs.packages }}
+          RETRY_EXISTING: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           set -euo pipefail
 
@@ -112,6 +152,11 @@ jobs:
             package_tag="$(jq -r '.tag' <<< "$package")"
 
             if git show-ref --tags --verify --quiet "refs/tags/$package_tag"; then
+              if [[ "$RETRY_EXISTING" == true ]]; then
+                echo "Retrying existing tag '$package_tag'."
+                continue
+              fi
+
               tagged_commit="$(git rev-list -n 1 "refs/tags/$package_tag")"
               if [[ "$tagged_commit" != "$GITHUB_SHA" ]]; then
                 echo "Tag '$package_tag' already points to $tagged_commit. Bump $package_name from version $package_version before publishing another commit." >&2
@@ -120,6 +165,11 @@ jobs:
 
               echo "Tag '$package_tag' already points to this commit; keeping it."
               continue
+            fi
+
+            if [[ "$RETRY_EXISTING" == true ]]; then
+              echo "Cannot retry '$package_tag' because that tag does not exist." >&2
+              exit 1
             fi
 
             git tag --annotate "$package_tag" "$GITHUB_SHA" \
@@ -132,40 +182,70 @@ jobs:
           fi
 
   publish:
-    name: Publish ${{ matrix.package }} ${{ matrix.version }}
+    name: Confirm ${{ matrix.package }} ${{ matrix.version }}
     needs: release
     if: needs.release.outputs.count != '0'
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 55
     permissions:
-      contents: read
-      id-token: write
+      actions: write
     strategy:
       fail-fast: false
       matrix:
         include: ${{ fromJSON(needs.release.outputs.packages) }}
     steps:
-      - name: Trigger OpenUPM and wait for registry publication
-        id: openupm
-        uses: openupm/openupm-action@v1
-        with:
-          package: ${{ matrix.package }}
-          tag: ${{ matrix.tag }}
-          timeout-minutes: 45
+      - name: Start the tag-scoped publication workflow
+        id: dispatch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE_NAME: ${{ matrix.package }}
+          PACKAGE_TAG: ${{ matrix.tag }}
+        run: |
+          set -euo pipefail
+
+          payload="$(
+            jq -n \
+              --arg ref "$PACKAGE_TAG" \
+              --arg package "$PACKAGE_NAME" \
+              --arg tag "$PACKAGE_TAG" \
+              '{ref: $ref, inputs: {package: $package, tag: $tag}}'
+          )"
+
+          response="$(
+            gh api --method POST \
+              --header 'Accept: application/vnd.github+json' \
+              --header 'X-GitHub-Api-Version: 2026-03-10' \
+              "repos/$GITHUB_REPOSITORY/actions/workflows/publish-openupm-tag.yml/dispatches" \
+              --input - <<< "$payload"
+          )"
+
+          run_id="$(jq -er '.workflow_run_id' <<< "$response")"
+          printf 'run-id=%s\n' "$run_id" >> "$GITHUB_OUTPUT"
+          echo "Started tag-scoped workflow run $run_id for $PACKAGE_TAG."
+
+      - name: Wait for OpenUPM publication confirmation
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.dispatch.outputs.run-id }}
+        run: |
+          gh run watch "$RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --exit-status \
+            --interval 15
 
       - name: Record publication result
         shell: bash
         env:
           PACKAGE_NAME: ${{ matrix.package }}
-          PACKAGE_VERSION: ${{ steps.openupm.outputs.published-version }}
-          PACKAGE_URL: ${{ steps.openupm.outputs.package-url }}
-          STATUS_URL: ${{ steps.openupm.outputs.status-url }}
+          PACKAGE_VERSION: ${{ matrix.version }}
+          RUN_ID: ${{ steps.dispatch.outputs.run-id }}
         run: |
           {
             echo "### OpenUPM publication confirmed"
             echo
             echo "- Package: \`$PACKAGE_NAME\`"
             echo "- Registry version: \`$PACKAGE_VERSION\`"
-            echo "- Package page: $PACKAGE_URL"
-            echo "- Build status: $STATUS_URL"
+            echo "- Publication run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$RUN_ID"
           } >> "$GITHUB_STEP_SUMMARY"

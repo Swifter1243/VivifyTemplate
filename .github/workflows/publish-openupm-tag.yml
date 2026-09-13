@@ -1,0 +1,124 @@
+name: Publish tagged package to OpenUPM
+
+on:
+  push:
+    tags:
+      - com.swifter.vivify-template.*/**
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Unity package name
+        required: true
+        type: string
+      tag:
+        description: Existing package tag
+        required: true
+        type: string
+
+concurrency:
+  group: openupm-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and verify package
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'com.swifter.vivify-template.')
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out the tagged package
+        uses: actions/checkout@v4
+
+      - name: Validate tag and package manifest
+        id: package
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          REQUESTED_PACKAGE: ${{ inputs.package }}
+          REQUESTED_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$GITHUB_EVENT_NAME" == release ]]; then
+            package_tag="$RELEASE_TAG"
+          else
+            package_tag="$GITHUB_REF_NAME"
+          fi
+          package_name="${package_tag%/*}"
+          package_version="${package_tag#*/}"
+
+          if [[ "$GITHUB_REF_TYPE" != tag ]]; then
+            echo "This workflow must run with a package tag as its ref." >&2
+            exit 1
+          fi
+
+          if [[ "$package_name" == "$package_tag" || "$package_version" == "$package_tag" || "$package_version" == */* ]]; then
+            echo "Tag '$package_tag' must use the <package-name>/<version> format." >&2
+            exit 1
+          fi
+
+          if [[ ! "$package_name" =~ ^[a-z0-9]+([._-][a-z0-9]+)*(\.[a-z0-9]+([._-][a-z0-9]+)*){2,}$ ]]; then
+            echo "Tag '$package_tag' contains an invalid Unity package name." >&2
+            exit 1
+          fi
+
+          if [[ ! "$package_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "Tag '$package_tag' contains an invalid semantic version." >&2
+            exit 1
+          fi
+
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]]; then
+            if [[ "$REQUESTED_TAG" != "$package_tag" || "$REQUESTED_PACKAGE" != "$package_name" ]]; then
+              echo "Dispatch inputs do not match the tag ref '$package_tag'." >&2
+              exit 1
+            fi
+          fi
+
+          manifest="Packages/$package_name/package.json"
+          if [[ ! -f "$manifest" ]]; then
+            echo "Package manifest '$manifest' does not exist at tag '$package_tag'." >&2
+            exit 1
+          fi
+
+          manifest_name="$(jq -er '.name | select(type == "string" and length > 0)' "$manifest")"
+          manifest_version="$(jq -er '.version | select(type == "string" and length > 0)' "$manifest")"
+
+          if [[ "$manifest_name" != "$package_name" || "$manifest_version" != "$package_version" ]]; then
+            echo "Tag '$package_tag' does not match $manifest ($manifest_name $manifest_version)." >&2
+            exit 1
+          fi
+
+          printf 'name=%s\n' "$package_name" >> "$GITHUB_OUTPUT"
+          printf 'version=%s\n' "$package_version" >> "$GITHUB_OUTPUT"
+          printf 'tag=%s\n' "$package_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger OpenUPM and wait for registry publication
+        id: openupm
+        uses: openupm/openupm-action@v1
+        with:
+          package: ${{ steps.package.outputs.name }}
+          tag: ${{ steps.package.outputs.tag }}
+          timeout-minutes: 45
+
+      - name: Record publication result
+        shell: bash
+        env:
+          PACKAGE_NAME: ${{ steps.package.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.openupm.outputs.published-version }}
+          PACKAGE_URL: ${{ steps.openupm.outputs.package-url }}
+          STATUS_URL: ${{ steps.openupm.outputs.status-url }}
+        run: |
+          {
+            echo "### OpenUPM publication confirmed"
+            echo
+            echo "- Package: \`$PACKAGE_NAME\`"
+            echo "- Registry version: \`$PACKAGE_VERSION\`"
+            echo "- Package page: $PACKAGE_URL"
+            echo "- Build status: $STATUS_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
